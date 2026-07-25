@@ -58,7 +58,7 @@ export interface RoomSnapshot {
   question: {
     flagImage: string;
     choices: string[];
-    kind?: "flag" | "capital";
+    kind?: "flag" | "capital" | "shape";
     silhouette?: boolean;
     prompt?: string;
   } | null;

@@ -70,9 +70,11 @@ export function HighScores({ onBack }: Props) {
                       ? "🏛️ US capitals · "
                       : s.collection === "worldCapitals"
                         ? "🌆 world capitals · "
-                        : s.collection === "everything"
-                          ? "🌐 everything · "
-                          : ""}
+                        : s.collection === "worldShapes"
+                          ? "🗺️ shapes · "
+                          : s.collection === "everything"
+                            ? "🌐 everything · "
+                            : ""}
                   {s.mode} · {s.difficulty} · {s.questionCount} Qs{s.timed ? " · ⏱️" : ""}
                   {s.typed ? " · ⌨️" : ""} · {s.accuracy}% · 🔥{s.bestStreak}
                 </div>

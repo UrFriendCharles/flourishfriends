@@ -64,6 +64,7 @@ const COLLECTIONS = new Set<string>([
   "usStates",
   "usCapitals",
   "worldCapitals",
+  "worldShapes",
   "everything",
 ]);
 
@@ -132,9 +133,11 @@ export function shareText(share: ScoreShare): string {
         ? "state capitals"
         : share.collection === "worldCapitals"
           ? "world capitals"
-          : share.collection === "everything"
-            ? "mixed quiz questions"
-            : "world flags";
+          : share.collection === "worldShapes"
+            ? "country outlines"
+            : share.collection === "everything"
+              ? "mixed quiz questions"
+              : "world flags";
   return (
     `🌍 I scored ${share.score} on the Flourish Friends Flag Quiz! ` +
     `${share.correctAnswers}/${share.totalQuestions} ${pack} (${share.difficulty}), ` +

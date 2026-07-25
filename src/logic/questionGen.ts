@@ -1,5 +1,12 @@
 import type { Collection, Continent, Country, Difficulty, Question } from "../types";
-import { collectionEntries, countries, flagUrl, stateShapeUrl, usStates } from "../data/countries";
+import {
+  collectionEntries,
+  countries,
+  countryShapeUrl,
+  flagUrl,
+  stateShapeUrl,
+  usStates,
+} from "../data/countries";
 import { CAPITAL_TRAPS } from "../data/capitalTraps";
 
 /** A single-pack question type (everything mode mixes these). */
@@ -174,6 +181,19 @@ function buildQuestion(
     };
   }
 
+  if (sub === "worldShapes") {
+    return {
+      id,
+      countryId: country.id,
+      flagImage: countryShapeUrl(country),
+      correctAnswer: country.country,
+      choices: shuffle([country.country, ...pickDistractors(dataset, country, difficulty)]),
+      kind: "shape",
+      silhouette: true,
+      prompt: "Which country is this?",
+    };
+  }
+
   // flag question (world or usStates)
   const isState = sub === "usStates";
   return {
@@ -254,7 +274,11 @@ export function generateQuestions(
   const pool =
     collection === "usCapitals"
       ? dataset
-      : poolForDifficulty(dataset, difficulty, collection === "world" ? continents : []);
+      : poolForDifficulty(
+          dataset,
+          difficulty,
+          collection === "world" || collection === "worldShapes" ? continents : []
+        );
   const correctCountries = pickCorrectCountries(pool, count, difficulty);
   return correctCountries.map((c, i) =>
     buildQuestion(dataset, c, difficulty, "q", i, collection, false)
@@ -276,7 +300,11 @@ export function generateTieBreakerQuestions(
   const basePool =
     collection === "usCapitals"
       ? dataset
-      : poolForDifficulty(dataset, difficulty, collection === "world" ? continents : []);
+      : poolForDifficulty(
+          dataset,
+          difficulty,
+          collection === "world" || collection === "worldShapes" ? continents : []
+        );
   const pool = basePool.filter((c) => !usedCountryIds.has(c.id));
   const source = pool.length >= count ? pool : basePool;
   const picked = pickCorrectCountries(source, count, difficulty);

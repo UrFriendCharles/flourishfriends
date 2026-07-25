@@ -19,6 +19,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260717.1",
     "@svg-maps/usa": "^2.0.0",
+    "@svg-maps/world": "^2.0.0",
     "@types/node": "^24.13.2",
     "@types/qrcode-generator": "^0.0.16",
     "@types/react": "^19.2.17",

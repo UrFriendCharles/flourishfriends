@@ -1,4 +1,5 @@
 import type { Country, Player, Question } from "../types";
+import { flagUrl } from "../data/countries";
 import { AnswerGrid } from "../components/AnswerGrid";
 import { FlagDisplay } from "../components/FlagDisplay";
 import { PlayerScoreboard } from "../components/PlayerScoreboard";
@@ -65,6 +66,17 @@ export function AnswerReveal({
       </div>
 
       <FlagDisplay src={question.flagImage} plain={question.silhouette ?? false} />
+
+      {question.kind === "shape" && (
+        <div className="flex items-center justify-center gap-2 animate-slide-up">
+          <img
+            src={flagUrl(country)}
+            alt={`Flag of ${country.country}`}
+            className="h-8 w-auto rounded border border-white/20 shadow"
+          />
+          <span className="text-xs text-slate-400">its flag</span>
+        </div>
+      )}
 
       {isTyped ? (
         single && singleAnswer && !singleAnswer.correct && singleAnswer.choice ? (

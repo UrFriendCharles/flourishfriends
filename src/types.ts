@@ -5,6 +5,7 @@ export type Collection =
   | "usStates"
   | "usCapitals"
   | "worldCapitals"
+  | "worldShapes"
   | "everything";
 export type AnswerStyle = "choices" | "typed";
 export type Continent =
@@ -33,7 +34,7 @@ export interface Country {
   confusableWith: string[];
 }
 
-export type HintKey = "continent" | "region" | "geography" | "flagFact" | "funFact";
+export type HintKey = "continent" | "region" | "geography" | "flagFact" | "funFact" | "flag";
 
 export interface Question {
   id: string;
@@ -41,8 +42,12 @@ export interface Question {
   flagImage: string; // flag SVG, or state silhouette for capital questions
   correctAnswer: string;
   choices: string[];
-  /** "capital" = guess the capital (from a state silhouette or a country flag); default "flag" */
-  kind?: "flag" | "capital";
+  /**
+   * What's being guessed / shown. "capital" = guess the capital (from a state
+   * silhouette or a country flag); "shape" = guess the country from its map
+   * outline (flag + fact available as clues); default "flag".
+   */
+  kind?: "flag" | "capital" | "shape";
   /** image is a state silhouette (transparent, no frame) rather than a flag */
   silhouette?: boolean;
   /** question line shown to players (easy capitals name the place, harder don't) */

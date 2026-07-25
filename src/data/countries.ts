@@ -28,7 +28,7 @@ export const allEntries: Country[] = [...countries, ...usStates];
 
 export function collectionEntries(collection: Collection): Country[] {
   // usStates/usCapitals quiz the same 50 states (flags vs. capitals);
-  // world/worldCapitals quiz the same countries; everything spans both packs.
+  // world/worldCapitals/worldShapes quiz the same countries; everything spans both packs.
   if (collection === "usStates" || collection === "usCapitals") return usStates;
   if (collection === "everything") return allEntries;
   return countries;
@@ -45,4 +45,9 @@ export function flagUrl(country: Country): string {
 /** State silhouette (us-ga -> /states/ga.svg), for the capitals pack. */
 export function stateShapeUrl(state: Country): string {
   return `${import.meta.env.BASE_URL}states/${state.countryCode.replace(/^us-/, "")}.svg`;
+}
+
+/** Country map silhouette (fr -> /shapes/fr.svg), for the Guess the Country pack. */
+export function countryShapeUrl(country: Country): string {
+  return `${import.meta.env.BASE_URL}shapes/${country.countryCode}.svg`;
 }

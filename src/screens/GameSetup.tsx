@@ -62,11 +62,13 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
   const set = <K extends keyof GameSettings>(key: K, value: GameSettings[K]) =>
     setSettings((s) => ({ ...s, [key]: value }));
 
-  // capitals & everything are multiple-choice classic (hints/typed are flag-centric)
+  // capitals & everything are multiple-choice classic (hints/typed are flag-centric);
+  // shapes is multiple-choice with its own clue flow (forced learning for point decay)
   const isCapitals =
     settings.collection === "usCapitals" || settings.collection === "worldCapitals";
   const isEverything = settings.collection === "everything";
-  const forced = tv || isCapitals || isEverything;
+  const isShapes = settings.collection === "worldShapes";
+  const forced = tv || isCapitals || isEverything || isShapes;
 
   const toggleContinent = (c: Continent) =>
     set(
@@ -86,10 +88,13 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
       isCapitals || isEverything
         ? { answerStyle: "choices", mode: "classic", hintsEnabled: false }
         : {};
+    // shapes: multiple choice + learning so the flag/fact clues cost points
+    const shapesOverride: Partial<GameSettings> =
+      isShapes ? { answerStyle: "choices", mode: "learning", hintsEnabled: true } : {};
     const tvOverride: Partial<GameSettings> = tv
       ? { answerStyle: "choices", mode: "classic", hintsEnabled: false, lifelinesEnabled: false }
       : {};
-    onStart({ ...clean, ...capitalsOverride, ...tvOverride });
+    onStart({ ...clean, ...capitalsOverride, ...shapesOverride, ...tvOverride });
   };
 
   return (
@@ -113,6 +118,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
             ["usStates", "🇺🇸 US States"],
             ["usCapitals", "🏛️ State Capitals"],
             ["worldCapitals", "🌆 World Capitals"],
+            ["worldShapes", "🗺️ Guess the Country"],
             ["everything", "🌐 Everything"],
           ] as [Collection, string][]
         ).map(([collection, label]) => (
@@ -135,6 +141,12 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
         <p className="-mt-3 text-xs text-slate-400">
           Guess each country's capital from its flag. Easy names the country — Medium and Hard show
           only the flag, and Hard mixes in tricky same-region cities!
+        </p>
+      )}
+      {isShapes && (
+        <p className="-mt-3 text-xs text-slate-400">
+          Name the country from its map outline. Stuck? Spend a clue to reveal its flag, then another
+          for a fact — but each clue lowers the points. Nail it from the shape alone for the full 100!
         </p>
       )}
       {isEverything && (
@@ -245,7 +257,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
             💡 Hints {settings.hintsEnabled ? "On" : "Off"}
           </Chip>
         )}
-        {!tv && (settings.answerStyle === "choices" || isCapitals || isEverything) && (
+        {!tv && (settings.answerStyle === "choices" || isCapitals || isEverything || isShapes) && (
           <Chip
             active={settings.lifelinesEnabled}
             onClick={() => set("lifelinesEnabled", !settings.lifelinesEnabled)}
@@ -261,7 +273,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
         </Chip>
       </Section>
 
-      {settings.collection === "world" && (
+      {(settings.collection === "world" || isShapes) && (
         <Section title="Continents (all if none picked)">
           {CONTINENTS.map((c) => (
             <Chip key={c} active={settings.continents.includes(c)} onClick={() => toggleContinent(c)}>

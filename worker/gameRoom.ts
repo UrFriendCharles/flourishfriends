@@ -64,7 +64,11 @@ function validateInit(body: InitRequest): string | null {
   for (const q of qs) {
     if (
       typeof q?.flagImage !== "string" ||
-      !(q.flagImage.startsWith("/flags/") || q.flagImage.startsWith("/states/"))
+      !(
+        q.flagImage.startsWith("/flags/") ||
+        q.flagImage.startsWith("/states/") ||
+        q.flagImage.startsWith("/shapes/")
+      )
     ) {
       return "bad flag";
     }
