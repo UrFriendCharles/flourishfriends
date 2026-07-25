@@ -16,5 +16,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["worker", "src/types.ts", "src/logic/scoring.ts", "src/logic/roomProtocol.ts"]
+  "include": [
+    "worker",
+    "src/types.ts",
+    "src/logic/scoring.ts",
+    "src/logic/roomProtocol.ts",
+    "src/logic/scoreShareWire.ts"
+  ]
 }

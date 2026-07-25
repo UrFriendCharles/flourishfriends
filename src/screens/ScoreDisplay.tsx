@@ -5,14 +5,14 @@ import { getScoreShare } from "../storage/scoreShares";
 
 interface Props {
   shareId: string;
-  fragment: string; // URL hash payload (may be empty on old/local links)
+  payload: string; // encoded score from ?s= or the #fragment (empty on old/local links)
   onHome: () => void;
 }
 
-export function ScoreDisplay({ shareId, fragment, onHome }: Props) {
-  // Links carry their data in the fragment; fall back to this device's
-  // IndexedDB for links saved here before the fragment existed.
-  const fromUrl = useMemo(() => decodeShare(shareId, fragment), [shareId, fragment]);
+export function ScoreDisplay({ shareId, payload, onHome }: Props) {
+  // Links carry their data in the URL; fall back to this device's IndexedDB
+  // for links saved here before the payload was embedded in the URL.
+  const fromUrl = useMemo(() => decodeShare(shareId, payload), [shareId, payload]);
   const [share, setShare] = useState<ScoreShare | null>(fromUrl);
   const [loading, setLoading] = useState(fromUrl === null);
 

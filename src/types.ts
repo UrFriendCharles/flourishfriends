@@ -84,6 +84,7 @@ export interface Player {
 export type Screen =
   | "home"
   | "howToPlay"
+  | "about"
   | "highScores"
   | "playerSetup"
   | "gameSetup"

@@ -42,13 +42,14 @@ import { AnswerReveal } from "./screens/AnswerReveal";
 import { GameResults, missedCountryIds } from "./screens/GameResults";
 import { HighScores } from "./screens/HighScores";
 import { HowToPlay } from "./screens/HowToPlay";
+import { About } from "./screens/About";
 
 const IN_GAME_SCREENS = new Set(["passDevice", "question", "reveal"]);
 
 // URL-addressed views (shared scores, multiplayer rooms) live outside the
 // game state machine, so the reducer stays purely about local gameplay.
 type AppRoute =
-  | { kind: "score"; shareId: string; fragment: string }
+  | { kind: "score"; shareId: string; payload: string }
   | { kind: "join"; code: string }
   | { kind: "controller"; code: string; name: string }
   | { kind: "display"; code: string }
@@ -62,7 +63,11 @@ const hostKeyStorage = (code: string) => `ffq:room:${code}:hostKey`;
 function parseRoute(): AppRoute {
   const path = window.location.pathname;
   const score = path.match(/^\/score\/([a-zA-Z0-9_-]+)\/?$/);
-  if (score) return { kind: "score", shareId: score[1], fragment: window.location.hash.slice(1) };
+  if (score) {
+    // Payload lives in ?s= (server-visible); old links used the #fragment.
+    const payload = new URLSearchParams(window.location.search).get("s") ?? window.location.hash.slice(1);
+    return { kind: "score", shareId: score[1], payload };
+  }
   const join = path.match(/^\/join(?:\/([a-zA-Z0-9]*))?\/?$/);
   if (join) return { kind: "join", code: normalizeRoomCode(join[1] ?? "") };
   const display = path.match(/^\/display\/([a-zA-Z0-9]+)\/?$/);
@@ -222,7 +227,7 @@ export default function App() {
   if (route) {
     switch (route.kind) {
       case "score":
-        return <ScoreDisplay shareId={route.shareId} fragment={route.fragment} onHome={goHome} />;
+        return <ScoreDisplay shareId={route.shareId} payload={route.payload} onHome={goHome} />;
       case "join":
         return (
           <JoinRoom
@@ -279,11 +284,15 @@ export default function App() {
           }}
           onHighScores={() => dispatch({ type: "NAVIGATE", screen: "highScores" })}
           onHowToPlay={() => dispatch({ type: "NAVIGATE", screen: "howToPlay" })}
+          onAbout={() => dispatch({ type: "NAVIGATE", screen: "about" })}
         />
       );
 
     case "howToPlay":
       return <HowToPlay onBack={() => dispatch({ type: "NAVIGATE", screen: "home" })} />;
+
+    case "about":
+      return <About onBack={() => dispatch({ type: "NAVIGATE", screen: "home" })} />;
 
     case "highScores":
       return <HighScores onBack={() => dispatch({ type: "NAVIGATE", screen: "home" })} />;
