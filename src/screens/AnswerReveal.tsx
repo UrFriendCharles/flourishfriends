@@ -64,7 +64,7 @@ export function AnswerReveal({
         )}
       </div>
 
-      <FlagDisplay src={question.flagImage} plain={isCapital} />
+      <FlagDisplay src={question.flagImage} plain={question.silhouette ?? false} />
 
       {isTyped ? (
         single && singleAnswer && !singleAnswer.correct && singleAnswer.choice ? (

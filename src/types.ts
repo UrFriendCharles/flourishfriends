@@ -1,6 +1,11 @@
 export type Difficulty = "easy" | "medium" | "hard";
 export type GameMode = "classic" | "learning";
-export type Collection = "world" | "usStates" | "usCapitals";
+export type Collection =
+  | "world"
+  | "usStates"
+  | "usCapitals"
+  | "worldCapitals"
+  | "everything";
 export type AnswerStyle = "choices" | "typed";
 export type Continent =
   | "Africa"
@@ -36,9 +41,11 @@ export interface Question {
   flagImage: string; // flag SVG, or state silhouette for capital questions
   correctAnswer: string;
   choices: string[];
-  /** "capital" = guess the capital from a state silhouette; default "flag" */
+  /** "capital" = guess the capital (from a state silhouette or a country flag); default "flag" */
   kind?: "flag" | "capital";
-  /** question line shown to players (easy capitals name the state, harder don't) */
+  /** image is a state silhouette (transparent, no frame) rather than a flag */
+  silhouette?: boolean;
+  /** question line shown to players (easy capitals name the place, harder don't) */
   prompt?: string;
 }
 

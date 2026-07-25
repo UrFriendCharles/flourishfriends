@@ -1,6 +1,7 @@
 import { useRoomSocket } from "../hooks/useRoomSocket";
 import { countryById } from "../data/countries";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomTimerBar } from "../components/RoomBits";
+import { QrCode } from "../components/QrCode";
 
 interface Props {
   roomCode: string;
@@ -14,7 +15,8 @@ export function DisplayRoom({ roomCode }: Props) {
     role: "display",
   }));
 
-  const joinUrl = `${window.location.origin.replace(/^https?:\/\//, "")}/join/${roomCode}`;
+  const joinLink = `${window.location.origin}/join/${roomCode}`;
+  const joinUrl = joinLink.replace(/^https?:\/\//, "");
 
   const shell = (children: React.ReactNode) => (
     <div className="mx-auto flex min-h-dvh max-w-4xl flex-col gap-6 px-8 py-8">
@@ -46,9 +48,19 @@ export function DisplayRoom({ roomCode }: Props) {
     return shell(
       <div className="my-auto text-center">
         <h1 className="text-3xl font-black text-slate-300">Grab your phone and join!</h1>
-        <div className="mt-6 text-2xl font-bold text-slate-300">{joinUrl}</div>
-        <div className="mt-2 text-8xl font-black tracking-[0.15em] text-sky-200 animate-pop-in">
-          {roomCode}
+        <div className="mt-6 flex flex-col items-center justify-center gap-6 md:flex-row md:gap-12">
+          <div className="rounded-3xl bg-white p-4 shadow-2xl">
+            <QrCode value={joinLink} size={240} />
+          </div>
+          <div>
+            <div className="text-lg font-bold uppercase tracking-wider text-slate-400">
+              📱 Scan to join
+            </div>
+            <div className="mt-2 text-2xl font-bold text-slate-300">{joinUrl}</div>
+            <div className="mt-1 text-8xl font-black tracking-[0.15em] text-sky-200 animate-pop-in">
+              {roomCode}
+            </div>
+          </div>
         </div>
         <div className="mx-auto mt-10 flex max-w-2xl flex-wrap justify-center gap-3">
           {snapshot.players.length === 0 ? (
@@ -83,9 +95,9 @@ export function DisplayRoom({ roomCode }: Props) {
         <div className="flex flex-1 flex-col items-center justify-center gap-6 md:flex-row md:gap-10">
           <img
             src={snapshot.question.flagImage}
-            alt={snapshot.question.kind === "capital" ? "Mystery state" : "Mystery flag"}
+            alt={snapshot.question.silhouette ? "Mystery state" : "Mystery flag"}
             className={`max-h-64 w-auto md:max-h-80 ${
-              snapshot.question.kind === "capital"
+              snapshot.question.silhouette
                 ? "drop-shadow-2xl"
                 : "rounded-xl border border-white/15 shadow-2xl"
             }`}
@@ -137,7 +149,7 @@ export function DisplayRoom({ roomCode }: Props) {
             The answer is
           </div>
           <div className="mt-1 text-5xl font-black text-green-300">{snapshot.correctAnswer}</div>
-          {country && snapshot.settings.collection === "usCapitals" ? (
+          {country && snapshot.question?.kind === "capital" ? (
             <p className="mx-auto mt-3 max-w-2xl text-slate-300">
               🏛️ The capital of <span className="font-bold text-white">{country.country}</span>
               {country.funFacts[0] ? <> · 💡 {country.funFacts[0]}</> : null}
@@ -156,7 +168,18 @@ export function DisplayRoom({ roomCode }: Props) {
               >
                 <span className="w-6 text-center font-black text-slate-400">{i + 1}</span>
                 <span className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color }} />
-                <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate font-bold">{p.name}</span>
+                  {p.lastAnswer && (
+                    <span
+                      className={`truncate text-sm ${
+                        p.lastAnswer.correct ? "text-green-300/80" : "text-rose-300/80"
+                      }`}
+                    >
+                      picked {p.lastAnswer.choice}
+                    </span>
+                  )}
+                </span>
                 <span className="text-base">
                   {p.lastAnswer ? (p.lastAnswer.correct ? "✅" : "❌") : "⏰"}
                 </span>

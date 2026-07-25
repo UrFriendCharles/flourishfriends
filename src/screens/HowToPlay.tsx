@@ -9,7 +9,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "🇺🇸 Quiz packs & typed answers",
-    body: "Choose World Flags or US State Flags in game setup. Feeling brave? Switch answers to Type It In and spell the name yourself — small typos are forgiven, but lifelines are off.",
+    body: "Pick a pack in game setup: World Flags, US State Flags, State Capitals, World Capitals (name a country's capital from its flag), or Everything — a mix of all four. Feeling brave? On flag packs switch answers to Type It In and spell the name yourself — small typos are forgiven, but lifelines are off.",
   },
   {
     title: "👥 Playing with friends",

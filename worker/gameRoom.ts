@@ -69,6 +69,7 @@ function validateInit(body: InitRequest): string | null {
       return "bad flag";
     }
     if (q.prompt !== undefined && typeof q.prompt !== "string") return "bad prompt";
+    if (q.silhouette !== undefined && typeof q.silhouette !== "boolean") return "bad silhouette";
     if (!Array.isArray(q.choices) || q.choices.length < 2 || q.choices.length > 6) return "bad choices";
     if (!q.choices.includes(q.correctAnswer)) return "answer not in choices";
     if (typeof q.countryId !== "string") return "bad country";
@@ -403,6 +404,7 @@ export class GameRoom {
               flagImage: question.flagImage,
               choices: question.choices,
               kind: question.kind,
+              silhouette: question.silhouette,
               prompt: question.prompt,
             }
           : null,

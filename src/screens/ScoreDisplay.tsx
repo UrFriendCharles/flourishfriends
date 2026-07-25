@@ -67,7 +67,11 @@ export function ScoreDisplay({ shareId, fragment, onHome }: Props) {
       ? "🇺🇸 US states"
       : share.collection === "usCapitals"
         ? "🏛️ State capitals"
-        : "🌍 World flags",
+        : share.collection === "worldCapitals"
+          ? "🌆 World capitals"
+          : share.collection === "everything"
+            ? "🌐 Everything"
+            : "🌍 World flags",
     share.mode === "learning" ? "📚 Learning" : "🎯 Classic",
     share.difficulty,
     `${share.totalQuestions} questions`,

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRoomSocket } from "../hooks/useRoomSocket";
 import { countryById } from "../data/countries";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomTimerBar } from "../components/RoomBits";
+import { QrCode } from "../components/QrCode";
 
 interface Props {
   roomCode: string;
@@ -47,6 +48,7 @@ export function HostRoom({ roomCode, hostKey, onExit }: Props) {
   const [confirmEnd, setConfirmEnd] = useState(false);
 
   const origin = window.location.origin.replace(/^https?:\/\//, "");
+  const joinUrl = `${window.location.origin}/join/${roomCode}`;
 
   const shell = (children: React.ReactNode) => (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-4 px-5 py-6 md:max-w-4xl md:px-8">
@@ -108,11 +110,21 @@ export function HostRoom({ roomCode, hostKey, onExit }: Props) {
           <h1 className="text-xl font-black text-slate-300 md:text-3xl">
             Grab your phone and join!
           </h1>
-          <div className="mt-3 text-lg font-bold text-slate-300 md:text-2xl">
-            {origin}/join/{roomCode}
-          </div>
-          <div className="text-7xl font-black tracking-[0.15em] text-sky-200 md:text-8xl">
-            {roomCode}
+          <div className="mt-3 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
+            <div className="rounded-2xl bg-white p-3 shadow-lg md:p-4">
+              <QrCode value={joinUrl} size={168} />
+            </div>
+            <div>
+              <div className="text-sm font-bold uppercase tracking-wider text-slate-400">
+                📱 Scan to join · or enter the code
+              </div>
+              <div className="mt-1 text-lg font-bold text-slate-300 md:text-2xl">
+                {origin}/join/{roomCode}
+              </div>
+              <div className="text-7xl font-black tracking-[0.15em] text-sky-200 md:text-8xl">
+                {roomCode}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -177,9 +189,9 @@ export function HostRoom({ roomCode, hostKey, onExit }: Props) {
         <div className="flex flex-1 flex-col items-center justify-center gap-4 md:flex-row md:gap-10">
           <img
             src={snapshot.question.flagImage}
-            alt={snapshot.question.kind === "capital" ? "Mystery state" : "Mystery flag"}
+            alt={snapshot.question.silhouette ? "Mystery state" : "Mystery flag"}
             className={`max-h-44 w-auto md:max-h-72 ${
-              snapshot.question.kind === "capital"
+              snapshot.question.silhouette
                 ? "drop-shadow-2xl"
                 : "rounded-xl border border-white/15 shadow-2xl"
             }`}
@@ -245,7 +257,7 @@ export function HostRoom({ roomCode, hostKey, onExit }: Props) {
           <div className="mt-1 text-3xl font-black text-green-300 md:text-5xl">
             {snapshot.correctAnswer}
           </div>
-          {country && snapshot.settings.collection === "usCapitals" ? (
+          {country && snapshot.question?.kind === "capital" ? (
             <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-300 md:text-base">
               🏛️ The capital of <span className="font-bold text-white">{country.country}</span>
               {country.funFacts[0] ? <> · 💡 {country.funFacts[0]}</> : null}
@@ -266,7 +278,18 @@ export function HostRoom({ roomCode, hostKey, onExit }: Props) {
               >
                 <span className="w-5 text-center font-black text-slate-400">{i + 1}</span>
                 <span className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color }} />
-                <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate font-bold">{p.name}</span>
+                  {p.lastAnswer && (
+                    <span
+                      className={`truncate text-xs md:text-sm ${
+                        p.lastAnswer.correct ? "text-green-300/80" : "text-rose-300/80"
+                      }`}
+                    >
+                      picked {p.lastAnswer.choice}
+                    </span>
+                  )}
+                </span>
                 <span className="text-sm md:text-base">
                   {p.lastAnswer ? (p.lastAnswer.correct ? "✅" : "❌") : "⏰"}
                 </span>

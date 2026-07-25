@@ -27,8 +27,11 @@ export const usStates: Country[] = [...usStates1, ...usStates2];
 export const allEntries: Country[] = [...countries, ...usStates];
 
 export function collectionEntries(collection: Collection): Country[] {
-  // usCapitals quizzes the same 50 states, just on capitals instead of flags
-  return collection === "world" ? countries : usStates;
+  // usStates/usCapitals quiz the same 50 states (flags vs. capitals);
+  // world/worldCapitals quiz the same countries; everything spans both packs.
+  if (collection === "usStates" || collection === "usCapitals") return usStates;
+  if (collection === "everything") return allEntries;
+  return countries;
 }
 
 // id is globally unique across packs; name is NOT (Georgia the country vs the

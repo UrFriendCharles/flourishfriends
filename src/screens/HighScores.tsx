@@ -64,7 +64,15 @@ export function HighScores({ onBack }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="truncate font-bold">{s.playerName}</div>
                 <div className="text-xs text-slate-400">
-                  {s.collection === "usStates" ? "🇺🇸 states · " : s.collection === "usCapitals" ? "🏛️ capitals · " : ""}
+                  {s.collection === "usStates"
+                    ? "🇺🇸 states · "
+                    : s.collection === "usCapitals"
+                      ? "🏛️ US capitals · "
+                      : s.collection === "worldCapitals"
+                        ? "🌆 world capitals · "
+                        : s.collection === "everything"
+                          ? "🌐 everything · "
+                          : ""}
                   {s.mode} · {s.difficulty} · {s.questionCount} Qs{s.timed ? " · ⏱️" : ""}
                   {s.typed ? " · ⌨️" : ""} · {s.accuracy}% · 🔥{s.bestStreak}
                 </div>

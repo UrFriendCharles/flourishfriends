@@ -88,9 +88,9 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
         )}
         <img
           src={snapshot.question.flagImage}
-          alt={snapshot.question.kind === "capital" ? "Mystery state" : "Mystery flag"}
+          alt={snapshot.question.silhouette ? "Mystery state" : "Mystery flag"}
           className={`mx-auto max-h-40 w-auto ${
-            snapshot.question.kind === "capital"
+            snapshot.question.silhouette
               ? "drop-shadow-lg"
               : "rounded-lg border border-white/15 shadow-lg"
           }`}
@@ -149,6 +149,11 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
               <h2 className="mt-2 text-2xl font-black">
                 {mine ? "Not this time" : "Time's up!"}
               </h2>
+              {mine && (
+                <p className="mt-1 text-sm text-slate-400">
+                  You picked <span className="font-bold text-rose-300">{mine.choice}</span>
+                </p>
+              )}
               <p className="mt-1 text-sm text-slate-300">
                 It was <span className="font-black text-white">{snapshot.correctAnswer}</span>
               </p>

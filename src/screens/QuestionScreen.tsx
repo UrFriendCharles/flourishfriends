@@ -122,7 +122,7 @@ export function QuestionScreen(props: Props) {
       <FlagDisplay
         src={question.flagImage}
         className="my-1"
-        plain={question.kind === "capital"}
+        plain={question.silhouette ?? false}
       />
 
       {isTyped ? (

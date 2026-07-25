@@ -62,9 +62,11 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
   const set = <K extends keyof GameSettings>(key: K, value: GameSettings[K]) =>
     setSettings((s) => ({ ...s, [key]: value }));
 
-  // capitals questions are multiple-choice classic (hints/typed are flag-centric)
-  const isCapitals = settings.collection === "usCapitals";
-  const forced = tv || isCapitals;
+  // capitals & everything are multiple-choice classic (hints/typed are flag-centric)
+  const isCapitals =
+    settings.collection === "usCapitals" || settings.collection === "worldCapitals";
+  const isEverything = settings.collection === "everything";
+  const forced = tv || isCapitals || isEverything;
 
   const toggleContinent = (c: Continent) =>
     set(
@@ -80,9 +82,10 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
       questionCount: Math.max(3, Math.min(50, settings.questionCount)),
     };
     saveSettings(clean); // saved before overrides so local-game prefs survive
-    const capitalsOverride: Partial<GameSettings> = isCapitals
-      ? { answerStyle: "choices", mode: "classic", hintsEnabled: false }
-      : {};
+    const capitalsOverride: Partial<GameSettings> =
+      isCapitals || isEverything
+        ? { answerStyle: "choices", mode: "classic", hintsEnabled: false }
+        : {};
     const tvOverride: Partial<GameSettings> = tv
       ? { answerStyle: "choices", mode: "classic", hintsEnabled: false, lifelinesEnabled: false }
       : {};
@@ -109,6 +112,8 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
             ["world", "🌍 World Flags"],
             ["usStates", "🇺🇸 US States"],
             ["usCapitals", "🏛️ State Capitals"],
+            ["worldCapitals", "🌆 World Capitals"],
+            ["everything", "🌐 Everything"],
           ] as [Collection, string][]
         ).map(([collection, label]) => (
           <Chip
@@ -120,10 +125,22 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
           </Chip>
         ))}
       </Section>
-      {isCapitals && (
+      {settings.collection === "usCapitals" && (
         <p className="-mt-3 text-xs text-slate-400">
           Guess the capital from the state's shape. Easy names the state — Medium and Hard show
           only the silhouette, and Hard mixes in trick cities like Seattle and New Orleans!
+        </p>
+      )}
+      {settings.collection === "worldCapitals" && (
+        <p className="-mt-3 text-xs text-slate-400">
+          Guess each country's capital from its flag. Easy names the country — Medium and Hard show
+          only the flag, and Hard mixes in tricky same-region cities!
+        </p>
+      )}
+      {isEverything && (
+        <p className="-mt-3 text-xs text-slate-400">
+          The ultimate mix — every question is pulled at random from all four packs: world flags, US
+          state flags, state capitals, and world capitals. Each question tells you what it's asking.
         </p>
       )}
 
@@ -228,7 +245,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
             💡 Hints {settings.hintsEnabled ? "On" : "Off"}
           </Chip>
         )}
-        {!tv && (settings.answerStyle === "choices" || isCapitals) && (
+        {!tv && (settings.answerStyle === "choices" || isCapitals || isEverything) && (
           <Chip
             active={settings.lifelinesEnabled}
             onClick={() => set("lifelinesEnabled", !settings.lifelinesEnabled)}

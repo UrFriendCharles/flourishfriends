@@ -59,6 +59,7 @@ export interface RoomSnapshot {
     flagImage: string;
     choices: string[];
     kind?: "flag" | "capital";
+    silhouette?: boolean;
     prompt?: string;
   } | null;
   correctAnswer: string | null; // reveal/ended only

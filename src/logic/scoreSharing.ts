@@ -59,7 +59,13 @@ export function encodeShare(share: ScoreShare): string {
 
 const DIFFICULTIES = new Set<string>(["easy", "medium", "hard"]);
 const MODES = new Set<string>(["classic", "learning"]);
-const COLLECTIONS = new Set<string>(["world", "usStates", "usCapitals"]);
+const COLLECTIONS = new Set<string>([
+  "world",
+  "usStates",
+  "usCapitals",
+  "worldCapitals",
+  "everything",
+]);
 
 function asCount(value: unknown, max: number): number | null {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= max
@@ -124,7 +130,11 @@ export function shareText(share: ScoreShare): string {
       ? "US state flags"
       : share.collection === "usCapitals"
         ? "state capitals"
-        : "world flags";
+        : share.collection === "worldCapitals"
+          ? "world capitals"
+          : share.collection === "everything"
+            ? "mixed quiz questions"
+            : "world flags";
   return (
     `🌍 I scored ${share.score} on the Flourish Friends Flag Quiz! ` +
     `${share.correctAnswers}/${share.totalQuestions} ${pack} (${share.difficulty}), ` +

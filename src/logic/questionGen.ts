@@ -1,6 +1,9 @@
 import type { Collection, Continent, Country, Difficulty, Question } from "../types";
-import { collectionEntries, flagUrl, stateShapeUrl } from "../data/countries";
+import { collectionEntries, countries, flagUrl, stateShapeUrl, usStates } from "../data/countries";
 import { CAPITAL_TRAPS } from "../data/capitalTraps";
+
+/** A single-pack question type (everything mode mixes these). */
+type SubCollection = Exclude<Collection, "everything">;
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -87,9 +90,11 @@ function pickDistractors(dataset: Country[], correct: Country, difficulty: Diffi
 }
 
 /**
- * Wrong answers for a capital question. Hard mode leads with the state's own
- * famous non-capital cities (Seattle for Washington…), then nearby states'
- * capitals; medium stays in-region; easy pulls far-away capitals.
+ * Wrong answers for a capital question (state or country). Hard mode leads with
+ * the place's own famous non-capital cities (Seattle for Washington…), then
+ * nearby capitals; medium stays in-region; easy pulls far-away capitals.
+ * CAPITAL_TRAPS only has entries for US states, so countries just fall through
+ * to region/continent capitals.
  */
 function pickCapitalDistractors(
   dataset: Country[],
@@ -112,8 +117,10 @@ function pickCapitalDistractors(
   if (difficulty === "hard") {
     addNames((CAPITAL_TRAPS[correct.id] ?? []).slice(0, 2)); // max 2 traps, keep 1 real capital
     addNames(capitalsOf(dataset.filter((s) => s.region === correct.region)));
+    addNames(capitalsOf(dataset.filter((s) => s.continent === correct.continent)));
   } else if (difficulty === "medium") {
     addNames(capitalsOf(dataset.filter((s) => s.region === correct.region)));
+    addNames(capitalsOf(dataset.filter((s) => s.continent === correct.continent)));
   } else {
     addNames(capitalsOf(dataset.filter((s) => s.region !== correct.region)));
   }
@@ -121,35 +128,118 @@ function pickCapitalDistractors(
   return chosen;
 }
 
+/**
+ * Build one question. `sub` is the single-pack type. `mixed` is true inside
+ * everything mode, where flag questions get an explicit prompt so players know
+ * whether they're being asked for a country or a US state.
+ */
 function buildQuestion(
   dataset: Country[],
   country: Country,
   difficulty: Difficulty,
   idPrefix: string,
   i: number,
-  collection: Collection
+  sub: SubCollection,
+  mixed: boolean
 ): Question {
-  if (collection === "usCapitals") {
-    const named = difficulty === "easy"; // easy names the state; harder = silhouette only
+  const id = `${idPrefix}-${i}-${country.id}`;
+  const named = difficulty === "easy"; // easy names the place; harder hides it
+
+  if (sub === "usCapitals") {
     return {
-      id: `${idPrefix}-${i}-${country.id}`,
+      id,
       countryId: country.id,
       flagImage: stateShapeUrl(country),
       correctAnswer: country.capital,
       choices: shuffle([country.capital, ...pickCapitalDistractors(dataset, country, difficulty)]),
       kind: "capital",
+      silhouette: true,
       prompt: named
         ? `What's the capital of ${country.country}?`
         : "What's the capital of this state?",
     };
   }
+
+  if (sub === "worldCapitals") {
+    return {
+      id,
+      countryId: country.id,
+      flagImage: flagUrl(country),
+      correctAnswer: country.capital,
+      choices: shuffle([country.capital, ...pickCapitalDistractors(dataset, country, difficulty)]),
+      kind: "capital",
+      prompt: named
+        ? `What's the capital of ${country.country}?`
+        : "What's the capital of this country?",
+    };
+  }
+
+  // flag question (world or usStates)
+  const isState = sub === "usStates";
   return {
-    id: `${idPrefix}-${i}-${country.id}`,
+    id,
     countryId: country.id,
     flagImage: flagUrl(country),
     correctAnswer: country.country,
     choices: shuffle([country.country, ...pickDistractors(dataset, country, difficulty)]),
+    prompt: mixed
+      ? isState
+        ? "Which US state is this?"
+        : "Which country is this?"
+      : undefined,
   };
+}
+
+/**
+ * Everything mode: draw questions from all four packs (world flags, state
+ * flags, state capitals, world capitals). We avoid repeating a place until
+ * every place has been used once, then allow the same place in a different
+ * pack (e.g. France's flag and France's capital) to fill the count.
+ */
+function generateEverything(
+  count: number,
+  difficulty: Difficulty,
+  exclude: Set<string> = new Set(),
+  idPrefix = "q"
+): Question[] {
+  type Spec = { dataset: Country[]; country: Country; sub: SubCollection };
+  const specs: Spec[] = [];
+  const worldPool = poolForDifficulty(countries, difficulty, []);
+  for (const c of worldPool) {
+    if (exclude.has(c.id)) continue;
+    specs.push({ dataset: countries, country: c, sub: "world" });
+    specs.push({ dataset: countries, country: c, sub: "worldCapitals" });
+  }
+  for (const s of usStates) {
+    if (exclude.has(s.id)) continue;
+    specs.push({ dataset: usStates, country: s, sub: "usStates" });
+    specs.push({ dataset: usStates, country: s, sub: "usCapitals" });
+  }
+
+  const shuffled = shuffle(specs);
+  const picked: Spec[] = [];
+  const usedCountry = new Set<string>();
+  const usedKey = new Set<string>();
+  const key = (s: Spec) => `${s.sub}:${s.country.id}`;
+  // pass 1: unique place
+  for (const s of shuffled) {
+    if (picked.length >= count) break;
+    if (usedCountry.has(s.country.id)) continue;
+    usedCountry.add(s.country.id);
+    usedKey.add(key(s));
+    picked.push(s);
+  }
+  // pass 2: allow a place in a second pack to top up the count
+  for (const s of shuffled) {
+    if (picked.length >= count) break;
+    if (usedKey.has(key(s))) continue;
+    usedKey.add(key(s));
+    picked.push(s);
+  }
+
+  return shuffle(picked).map((s, i) =>
+    buildQuestion(s.dataset, s.country, difficulty, idPrefix, i, s.sub, true)
+  );
 }
 
 export function generateQuestions(
@@ -158,6 +248,7 @@ export function generateQuestions(
   continents: Continent[],
   collection: Collection
 ): Question[] {
+  if (collection === "everything") return generateEverything(count, difficulty);
   const dataset = collectionEntries(collection);
   // capitals difficulty comes from naming + distractors, not which states appear
   const pool =
@@ -165,7 +256,9 @@ export function generateQuestions(
       ? dataset
       : poolForDifficulty(dataset, difficulty, collection === "world" ? continents : []);
   const correctCountries = pickCorrectCountries(pool, count, difficulty);
-  return correctCountries.map((c, i) => buildQuestion(dataset, c, difficulty, "q", i, collection));
+  return correctCountries.map((c, i) =>
+    buildQuestion(dataset, c, difficulty, "q", i, collection, false)
+  );
 }
 
 /** Extra questions for sudden-death tie-breakers, excluding countries already used. */
@@ -176,6 +269,9 @@ export function generateTieBreakerQuestions(
   collection: Collection,
   count: number
 ): Question[] {
+  if (collection === "everything") {
+    return generateEverything(count, difficulty, usedCountryIds, "tb");
+  }
   const dataset = collectionEntries(collection);
   const basePool =
     collection === "usCapitals"
@@ -184,5 +280,5 @@ export function generateTieBreakerQuestions(
   const pool = basePool.filter((c) => !usedCountryIds.has(c.id));
   const source = pool.length >= count ? pool : basePool;
   const picked = pickCorrectCountries(source, count, difficulty);
-  return picked.map((c, i) => buildQuestion(dataset, c, difficulty, "tb", i, collection));
+  return picked.map((c, i) => buildQuestion(dataset, c, difficulty, "tb", i, collection, false));
 }
