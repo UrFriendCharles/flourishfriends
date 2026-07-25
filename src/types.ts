@@ -52,6 +52,12 @@ export interface Question {
   silhouette?: boolean;
   /** question line shown to players (easy capitals name the place, harder don't) */
   prompt?: string;
+  /**
+   * Pre-baked, answer-masked hint lines for TV rooms (max 3). Generated on the
+   * host's device at room creation so the worker never imports the dataset;
+   * the server reveals them one at a time to each player who asks.
+   */
+  hints?: string[];
 }
 
 export interface PlayerAnswer {
@@ -97,6 +103,8 @@ export interface GameSettings {
   lifelinesEnabled: boolean;
   speedBonusEnabled: boolean;
   continents: Continent[]; // empty = all
+  /** TV rooms: end-game round where players guess who used the most hints */
+  hintGuessRound?: boolean;
 }
 
 export interface QuestionRuntime {

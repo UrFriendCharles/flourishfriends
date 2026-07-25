@@ -2,12 +2,14 @@ import type { Collection, Continent, Country, Difficulty, Question } from "../ty
 import {
   collectionEntries,
   countries,
+  countryById,
   countryShapeUrl,
   flagUrl,
   stateShapeUrl,
   usStates,
 } from "../data/countries";
 import { CAPITAL_TRAPS } from "../data/capitalTraps";
+import { MAX_ROOM_HINTS } from "./scoring";
 
 /** A single-pack question type (everything mode mixes these). */
 type SubCollection = Exclude<Collection, "everything">;
@@ -283,6 +285,58 @@ export function generateQuestions(
   return correctCountries.map((c, i) =>
     buildQuestion(dataset, c, difficulty, "q", i, collection, false)
   );
+}
+
+/** Replace the answer / place name with a neutral phrase so a hint can't spell it out. */
+function maskAnswer(text: string, names: string[]): string {
+  let out = text;
+  for (const name of [...names].sort((a, b) => b.length - a.length)) {
+    if (!name) continue;
+    const safe = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    out = out
+      .replace(new RegExp(`${safe}'s`, "gi"), "its")
+      .replace(new RegExp(safe, "gi"), "this place");
+  }
+  return out;
+}
+
+/** Up to 3 answer-masked hint lines for a room question (baked on the host). */
+function roomHints(country: Country, kind: Question["kind"], correctAnswer: string): string[] {
+  const isState = country.id.startsWith("state-");
+  const mask = (t: string) => maskAnswer(t, [country.country, correctAnswer]);
+  const candidates: string[] = [];
+  if (!isState) candidates.push(`Continent: ${country.continent}`);
+  candidates.push(`Region: ${country.region}`);
+  if (kind === "capital") {
+    // don't reveal the capital itself (it's the answer) — nudge with its initial
+    candidates.push(`The capital begins with "${correctAnswer.charAt(0).toUpperCase()}"`);
+  } else {
+    const geo = [`Capital: ${country.capital}`];
+    if (country.landlocked) geo.push("landlocked");
+    else if (country.neighbors.length) geo.push(`borders ${country.neighbors.slice(0, 2).join(", ")}`);
+    candidates.push(mask(geo.join(" · ")));
+  }
+  candidates.push(mask(country.flagFact));
+  if (country.funFacts[0]) candidates.push(mask(country.funFacts[0]));
+
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const c of candidates) {
+    if (out.length >= MAX_ROOM_HINTS) break;
+    if (c && !seen.has(c)) {
+      seen.add(c);
+      out.push(c);
+    }
+  }
+  return out;
+}
+
+/** Attach baked hint lines to each question, for TV rooms (host-side only). */
+export function withRoomHints(questions: Question[]): Question[] {
+  return questions.map((q) => {
+    const country = countryById.get(q.countryId);
+    return country ? { ...q, hints: roomHints(country, q.kind, q.correctAnswer) } : q;
+  });
 }
 
 /** Extra questions for sudden-death tie-breakers, excluding countries already used. */

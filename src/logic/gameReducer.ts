@@ -30,6 +30,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   lifelinesEnabled: true,
   speedBonusEnabled: true,
   continents: [],
+  hintGuessRound: true,
 };
 
 const EMPTY_RUNTIME = {

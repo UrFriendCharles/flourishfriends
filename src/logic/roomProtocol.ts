@@ -5,9 +5,12 @@ import type { Collection, Difficulty, GameSettings, Question } from "../types";
 // constants, and pure helpers only (no data/ imports — they'd bloat the
 // worker bundle with the whole country dataset).
 
-export type RoomStatus = "lobby" | "question" | "reveal" | "ended";
+// "guessing" = end-game round: players guess who used the most hints
+export type RoomStatus = "lobby" | "question" | "reveal" | "guessing" | "ended";
 
 export const MAX_ROOM_PLAYERS = 8;
+/** Bonus for correctly guessing the game's biggest hint-user. */
+export const HINT_GUESS_BONUS = 100;
 export const ROOM_CODE_LENGTH = 4;
 // no I/L/O — too easy to misread on a TV across the room
 export const ROOM_CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ";
@@ -36,6 +39,16 @@ export interface RoomPlayerView {
   answered: boolean;
   /** filled in during reveal/ended; null = didn't answer that question */
   lastAnswer: { choice: string; correct: boolean; pointsEarned: number; timeMs: number } | null;
+  /**
+   * Total hints used all game — revealed only once the game has ended, so the
+   * end-game guess stays a real hidden-information call during play.
+   */
+  totalHints: number | null;
+  /** guessing phase: has this player locked in their guess yet */
+  guessed: boolean;
+  /** ended: who this player guessed as biggest hint-user, and whether right */
+  guessId: string | null;
+  guessCorrect: boolean | null;
 }
 
 export interface RoomSettingsView {
@@ -44,6 +57,8 @@ export interface RoomSettingsView {
   questionCount: number;
   timerSeconds: number | null;
   speedBonusEnabled: boolean;
+  hintsEnabled: boolean;
+  hintGuessRound: boolean;
 }
 
 export interface RoomSnapshot {
@@ -68,12 +83,16 @@ export interface RoomSnapshot {
   questionDeadline: number | null; // server clock; null = no timer
   serverNow: number; // lets clients compute clock offset for countdowns
   finishedAt: number | null;
+  /** ended only: ids tied for most hints used (empty if nobody used any) */
+  biggestHintUserIds: string[] | null;
 }
 
 /** Private per-connection data sent alongside every snapshot. */
 export interface YouView {
   playerId: string;
   choice: string | null; // your own locked-in choice for the current question
+  /** hint lines you've revealed on the current question (private to you) */
+  hints: string[];
 }
 
 export type ClientMessage =
@@ -81,6 +100,8 @@ export type ClientMessage =
   | { type: "hello"; role: "host"; hostKey: string }
   | { type: "hello"; role: "display" }
   | { type: "answer"; choice: string }
+  | { type: "hint" } // player: reveal my next hint on this question
+  | { type: "guess"; targetId: string } // player: guess the biggest hint-user
   | { type: "start" }
   | { type: "reveal" }
   | { type: "next" }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { ScoreShare } from "../types";
 import { useRoomSocket } from "../hooks/useRoomSocket";
+import { nextHintCost } from "../logic/scoring";
+import { HINT_GUESS_BONUS } from "../logic/roomProtocol";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomLeaderboard, RoomTimerBar } from "../components/RoomBits";
 import { ScoreShareWidget } from "../components/ScoreShareWidget";
 import { newShareId, saveScoreShare } from "../storage/scoreShares";
@@ -102,6 +104,31 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
             clockOffset={clockOffset}
           />
         )}
+        {snapshot.settings.hintsEnabled && locked === null && (
+          <div className="rounded-xl border border-violet-400/25 bg-violet-500/10 p-2.5">
+            {(you?.hints ?? []).length > 0 && (
+              <ul className="mb-2 space-y-1">
+                {(you?.hints ?? []).map((h, i) => (
+                  <li key={i} className="text-sm text-violet-100 animate-slide-up">
+                    💡 {h}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {(you?.hints ?? []).length < 3 ? (
+              <button
+                onClick={() => send({ type: "hint" })}
+                className="w-full rounded-xl border border-violet-400/40 bg-violet-500/20 px-3 py-2 text-sm font-bold text-violet-100 active:scale-95"
+              >
+                💡 Reveal a hint (−{nextHintCost((you?.hints ?? []).length)} pts)
+              </button>
+            ) : (
+              <p className="text-center text-xs font-semibold text-slate-400">
+                All 3 hints used (−30)
+              </p>
+            )}
+          </div>
+        )}
         <div className="grid grid-cols-1 gap-2.5">
           {snapshot.question.choices.map((choice, i) => (
             <button
@@ -166,8 +193,51 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
     );
   }
 
+  if (snapshot.status === "guessing") {
+    const iGuessed = me?.guessed ?? false;
+    return shell(
+      <>
+        <div className="text-center animate-pop-in">
+          <div className="text-5xl">🎲</div>
+          <h2 className="mt-2 text-2xl font-black">Who used the most hints?</h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Guess the game's biggest hint-user for +{HINT_GUESS_BONUS} bonus points!
+          </p>
+        </div>
+        {iGuessed ? (
+          <p className="text-center text-sm font-bold text-sky-200 animate-pop-in">
+            🔒 Guess locked — waiting for the others…
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-2.5">
+            {snapshot.players.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => send({ type: "guess", targetId: p.id })}
+                className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-left font-bold transition active:scale-95"
+              >
+                <span className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color }} />
+                {p.name}
+                {p.id === me?.id && <span className="text-xs text-slate-400">(you)</span>}
+              </button>
+            ))}
+          </div>
+        )}
+      </>
+    );
+  }
+
   // ended
   const totalQ = snapshot.totalQuestions;
+  const biggest = snapshot.biggestHintUserIds ?? [];
+  const biggestNames = snapshot.players
+    .filter((p) => biggest.includes(p.id))
+    .map((p) => p.name)
+    .join(", ");
+  const maxHints = Math.max(0, ...snapshot.players.map((p) => p.totalHints ?? 0));
+  const myGuessName = me?.guessId
+    ? snapshot.players.find((p) => p.id === me.guessId)?.name ?? "?"
+    : null;
   const shareScore = () => {
     if (!me) return;
     const s: ScoreShare = {
@@ -195,6 +265,25 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
         <div className="text-6xl">🏁</div>
         <h2 className="mt-2 text-3xl font-black">Game Over!</h2>
       </div>
+      {biggest.length > 0 && (
+        <div className="rounded-xl border border-violet-400/25 bg-violet-500/10 p-3 text-sm animate-slide-up">
+          <div className="font-bold text-violet-200">🎲 Hint-Guess Round</div>
+          <p className="mt-1 text-slate-200">
+            Biggest hint-user: <span className="font-bold text-white">{biggestNames}</span> ({maxHints}{" "}
+            {maxHints === 1 ? "hint" : "hints"})
+          </p>
+          {myGuessName && (
+            <p className="mt-1 text-slate-300">
+              You guessed <span className="font-bold text-white">{myGuessName}</span> —{" "}
+              {me?.guessCorrect ? (
+                <span className="font-bold text-green-300">correct! +{HINT_GUESS_BONUS}</span>
+              ) : (
+                <span className="font-semibold text-rose-300">not quite</span>
+              )}
+            </p>
+          )}
+        </div>
+      )}
       <RoomFinalStandings players={snapshot.players} highlightId={me?.id} />
       {me &&
         (share ? (

@@ -1,5 +1,6 @@
 import { useRoomSocket } from "../hooks/useRoomSocket";
 import { countryById } from "../data/countries";
+import { HINT_GUESS_BONUS } from "../logic/roomProtocol";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomTimerBar } from "../components/RoomBits";
 import { QrCode } from "../components/QrCode";
 
@@ -199,13 +200,62 @@ export function DisplayRoom({ roomCode }: Props) {
     );
   }
 
+  if (snapshot.status === "guessing") {
+    return shell(
+      <div className="my-auto text-center">
+        <div className="text-7xl">🎲</div>
+        <h1 className="mt-4 text-4xl font-black">Who used the most hints?</h1>
+        <p className="mt-3 text-xl text-slate-300">
+          Guess on your phones — correct guessers get +{HINT_GUESS_BONUS} points!
+        </p>
+        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-3">
+          {snapshot.players.map((p) => (
+            <span
+              key={p.id}
+              className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-xl font-bold ${
+                p.guessed
+                  ? "border-green-400/50 bg-green-500/15"
+                  : "border-white/15 bg-white/5 opacity-70"
+              }`}
+            >
+              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color }} />
+              {p.name} {p.guessed ? "✅" : "…"}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   // ended
+  const biggest = snapshot.biggestHintUserIds ?? [];
+  const biggestNames = snapshot.players
+    .filter((p) => biggest.includes(p.id))
+    .map((p) => p.name)
+    .join(", ");
+  const maxHints = Math.max(0, ...snapshot.players.map((p) => p.totalHints ?? 0));
+  const correctGuessers = snapshot.players.filter((p) => p.guessCorrect).map((p) => p.name);
   return shell(
     <div className="mx-auto my-auto w-full max-w-xl">
       <div className="text-center animate-pop-in">
         <div className="text-7xl">🏆</div>
         <h1 className="mt-2 text-4xl font-black winner-shimmer">Final Scores</h1>
       </div>
+      {biggest.length > 0 && (
+        <div className="mt-5 rounded-2xl border border-violet-400/25 bg-violet-500/10 p-4 text-center">
+          <div className="text-sm font-bold uppercase tracking-wider text-violet-200">
+            🎲 Biggest hint-user
+          </div>
+          <div className="mt-1 text-3xl font-black text-white">
+            {biggestNames} · {maxHints} {maxHints === 1 ? "hint" : "hints"}
+          </div>
+          <div className="mt-1 text-slate-300">
+            {correctGuessers.length
+              ? `${correctGuessers.join(", ")} guessed right (+${HINT_GUESS_BONUS})`
+              : "Nobody guessed it!"}
+          </div>
+        </div>
+      )}
       <div className="mt-6">
         <RoomFinalStandings players={snapshot.players} />
       </div>

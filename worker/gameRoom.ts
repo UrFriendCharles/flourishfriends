@@ -1,6 +1,7 @@
 import type { GameSettings, Question } from "../src/types";
-import { scoreCorrectAnswer } from "../src/logic/scoring";
+import { hintPenalty, MAX_ROOM_HINTS, scoreCorrectAnswer } from "../src/logic/scoring";
 import {
+  HINT_GUESS_BONUS,
   MAX_ROOM_PLAYERS,
   ROOM_PLAYER_COLORS,
   type ClientMessage,
@@ -30,6 +31,10 @@ interface StoredPlayer {
   correctCount: number;
   answer: { choice: string; answeredAt: number } | null;
   lastAnswer: { choice: string; correct: boolean; pointsEarned: number; timeMs: number } | null;
+  hintsThisQuestion: number; // reset each question
+  totalHints: number; // across the whole game
+  metaGuess: string | null; // guessing phase: id they think used the most hints
+  guessCorrect: boolean | null; // resolved when the guessing round ends
 }
 
 interface StoredRoom {
@@ -74,6 +79,14 @@ function validateInit(body: InitRequest): string | null {
     }
     if (q.prompt !== undefined && typeof q.prompt !== "string") return "bad prompt";
     if (q.silhouette !== undefined && typeof q.silhouette !== "boolean") return "bad silhouette";
+    if (
+      q.hints !== undefined &&
+      (!Array.isArray(q.hints) ||
+        q.hints.length > 3 ||
+        q.hints.some((h) => typeof h !== "string" || h.length > 200))
+    ) {
+      return "bad hints";
+    }
     if (!Array.isArray(q.choices) || q.choices.length < 2 || q.choices.length > 6) return "bad choices";
     if (!q.choices.includes(q.correctAnswer)) return "answer not in choices";
     if (typeof q.countryId !== "string") return "bad country";
@@ -171,6 +184,10 @@ export class GameRoom {
 
     if (msg.type === "answer" && who.role === "player" && who.playerId) {
       this.handleAnswer(room, who.playerId, msg.choice);
+    } else if (msg.type === "hint" && who.role === "player" && who.playerId) {
+      this.handleHint(room, who.playerId);
+    } else if (msg.type === "guess" && who.role === "player" && who.playerId) {
+      this.handleGuess(room, who.playerId, msg.targetId);
     } else if (who.role === "host") {
       if (msg.type === "start" && room.status === "lobby" && room.players.length > 0) {
         this.startQuestion(room, 0);
@@ -178,6 +195,8 @@ export class GameRoom {
         this.revealAnswers(room);
       } else if (msg.type === "next" && room.status === "reveal") {
         this.nextQuestion(room);
+      } else if (msg.type === "next" && room.status === "guessing") {
+        this.resolveGuessing(room);
       } else if (msg.type === "end" && room.status !== "ended") {
         room.status = "ended";
         room.finishedAt = Date.now();
@@ -263,6 +282,10 @@ export class GameRoom {
           correctCount: 0,
           answer: null,
           lastAnswer: null,
+          hintsThisQuestion: 0,
+          totalHints: 0,
+          metaGuess: null,
+          guessCorrect: null,
         };
         room.players.push(player);
         ws.serializeAttachment({ role: "player", playerId: player.id } satisfies Attachment);
@@ -285,6 +308,32 @@ export class GameRoom {
     if (everyoneAnswered) this.revealAnswers(room);
   }
 
+  private handleHint(room: StoredRoom, playerId: string): void {
+    if (room.status !== "question" || !room.settings.hintsEnabled) return;
+    const player = room.players.find((p) => p.id === playerId);
+    if (!player || player.answer) return; // can't peek after locking in
+    const question = room.questions[room.questionIndex];
+    const available = Math.min(MAX_ROOM_HINTS, question?.hints?.length ?? 0);
+    if (player.hintsThisQuestion >= available) return;
+    player.hintsThisQuestion++;
+    player.totalHints++;
+  }
+
+  private handleGuess(room: StoredRoom, playerId: string, targetId: string): void {
+    if (room.status !== "guessing") return;
+    const player = room.players.find((p) => p.id === playerId);
+    if (!player || player.metaGuess) return; // one guess, locked
+    if (!room.players.some((p) => p.id === targetId)) return; // must be a real player
+    player.metaGuess = targetId;
+
+    // resolve once every connected player has guessed
+    const connected = this.connectedPlayerIds();
+    const allGuessed =
+      connected.size > 0 &&
+      room.players.every((p) => p.metaGuess !== null || !connected.has(p.id));
+    if (allGuessed) this.resolveGuessing(room);
+  }
+
   // ---------- game flow ----------
 
   private startQuestion(room: StoredRoom, index: number): void {
@@ -294,6 +343,7 @@ export class GameRoom {
     for (const p of room.players) {
       p.answer = null;
       p.lastAnswer = null;
+      p.hintsThisQuestion = 0;
     }
     void this.armAlarm(room);
   }
@@ -311,7 +361,11 @@ export class GameRoom {
       const timeMs = Math.max(0, p.answer.answeredAt - room.questionStartedAt);
       const newStreak = correct ? p.streak + 1 : 0;
       const pointsEarned = correct
-        ? scoreCorrectAnswer(room.settings, 0, timeMs, newStreak)
+        ? Math.max(
+            0,
+            scoreCorrectAnswer(room.settings, 0, timeMs, newStreak) -
+              hintPenalty(p.hintsThisQuestion)
+          )
         : 0;
       p.score += pointsEarned;
       p.streak = newStreak;
@@ -326,11 +380,49 @@ export class GameRoom {
 
   private nextQuestion(room: StoredRoom): void {
     if (room.questionIndex + 1 >= room.questions.length) {
-      room.status = "ended";
-      room.finishedAt = Date.now();
+      this.endGame(room);
     } else {
       this.startQuestion(room, room.questionIndex + 1);
     }
+  }
+
+  /** After the last question: run the guess-the-biggest-hint-user round, or just end. */
+  private endGame(room: StoredRoom): void {
+    const connected = this.connectedPlayerIds();
+    const anyHints = room.players.some((p) => p.totalHints > 0);
+    const enoughPlayers = room.players.filter((p) => connected.has(p.id)).length >= 2;
+    if (room.settings.hintGuessRound !== false && room.settings.hintsEnabled && anyHints && enoughPlayers) {
+      room.status = "guessing";
+      for (const p of room.players) {
+        p.metaGuess = null;
+        p.guessCorrect = null;
+      }
+    } else {
+      room.status = "ended";
+      room.finishedAt = Date.now();
+    }
+  }
+
+  /** Score the guessing round: correct guessers of a biggest hint-user get a bonus. */
+  private resolveGuessing(room: StoredRoom): void {
+    if (room.status !== "guessing") return;
+    const biggest = this.biggestHintUserIds(room);
+    for (const p of room.players) {
+      if (p.metaGuess === null) {
+        p.guessCorrect = null;
+        continue;
+      }
+      p.guessCorrect = biggest.includes(p.metaGuess);
+      if (p.guessCorrect) p.score += HINT_GUESS_BONUS;
+    }
+    room.status = "ended";
+    room.finishedAt = Date.now();
+  }
+
+  /** Player ids tied for most hints used (empty if nobody used any). */
+  private biggestHintUserIds(room: StoredRoom): string[] {
+    const max = Math.max(0, ...room.players.map((p) => p.totalHints));
+    return max === 0 ? [] : room.players.filter((p) => p.totalHints === max).map((p) => p.id);
   }
 
   // ---------- plumbing ----------
@@ -391,6 +483,10 @@ export class GameRoom {
         correctCount: p.correctCount,
         answered: p.answer !== null,
         lastAnswer: revealPhase ? p.lastAnswer : null,
+        totalHints: room.status === "ended" ? p.totalHints : null,
+        guessed: p.metaGuess !== null,
+        guessId: room.status === "ended" ? p.metaGuess : null,
+        guessCorrect: room.status === "ended" ? p.guessCorrect : null,
       })),
       hostConnected,
       settings: {
@@ -399,6 +495,8 @@ export class GameRoom {
         questionCount: room.questions.length,
         timerSeconds: room.settings.timerSeconds,
         speedBonusEnabled: room.settings.speedBonusEnabled,
+        hintsEnabled: room.settings.hintsEnabled ?? false,
+        hintGuessRound: room.settings.hintGuessRound !== false,
       },
       questionIndex: room.questionIndex,
       totalQuestions: room.questions.length,
@@ -418,6 +516,7 @@ export class GameRoom {
       questionDeadline: this.questionDeadline(room),
       serverNow: Date.now(),
       finishedAt: room.finishedAt,
+      biggestHintUserIds: room.status === "ended" ? this.biggestHintUserIds(room) : null,
     };
   }
 
@@ -425,7 +524,12 @@ export class GameRoom {
     if (who?.role !== "player" || !who.playerId) return null;
     const player = room.players.find((p) => p.id === who.playerId);
     if (!player) return null;
-    return { playerId: player.id, choice: player.answer?.choice ?? null };
+    const question = room.questions[room.questionIndex];
+    const hints =
+      (room.status === "question" || room.status === "reveal") && question?.hints
+        ? question.hints.slice(0, player.hintsThisQuestion)
+        : [];
+    return { playerId: player.id, choice: player.answer?.choice ?? null, hints };
   }
 
   private broadcast(room: StoredRoom): void {

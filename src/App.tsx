@@ -11,7 +11,7 @@ import {
   roundPlayers,
   usedCountryIds,
 } from "./logic/gameReducer";
-import { generateQuestions, generateTieBreakerQuestions } from "./logic/questionGen";
+import { generateQuestions, generateTieBreakerQuestions, withRoomHints } from "./logic/questionGen";
 import { simulateCrowdVote } from "./logic/crowd";
 import {
   addHighScores,
@@ -192,14 +192,16 @@ export default function App() {
 
   const createTvRoom = async (settings: GameSettings) => {
     try {
+      const questions = generateQuestions(
+        settings.questionCount,
+        settings.difficulty,
+        settings.continents,
+        settings.collection
+      );
       const body: CreateRoomRequest = {
         settings,
-        questions: generateQuestions(
-          settings.questionCount,
-          settings.difficulty,
-          settings.continents,
-          settings.collection
-        ),
+        // bake hint lines here on the host so the worker never needs the dataset
+        questions: settings.hintsEnabled ? withRoomHints(questions) : questions,
       };
       const res = await fetch("/api/rooms", {
         method: "POST",

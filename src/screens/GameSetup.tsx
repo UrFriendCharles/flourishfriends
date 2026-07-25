@@ -91,8 +91,10 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
     // shapes: multiple choice + learning so the flag/fact clues cost points
     const shapesOverride: Partial<GameSettings> =
       isShapes ? { answerStyle: "choices", mode: "learning", hintsEnabled: true } : {};
+    // TV rooms keep their own hints toggle (penalized hints on phones); other
+    // helps are off, and scoring is classic multiple-choice.
     const tvOverride: Partial<GameSettings> = tv
-      ? { answerStyle: "choices", mode: "classic", hintsEnabled: false, lifelinesEnabled: false }
+      ? { answerStyle: "choices", mode: "classic", lifelinesEnabled: false }
       : {};
     onStart({ ...clean, ...capitalsOverride, ...shapesOverride, ...tvOverride });
   };
@@ -271,7 +273,28 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
         >
           ⚡ Speed Bonus {settings.speedBonusEnabled ? "On" : "Off"}
         </Chip>
+        {tv && (
+          <Chip active={settings.hintsEnabled} onClick={() => set("hintsEnabled", !settings.hintsEnabled)}>
+            💡 Hints {settings.hintsEnabled ? "On" : "Off"}
+          </Chip>
+        )}
+        {tv && settings.hintsEnabled && (
+          <Chip
+            active={settings.hintGuessRound !== false}
+            onClick={() => set("hintGuessRound", settings.hintGuessRound === false)}
+          >
+            🎲 Hint-Guess Round {settings.hintGuessRound !== false ? "On" : "Off"}
+          </Chip>
+        )}
       </Section>
+      {tv && settings.hintsEnabled && (
+        <p className="-mt-3 text-xs text-slate-400">
+          Players can reveal up to 3 hints per question on their own phone — each costs points
+          (−5 / −10 / −15).{" "}
+          {settings.hintGuessRound !== false &&
+            "At the end, everyone guesses who leaned on hints the most for bonus points."}
+        </p>
+      )}
 
       {(settings.collection === "world" || isShapes) && (
         <Section title="Continents (all if none picked)">
