@@ -1218,6 +1218,343 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "adapted",
     sourceReference: "classic word-ladder puzzle",
   },
+
+  // ===================================================================
+  // Second intake — curated from three parallel authoring passes.
+  // Weighted toward the tiers that were thin (10%, 5%, 0.5%) and toward
+  // constraint puzzles, which is what the format was missing: you can't
+  // guess your way in, but there's no arithmetic either.
+  // ===================================================================
+
+  {
+    id: "c90_cups",
+    difficulty: 90,
+    questionType: "number",
+    prompt: "Three empty cups sit on a table. You put one coin into each cup. How many cups are still empty?",
+    correctAnswer: "0",
+    explanation: "Every cup got a coin, so none of them is empty any more. The word “empty” at the start is doing all the misdirection.",
+    category: "observation",
+    mechanic: "read it again",
+    sourceType: "original",
+  },
+  {
+    id: "c80_fourth_word",
+    difficulty: 80,
+    questionType: "true_false",
+    prompt: "True or false:\n\nIn this sentence, the fourth word is “fourth”.",
+    correctAnswer: "false",
+    explanation: "Count them: In (1), this (2), sentence (3), the (4). The fourth word is “the”.",
+    category: "observation",
+    mechanic: "self-referential sentence",
+    sourceType: "original",
+  },
+  {
+    id: "c70_four_letters",
+    difficulty: 70,
+    questionType: "multiple_choice",
+    prompt: "Which of these words has exactly as many letters as the number it names?",
+    choices: ["FOUR", "THREE", "SIX", "SEVEN"],
+    correctAnswer: "FOUR",
+    explanation: "FOUR has four letters. THREE has five, SIX has three, SEVEN has five. Four is the only number in English that describes itself this way.",
+    category: "wordplay",
+    mechanic: "self-descriptive number",
+    sourceType: "adapted",
+    sourceReference: "classic self-descriptive word puzzle",
+  },
+  {
+    id: "c70_pills",
+    difficulty: 70,
+    questionType: "number",
+    prompt:
+      "A doctor gives you three pills and says to take one every half hour, starting now. How many minutes until you've taken all three?",
+    correctAnswer: "60",
+    explanation:
+      "First pill now, second at 30 minutes, third at 60. Three pills only have two gaps between them — the trap is multiplying 3 × 30.",
+    category: "logic",
+    mechanic: "intervals not items",
+    sourceType: "adapted",
+    sourceReference: "classic interval puzzle",
+  },
+  {
+    id: "c60_stop_spot",
+    difficulty: 60,
+    questionType: "text",
+    prompt:
+      "Two instructions:\nRED — move the first letter to the end.\nBLUE — reverse all the letters.\n\nStart with STOP. Do RED, then BLUE. What word do you end up with?",
+    correctAnswer: "spot",
+    explanation: "RED turns STOP into TOPS. BLUE reverses TOPS into SPOT.",
+    category: "letter manipulation",
+    mechanic: "chained instructions",
+    sourceType: "original",
+  },
+  {
+    id: "c60_line_order",
+    difficulty: 60,
+    questionType: "multiple_choice",
+    prompt:
+      "Ada, Ben and Cy stand in a line.\n\nAda is not on the left.\nBen is somewhere to the left of Cy.\nCy is not on the right.\n\nWho is in the middle?",
+    choices: ["Ada", "Ben", "Cy", "It can't be worked out"],
+    correctAnswer: "Cy",
+    explanation:
+      "Cy can't be on the right, and can't be on the left because Ben is left of him — so Cy is in the middle. That forces Ben left and Ada right.",
+    category: "deduction",
+    mechanic: "ordering constraints",
+    sourceType: "original",
+  },
+  {
+    id: "c50_word_chain",
+    difficulty: 50,
+    questionType: "multiple_choice",
+    prompt:
+      "Arrange four tiles so the last letter of each is the first letter of the next.\n\nWhich order works?",
+    choices: ["ARC, CAT, TOP, PEN", "CAT, ARC, TOP, PEN", "ARC, TOP, CAT, PEN", "PEN, ARC, CAT, TOP"],
+    correctAnswer: "ARC, CAT, TOP, PEN",
+    explanation:
+      "AR**C** → **C**A**T** → **T**O**P** → **P**EN. Every join lands. In each other order the very first join already fails.",
+    category: "sequencing",
+    mechanic: "chain matching",
+    sourceType: "original",
+  },
+  {
+    id: "c40_reversible",
+    difficulty: 40,
+    questionType: "multiple_choice",
+    prompt: "Which word is the odd one out?\n\nLIVE · NUTS · TON · LETTER",
+    choices: ["LIVE", "NUTS", "TON", "LETTER"],
+    correctAnswer: "LETTER",
+    explanation:
+      "Read backwards, LIVE is EVIL, NUTS is STUN and TON is NOT — all real words. LETTER backwards is RETTEL, which is nothing.",
+    category: "wordplay",
+    mechanic: "reversal",
+    sourceType: "original",
+  },
+  {
+    id: "c40_zibs",
+    difficulty: 40,
+    questionType: "multiple_choice",
+    prompt: "All zibs are lops.\nNo lops are red.\n\nWhich of these must be true?",
+    choices: ["No zibs are red", "All red things are zibs", "Some lops are zibs", "Red things don't exist"],
+    correctAnswer: "No zibs are red",
+    explanation:
+      "Every zib is a lop, and no lop is red, so no zib can be red. “Some lops are zibs” sounds safe but nothing here promises a single zib exists.",
+    category: "logic",
+    mechanic: "categorical syllogism",
+    sourceType: "adapted",
+    sourceReference: "classic syllogism form",
+  },
+  {
+    id: "c40_enclosed",
+    difficulty: 40,
+    questionType: "number",
+    prompt:
+      "In plain block capitals, count only the fully enclosed spaces inside a letter. A has 1, B has 2, C has 0, D has 1.\n\nHow many enclosed spaces are there in BADC?",
+    correctAnswer: "4",
+    explanation: "B gives 2, A gives 1, D gives 1, C gives 0. That's 4 — the rule is handed to you, the work is applying it carefully.",
+    category: "observation",
+    mechanic: "letter shape counting",
+    sourceType: "adapted",
+    sourceReference: "classic enclosed-space puzzle",
+  },
+  {
+    id: "c40_parking",
+    difficulty: 40,
+    questionType: "number",
+    prompt: "A car is parked in one of six numbered spaces. What number is painted underneath it?",
+    correctAnswer: "87",
+    explanation:
+      "Turn the whole picture upside down. The numbers become 86, __, 88, 89, 90, 91 — an ordinary run, and the car is sitting on 87.",
+    timerSeconds: 45,
+    visual: {
+      type: "svg",
+      assetId: "parking_spaces",
+      altText:
+        "Six parking spaces in a row painted 16, 06, 68, 88, then a car, then 98",
+    },
+    category: "perspective",
+    mechanic: "rotate the whole picture",
+    sourceType: "adapted",
+    sourceReference: "widely circulated primary-school admissions puzzle",
+  },
+  {
+    id: "c30_shirts",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt:
+      "Alex, Blake and Charlie wear a red, a blue and a green shirt in some order.\n\nAlex: “I'm not wearing red.”\nBlake: “I'm wearing blue.”\nCharlie: “Alex is wearing green.”\n\nExactly one of them is lying. Who is in red?",
+    choices: ["Alex", "Blake", "Charlie", "It can't be worked out"],
+    correctAnswer: "Blake",
+    explanation:
+      "If Blake is the liar, Alex and Charlie are honest: Alex is green and not red, and Blake isn't blue — so Blake is red and Charlie is blue. Make Alex the liar and Charlie has to lie too; make Charlie the liar and two people end up in blue.",
+    category: "deduction",
+    mechanic: "single liar",
+    sourceType: "original",
+  },
+  {
+    id: "c30_pizza",
+    difficulty: 30,
+    questionType: "number",
+    prompt:
+      "You cut a round pizza with three straight cuts, each going all the way across. What is the largest number of pieces you can end up with?",
+    correctAnswer: "7",
+    explanation:
+      "Not 6. Cutting through the middle three times gives 6 equal slices, but if the three cuts cross each other in a small triangle instead, you get 7.",
+    category: "spatial reasoning",
+    mechanic: "maximising regions",
+    sourceType: "adapted",
+    sourceReference: "classic pizza-cutting puzzle",
+  },
+  {
+    id: "c30_chimes",
+    difficulty: 30,
+    questionType: "number",
+    prompt:
+      "A clock takes 4 seconds to strike 3 o'clock. How many seconds does it take to strike 4 o'clock?",
+    correctAnswer: "6",
+    explanation:
+      "The time is in the gaps, not the chimes. Three chimes have two gaps, so each gap is 2 seconds. Four chimes have three gaps: 6 seconds.",
+    category: "logic",
+    mechanic: "intervals not items",
+    sourceType: "adapted",
+    sourceReference: "classic chiming-clock puzzle",
+  },
+  {
+    id: "c30_five_tiles",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt:
+      "Five tiles sit in a row.\n\nD is first.\nE is last.\nC is immediately after A.\nB is somewhere before A.\n\nWhat is the order?",
+    choices: ["DBACE", "DABCE", "DBCAE", "DCBAE"],
+    correctAnswer: "DBACE",
+    explanation:
+      "D and E take the ends, leaving B, A and C in the middle. A and C must stay together in that order, and B has to come before A — only D–B–A–C–E fits.",
+    category: "deduction",
+    mechanic: "ordering constraints",
+    sourceType: "original",
+  },
+  {
+    id: "c30_truth_count",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt: "Exactly one of these four statements is true. Which one?",
+    choices: [
+      "Exactly one of these statements is true",
+      "Exactly two of these statements are true",
+      "Exactly three of these statements are true",
+      "All four of these statements are true",
+    ],
+    correctAnswer: "Exactly one of these statements is true",
+    explanation:
+      "If the first is true, then exactly one is true — which is what it claims, and the other three are correctly false. Any other choice ends up contradicting its own count.",
+    category: "logic",
+    mechanic: "self-referential truth count",
+    sourceType: "adapted",
+    sourceReference: "classic self-reference puzzle",
+  },
+  {
+    id: "c20_lock_code",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "A lock uses 1, 2, 3 and 4 once each.\n\nThe 1 is immediately left of the 3.\nThe 4 is not at either end.\nThe 2 is somewhere left of the 4.\n\nWhich code opens it?",
+    choices: ["2134", "2413", "4132", "4213"],
+    correctAnswer: "2413",
+    explanation:
+      "The 4 can't be on either end, which kills both codes starting with 4. That leaves 2134 — but there the 4 sits on the end. Only 2413 keeps 1 immediately left of 3, the 4 inside, and the 2 to its left.",
+    category: "deduction",
+    mechanic: "positional constraints",
+    sourceType: "original",
+  },
+  {
+    id: "c20_drawers",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "A key is in drawer A, B, C or D. Exactly two of these are true:\n\n1. The key is in A or B.\n2. The key is not in A.\n3. The key is in C.\n4. The key is not in D.\n\nWhere is the key?",
+    choices: ["A", "B", "C", "D"],
+    correctAnswer: "A",
+    explanation:
+      "Put it in A and statements 1 and 4 are true while 2 and 3 are false — exactly two. B and C each make three statements true, and D makes only one.",
+    category: "deduction",
+    mechanic: "truth counting",
+    sourceType: "original",
+  },
+  {
+    id: "c20_hats",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "Ari, Bo and Cy each wear a red or blue hat, and all three know at least one hat is red. Ari can see Bo and Cy. Bo can see only Cy.\n\nAri: “I don't know my colour.”\nBo, after hearing that: “I don't know mine either.”\n\nWhat colour is Cy's hat?",
+    choices: ["Red", "Blue", "It depends on Ari's hat", "It can't be worked out"],
+    correctAnswer: "Red",
+    explanation:
+      "If Bo and Cy were both blue, Ari would know his own was red. So at least one of them is red. Bo now knows that — and if Cy were blue, Bo could conclude his own hat was red. Bo still doesn't know, so Cy must be red.",
+    timerSeconds: 60,
+    category: "deduction",
+    mechanic: "reasoning about what others know",
+    sourceType: "adapted",
+    sourceReference: "classic hat puzzle",
+  },
+  {
+    id: "c10_two_true",
+    difficulty: 10,
+    questionType: "multiple_choice",
+    prompt:
+      "A code uses 1, 2, 3 and 4 once each. Exactly two of these are true:\n\n1. It begins with 1.\n2. It ends with 4.\n3. The 2 comes somewhere before the 3.\n4. The 1 is next to the 4.\n\nWhich code is it?",
+    choices: ["1234", "2143", "3412", "4321"],
+    correctAnswer: "2143",
+    explanation:
+      "For 2143: it doesn't begin with 1 and doesn't end with 4, but the 2 does come before the 3 and the 1 is next to the 4 — exactly two. 1234 makes three true, 3412 only one, and 4321 none at all.",
+    timerSeconds: 60,
+    category: "deduction",
+    mechanic: "truth counting",
+    sourceType: "original",
+  },
+  {
+    id: "c10_mastermind",
+    difficulty: 10,
+    questionType: "number",
+    prompt:
+      "A three-digit code has no repeated digits. Each clue is exact:\n\n352 — one digit is correct and in the right place.\n179 — one digit is correct but in the wrong place.\n641 — two digits are correct, both in the wrong place.\n835 — one digit is correct but in the wrong place.\n\nWhat is the code?",
+    correctAnswer: "314",
+    explanation:
+      "314 fits all four: the 3 is right and in place for 352; the 1 is right but misplaced for 179; the 4 and 1 are both right and both misplaced for 641; and the 3 is right but misplaced for 835.",
+    timerSeconds: 120,
+    category: "deduction",
+    mechanic: "elimination from exact clues",
+    sourceType: "adapted",
+    sourceReference: "Mastermind-style code puzzle",
+  },
+  {
+    id: "c5_three_liars",
+    difficulty: 5,
+    questionType: "multiple_choice",
+    prompt:
+      "Ada, Ben and Cy each always tell the truth or always lie.\n\nAda: “Ben lies.”\nBen: “Cy lies.”\nCy: “Ada and Ben are not the same as each other.”\n\nExactly one of the three is a liar. Which one?",
+    choices: ["Ada", "Ben", "Cy", "No arrangement works"],
+    correctAnswer: "Ben",
+    explanation:
+      "Say Ben is the liar. Ada truthfully says so. Cy truthfully says Ada and Ben differ — one honest, one not. Everything holds with exactly one liar. Make Ada the liar and Cy has to lie too; make Cy the liar and Ada's statement forces Ben to lie as well.",
+    timerSeconds: 90,
+    category: "deduction",
+    mechanic: "truth-teller and liar",
+    sourceType: "adapted",
+    sourceReference: "classic knights-and-knaves form",
+  },
+  {
+    id: "c05_houses",
+    difficulty: 0.5,
+    questionType: "multiple_choice",
+    prompt:
+      "Four people live in houses 1 to 4, left to right — one person each, one drink each.\n\nBen is immediately right of Ada.\nDev is immediately left of Cy.\nAda is somewhere left of Dev.\n\nThe juice is in house 1.\nThe tea is immediately left of the milk.\nBen does not drink water.\n\nWho drinks the water?",
+    choices: ["Ada", "Ben", "Cy", "Dev"],
+    correctAnswer: "Cy",
+    explanation:
+      "Two adjacent pairs — Ada–Ben and Dev–Cy — with Ada left of Dev can only sit as Ada, Ben, Dev, Cy. House 1 has juice, so tea and milk are either in 2 and 3 or in 3 and 4. If they took 3 and 4, water would fall to Ben in house 2, which he's ruled out. So tea and milk are in 2 and 3, and the water is in house 4: Cy.",
+    timerSeconds: 120,
+    category: "deduction",
+    mechanic: "two-layer constraint grid",
+    sourceType: "original",
+  },
 ];
 
 /** Ids grouped by tier — the selector picks one from each list. */

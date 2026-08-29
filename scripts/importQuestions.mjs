@@ -93,10 +93,69 @@ raw.forEach((line, i) => {
   }
 });
 
+// ---------- normalise ----------
+//
+// Every model returns a slightly different shape, and none of them has
+// matched the spec exactly: we have seen `questionText`, `question` and
+// `prompt` for the same field, choices as an array of strings, an array of
+// {id,text}, and an object keyed by letter, and difficulty as both 90 and
+// "90%". Rejecting a good question over a field name helps nobody.
+
+function normaliseRow(q, index) {
+  const out = { ...q };
+
+  out.id = q.id ?? `imported-${String(index + 1).padStart(3, "0")}`;
+  out.prompt = q.prompt ?? q.questionText ?? q.question ?? q.text;
+
+  if (typeof q.difficulty === "string") {
+    out.difficulty = Number(q.difficulty.replace("%", "").trim());
+  }
+
+  const typeAliases = {
+    text_entry: "text",
+    number_entry: "number",
+    freetext: "text",
+    truefalse: "true_false",
+    "true/false": "true_false",
+  };
+  out.questionType = typeAliases[q.questionType] ?? q.questionType;
+
+  // choices may be [..], [{id,text}..] or {A:"..", B:".."}
+  const rawChoices = q.choices ?? q.options;
+  if (rawChoices && !Array.isArray(rawChoices) && typeof rawChoices === "object") {
+    out.choices = Object.entries(rawChoices).map(([id, text]) => ({ id, text: String(text) }));
+  } else if (Array.isArray(rawChoices)) {
+    // strip a leading "A) " / "A: " label if the model baked it into the text
+    out.choices = rawChoices.map((c, i) => {
+      if (typeof c !== "string") return c;
+      const m = c.match(/^\s*([A-F])\s*[):.]\s*(.+)$/);
+      return m ? { id: m[1], text: m[2] } : { id: String.fromCharCode(65 + i), text: c };
+    });
+  }
+
+  if (typeof out.correctAnswer === "boolean") out.correctAnswer = String(out.correctAnswer);
+  if (typeof out.correctAnswer === "number") out.correctAnswer = String(out.correctAnswer);
+
+  // artwork may arrive as a top-level assetId, nested under visual, or as a
+  // visualSpec asking for something new
+  const assetId = q.assetId ?? q.visual?.assetId;
+  const spec = q.visualSpec ?? q.visual?.visualSpec ?? q.visual?.description;
+  if (assetId) out.assetId = assetId;
+  if (spec && !assetId) {
+    out.visualRequired = true;
+    out.visualSpec = typeof spec === "string" ? { description: spec } : spec;
+  }
+  return out;
+}
+
 // ---------- validate + convert ----------
 
 const seenIds = new Set();
 const accepted = [];
+const referencedAssets = [];
+const missingSource = [];
+
+for (let i = 0; i < rows.length; i++) rows[i].q = normaliseRow(rows[i].q, i);
 
 for (const { line, q } of rows) {
   const id = q?.id ?? `line ${line}`;
@@ -137,9 +196,15 @@ for (const { line, q } of rows) {
     fail("missing explanation");
     continue;
   }
-  if ((q.sourceType === "source" || q.sourceType === "adapted") && !q.source?.url && !q.source?.title) {
-    fail(`sourceType "${q.sourceType}" with no source information`);
-    continue;
+  // A missing citation is a provenance gap, not a broken question — flag it
+  // and carry on rather than throwing the puzzle away.
+  if (
+    (q.sourceType === "source" || q.sourceType === "adapted") &&
+    !q.source?.url &&
+    !q.source?.title &&
+    !q.sourceReference
+  ) {
+    missingSource.push(q.id);
   }
   if (
     q.timerSeconds !== undefined &&
@@ -223,6 +288,16 @@ for (const { line, q } of rows) {
     continue;
   }
 
+  // A question pointing at an existing component still needs a human to look
+  // at it: every batch so far has referenced a real assetId while describing
+  // artwork that isn't what the component draws.
+  let visual;
+  if (q.assetId) {
+    const ids = String(q.assetId).split(/[\s/+,]+/).filter(Boolean);
+    referencedAssets.push({ id: q.id, assets: ids });
+    visual = { type: "svg", assetId: ids[0], altText: q.visualSpec?.altText ?? "" };
+  }
+
   const categories = Array.isArray(q.category) ? q.category : [q.category].filter(Boolean);
   accepted.push({
     id: q.id,
@@ -235,12 +310,13 @@ for (const { line, q } of rows) {
       ? { acceptedAnswers: [...new Set(q.acceptedAnswers.map((s) => String(s)))] }
       : {}),
     explanation: q.explanation,
+    ...(visual ? { visual } : {}),
     ...(q.timerSeconds && q.timerSeconds !== 30 ? { timerSeconds: q.timerSeconds } : {}),
     category: (categories[0] ?? "logic").replace(/_/g, " "),
     mechanic: String(q.mechanic ?? "unspecified").replace(/_/g, " "),
     sourceType: q.sourceType === "source" ? "adapted" : (q.sourceType ?? "original"),
-    ...(q.source?.title || q.source?.url
-      ? { sourceReference: q.source.title ?? q.source.url }
+    ...(q.source?.title || q.source?.url || q.sourceReference
+      ? { sourceReference: q.source?.title ?? q.source?.url ?? q.sourceReference }
       : {}),
   });
 }
@@ -271,6 +347,26 @@ if (needsArt.length) {
     console.log(`  ${n.id} [${n.difficulty}%] template: ${n.template}`);
     console.log(`    ${n.prompt}`);
     console.log(`    ${String(n.description).slice(0, 150)}`);
+  }
+}
+if (missingSource.length) {
+  console.log(`\nAdapted but uncited (${missingSource.length}) — provenance needed before publishing`);
+  console.log(`  ${missingSource.join(", ")}`);
+}
+if (referencedAssets.length) {
+  let registry = "";
+  try {
+    registry = readFileSync("src/data/clubVisuals.tsx", "utf8");
+  } catch {
+    /* no registry to check against */
+  }
+  const unknown = referencedAssets.filter((r) => r.assets.some((a) => registry && !registry.includes(`${a}:`) && !registry.includes(`${a} `)));
+  console.log(`\nReuses existing artwork (${referencedAssets.length}) — CHECK EACH ONE`);
+  console.log("  A model can name a real assetId and still be describing different art,");
+  console.log("  which means its option letters may not match what we actually draw.");
+  for (const r of referencedAssets) console.log(`  ${r.id} → ${r.assets.join(", ")}`);
+  if (unknown.length) {
+    console.log(`\n  Not in the registry: ${unknown.map((u) => u.id).join(", ")}`);
   }
 }
 if (accepted.length) {

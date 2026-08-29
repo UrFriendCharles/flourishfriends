@@ -642,6 +642,50 @@ function OddPolygonOut({ className }: VisualProps) {
 
 const CLUB_LETTERS = ["A", "B", "C", "D"];
 
+// ---------- the parking space under the car ----------
+
+function ParkingSpaces({ className }: VisualProps) {
+  const labels = ["16", "06", "68", "88", null, "98"];
+  const w = 62;
+  const gap = 6;
+  return (
+    <Frame viewBox="0 0 420 150" className={className}>
+      {labels.map((label, i) => {
+        const x = 10 + i * (w + gap);
+        return (
+          <g key={i}>
+            <rect x={x} y={20} width={w} height={110} rx="4" fill="none" stroke={DIM} strokeWidth="3" />
+            {label ? (
+              <text
+                x={x + w / 2}
+                y={90}
+                fill={INK}
+                fontSize="34"
+                fontWeight="800"
+                textAnchor="middle"
+                fontFamily="system-ui, sans-serif"
+              >
+                {label}
+              </text>
+            ) : (
+              // a car, parked squarely over whatever is painted underneath
+              <g transform={`translate(${x + w / 2} 75)`}>
+                <rect x="-24" y="-28" width="48" height="56" rx="9" fill={ACCENT} opacity="0.92" />
+                <rect x="-16" y="-19" width="32" height="18" rx="4" fill="#0a1128" opacity="0.55" />
+                <rect x="-16" y="6" width="32" height="14" rx="4" fill="#0a1128" opacity="0.35" />
+                <circle cx="-26" cy="-14" r="4" fill="#0a1128" />
+                <circle cx="26" cy="-14" r="4" fill="#0a1128" />
+                <circle cx="-26" cy="16" r="4" fill="#0a1128" />
+                <circle cx="26" cy="16" r="4" fill="#0a1128" />
+              </g>
+            )}
+          </g>
+        );
+      })}
+    </Frame>
+  );
+}
+
 // ---------- registry ----------
 
 export const CLUB_VISUALS: Record<string, (props: VisualProps) => JSX.Element> = {
@@ -668,6 +712,7 @@ export const CLUB_VISUALS: Record<string, (props: VisualProps) => JSX.Element> =
   piece_bar: (p) => <Piece d={PIECE_BAR} {...p} />,
   piece_t: (p) => <Piece d={PIECE_T} {...p} />,
   odd_polygon_out: OddPolygonOut,
+  parking_spaces: ParkingSpaces,
 };
 
 export function hasClubVisual(assetId: string): boolean {
