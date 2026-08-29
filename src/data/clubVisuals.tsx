@@ -424,6 +424,224 @@ function TriangleGrid4({ className }: VisualProps) {
   );
 }
 
+// ---------- polygons gaining a side ----------
+
+function SeqPolygonSides({ className }: VisualProps) {
+  return (
+    <Frame viewBox="0 0 340 120" className={className}>
+      {[3, 4, 5].map((sides, i) => (
+        <g key={sides}>
+          <Cell x={50 + i * 75} y={60} size={64} />
+          <polygon
+            points={polygonPoints(50 + i * 75, 60, 24, sides)}
+            fill="none"
+            stroke={ACCENT}
+            strokeWidth="3"
+          />
+        </g>
+      ))}
+      <Cell x={275} y={60} size={64} />
+      <text
+        x="275"
+        y="72"
+        fill={INK}
+        fontSize="32"
+        fontWeight="900"
+        textAnchor="middle"
+        fontFamily="system-ui, sans-serif"
+      >
+        ?
+      </text>
+    </Frame>
+  );
+}
+
+// ---------- a dot walking round a tile ----------
+
+function TileDotRotation({ className }: VisualProps) {
+  const spots: [number, number][] = [
+    [-16, -16],
+    [16, -16],
+    [16, 16],
+  ];
+  return (
+    <Frame viewBox="0 0 340 120" className={className}>
+      {spots.map(([dx, dy], i) => {
+        const cx = 50 + i * 75;
+        return (
+          <g key={i}>
+            <Cell x={cx} y={60} size={64} />
+            <line x1={cx} y1={28} x2={cx} y2={92} stroke={DIM} strokeWidth="1.5" />
+            <line x1={cx - 32} y1={60} x2={cx + 32} y2={60} stroke={DIM} strokeWidth="1.5" />
+            <circle cx={cx + dx} cy={60 + dy} r="9" fill={ACCENT} />
+          </g>
+        );
+      })}
+      <Cell x={275} y={60} size={64} />
+      <line x1="275" y1="28" x2="275" y2="92" stroke={DIM} strokeWidth="1.5" />
+      <line x1="243" y1="60" x2="307" y2="60" stroke={DIM} strokeWidth="1.5" />
+      <text
+        x="275"
+        y="72"
+        fill={INK}
+        fontSize="30"
+        fontWeight="900"
+        textAnchor="middle"
+        fontFamily="system-ui, sans-serif"
+      >
+        ?
+      </text>
+    </Frame>
+  );
+}
+
+// ---------- balance scales ----------
+
+type PanShape = "circle" | "square" | "triangle";
+
+function PanShapes({ x, y, shapes }: { x: number; y: number; shapes: PanShape[] }) {
+  const step = 26;
+  const start = x - ((shapes.length - 1) * step) / 2;
+  return (
+    <g>
+      {shapes.map((shape, i) => {
+        const cx = start + i * step;
+        const cy = y - 14;
+        if (shape === "circle") return <circle key={i} cx={cx} cy={cy} r="10" fill={ACCENT} />;
+        if (shape === "square")
+          return <rect key={i} x={cx - 10} y={cy - 10} width="20" height="20" rx="3" fill="#fb923c" />;
+        return <polygon key={i} points={`${cx},${cy - 11} ${cx + 11},${cy + 9} ${cx - 11},${cy + 9}`} fill="#4ade80" />;
+      })}
+    </g>
+  );
+}
+
+function Scale({ x, y, left, right }: { x: number; y: number; left: PanShape[]; right: PanShape[] }) {
+  const arm = 78;
+  return (
+    <g>
+      <line x1={x - arm} y1={y} x2={x + arm} y2={y} stroke={INK} strokeWidth="4" strokeLinecap="round" />
+      <polygon points={`${x},${y} ${x + 15},${y + 34} ${x - 15},${y + 34}`} fill="none" stroke={INK} strokeWidth="3" />
+      <line x1={x - 26} y1={y + 34} x2={x + 26} y2={y + 34} stroke={INK} strokeWidth="3" />
+      {[x - arm, x + arm].map((px) => (
+        <line key={px} x1={px - 22} y1={y + 4} x2={px + 22} y2={y + 4} stroke={INK} strokeWidth="3" />
+      ))}
+      <PanShapes x={x - arm} y={y + 4} shapes={left} />
+      <PanShapes x={x + arm} y={y + 4} shapes={right} />
+    </g>
+  );
+}
+
+function BalanceTwoScales({ className }: VisualProps) {
+  return (
+    <Frame viewBox="0 0 260 210" className={className}>
+      <Scale x={130} y={50} left={["circle", "circle"]} right={["square"]} />
+      <Scale x={130} y={150} left={["square", "circle"]} right={["triangle"]} />
+    </Frame>
+  );
+}
+
+// ---------- a clock seen in a mirror ----------
+
+function MirrorClock({ className }: VisualProps) {
+  const cx = 100;
+  const cy = 100;
+  const hand = (deg: number, len: number, width: number) => {
+    const rad = (deg * Math.PI) / 180;
+    return (
+      <line
+        x1={cx}
+        y1={cy}
+        x2={cx + len * Math.sin(rad)}
+        y2={cy - len * Math.cos(rad)}
+        stroke={ACCENT}
+        strokeWidth={width}
+        strokeLinecap="round"
+      />
+    );
+  };
+  return (
+    <Frame viewBox="0 0 200 200" className={className}>
+      <circle cx={cx} cy={cy} r="82" fill="none" stroke={INK} strokeWidth="4" />
+      {Array.from({ length: 12 }, (_, i) => {
+        const rad = (i * 30 * Math.PI) / 180;
+        const major = i % 3 === 0;
+        const r1 = major ? 62 : 70;
+        return (
+          <line
+            key={i}
+            x1={cx + r1 * Math.sin(rad)}
+            y1={cy - r1 * Math.cos(rad)}
+            x2={cx + 76 * Math.sin(rad)}
+            y2={cy - 76 * Math.cos(rad)}
+            stroke={INK}
+            strokeWidth={major ? 4 : 2}
+          />
+        );
+      })}
+      {/* the hands as the mirror shows them: hour toward 8, minute straight up */}
+      {hand(240, 42, 6)}
+      {hand(0, 62, 4)}
+      <circle cx={cx} cy={cy} r="5" fill={INK} />
+    </Frame>
+  );
+}
+
+// ---------- the square with a piece bitten out ----------
+
+function NotchedSquare({ className }: VisualProps) {
+  return (
+    <Frame viewBox="0 0 160 160" className={className}>
+      <path
+        d="M20 20 H140 V80 H110 V110 H80 V140 H20 Z"
+        fill="none"
+        stroke={INK}
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      <path d="M140 80 H110 V110 H80 V140 H140 Z" fill={DIM} opacity="0.18" />
+    </Frame>
+  );
+}
+
+/** The four candidate pieces. Only the L actually fills the bite. */
+function Piece({ d, className }: { d: string; className?: string }) {
+  return (
+    <Frame viewBox="0 0 80 80" className={className}>
+      <path d={d} fill={ACCENT} opacity="0.9" />
+    </Frame>
+  );
+}
+
+const PIECE_L = "M70 10 H40 V40 H10 V70 H70 Z";
+const PIECE_SQUARE = "M10 10 H70 V70 H10 Z";
+const PIECE_BAR = "M10 25 H70 V55 H10 Z";
+const PIECE_T = "M10 10 H70 V32 H51 V70 H29 V32 H10 Z";
+
+// ---------- four shapes, one breaks the rule ----------
+
+function OddPolygonOut({ className }: VisualProps) {
+  // 5, 3, 7 sides against a square: the rule is odd-vs-even, and every shape
+  // stays countable at a glance from across the room.
+  const shapes = [5, 3, 7, 4];
+  return (
+    <Frame viewBox="0 0 400 150" className={className}>
+      {shapes.map((sides, i) => {
+        const cx = 60 + i * 93;
+        return (
+          <g key={i}>
+            <Cell x={cx} y={62} size={86} />
+            <polygon points={polygonPoints(cx, 62, 33, sides)} fill="none" stroke={ACCENT} strokeWidth="4" />
+            <OptionLabel x={cx} y={130} letter={CLUB_LETTERS[i]} />
+          </g>
+        );
+      })}
+    </Frame>
+  );
+}
+
+const CLUB_LETTERS = ["A", "B", "C", "D"];
+
 // ---------- registry ----------
 
 export const CLUB_VISUALS: Record<string, (props: VisualProps) => JSX.Element> = {
@@ -440,6 +658,16 @@ export const CLUB_VISUALS: Record<string, (props: VisualProps) => JSX.Element> =
   shape_l_rot90: (p) => <LShape rotate={90} {...p} />,
   shape_l_rot270: (p) => <LShape rotate={270} {...p} />,
   shape_l_mirror: (p) => <LShape rotate={0} mirror {...p} />,
+  seq_polygon_sides: SeqPolygonSides,
+  tile_dot_rotation: TileDotRotation,
+  balance_two_scales: BalanceTwoScales,
+  mirror_clock: MirrorClock,
+  notched_square: NotchedSquare,
+  piece_l: (p) => <Piece d={PIECE_L} {...p} />,
+  piece_square: (p) => <Piece d={PIECE_SQUARE} {...p} />,
+  piece_bar: (p) => <Piece d={PIECE_BAR} {...p} />,
+  piece_t: (p) => <Piece d={PIECE_T} {...p} />,
+  odd_polygon_out: OddPolygonOut,
 };
 
 export function hasClubVisual(assetId: string): boolean {

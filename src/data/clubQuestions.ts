@@ -1,15 +1,17 @@
 import type { ClubQuestion } from "../logic/clubProtocol";
 
 // The 0.5% Club question bank. Logic, observation, patterns, wordplay and
-// visual reasoning — deliberately *not* trivia: nothing here needs outside
-// knowledge, only thinking.
+// visual reasoning — deliberately *not* trivia, and deliberately not mental
+// arithmetic either. The good questions here are the ones where the answer is
+// sitting in the question the whole time and you have to look at it sideways
+// to see it. Nothing in the bank should reward a fast calculator.
 //
 // Every record carries its explanation (§18 — the explanation is the payoff)
-// and a source classification (§28). Visuals reference components in
-// data/clubVisuals.tsx by assetId so nothing depends on an outside image.
+// and an honest source classification (§28): "adapted" means the puzzle
+// mechanic is a known classic even when the wording here is ours.
 //
-// V1 ships four questions per tier; §50 targets 10 per tier for a private
-// beta and 50 for launch. Append here — nothing else needs to change.
+// Visuals reference components in data/clubVisuals.tsx by assetId, so nothing
+// depends on outside artwork. Append here — nothing else needs to change.
 
 export const CLUB_QUESTIONS: ClubQuestion[] = [
   // ============================== 90% ==============================
@@ -62,33 +64,58 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "direct count",
     sourceType: "original",
   },
+  {
+    id: "c90_feathers",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt: "Which is heavier: a kilogram of feathers, or a kilogram of bricks?",
+    choices: ["The feathers", "The bricks", "They weigh the same", "It depends on the bricks"],
+    correctAnswer: "They weigh the same",
+    explanation: "A kilogram is a kilogram. The feathers take up far more space, which is what makes this feel wrong.",
+    category: "logic",
+    mechanic: "false intuition",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c90_corners",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt: "A square has 4 corners and a triangle has 3. How many corners do they have between them?",
+    choices: ["5", "6", "7", "8"],
+    correctAnswer: "7",
+    explanation: "4 + 3 = 7. Sometimes the question really is the question.",
+    category: "counting",
+    mechanic: "direct sum",
+    sourceType: "original",
+  },
+  {
+    id: "c90_die_faces",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt:
+      "On a standard die, opposite faces always add up to 7.\n\nIf the 3 is facing up, what number is facing down?",
+    choices: ["1", "2", "4", "5"],
+    correctAnswer: "4",
+    explanation: "The rule is right there in the question: 3 + 4 = 7, so the 4 is underneath.",
+    category: "logic",
+    mechanic: "rule application",
+    sourceType: "original",
+  },
+  {
+    id: "c90_twice",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt: "Which word appears twice in this list?\n\nMAP · SUN · KEY · MAP · JAR",
+    choices: ["MAP", "SUN", "KEY", "JAR"],
+    correctAnswer: "MAP",
+    explanation: "MAP is first and fourth. Pure observation — the sort of thing that gets harder when the clock is running.",
+    category: "observation",
+    mechanic: "spot the repeat",
+    sourceType: "original",
+  },
 
   // ============================== 80% ==============================
-  {
-    id: "c80_short",
-    difficulty: 80,
-    questionType: "text",
-    prompt: "What five-letter word becomes shorter when you add two letters to it?",
-    correctAnswer: "short",
-    acceptedAnswers: ["shorter"],
-    explanation: 'Add "er" to SHORT and you get SHORTER — the word literally becomes "shorter".',
-    category: "wordplay",
-    mechanic: "self-referential word",
-    sourceType: "adapted",
-    sourceReference: "classic riddle",
-  },
-  {
-    id: "c80_sheep",
-    difficulty: 80,
-    questionType: "number",
-    prompt: "A farmer has 17 sheep. All but 9 run away. How many sheep does the farmer have left?",
-    correctAnswer: "9",
-    explanation: '"All but 9 run away" means 9 stayed. The 17 is there to make you subtract.',
-    category: "lateral thinking",
-    mechanic: "misleading arithmetic",
-    sourceType: "adapted",
-    sourceReference: "classic riddle",
-  },
   {
     id: "c80_letters_ace",
     difficulty: 80,
@@ -120,6 +147,84 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "rotation sequence",
     sourceType: "original",
   },
+  {
+    id: "c80_short",
+    difficulty: 80,
+    questionType: "text",
+    prompt: "What five-letter word becomes shorter when you add two letters to it?",
+    correctAnswer: "short",
+    acceptedAnswers: ["shorter"],
+    explanation: 'Add "er" to SHORT and you get SHORTER — the word literally becomes "shorter".',
+    category: "wordplay",
+    mechanic: "self-referential word",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_sheep",
+    difficulty: 80,
+    questionType: "number",
+    prompt: "A farmer has 17 sheep. All but 9 run away. How many sheep does the farmer have left?",
+    correctAnswer: "9",
+    explanation: '"All but 9 run away" means 9 stayed. The 17 is there to make you subtract.',
+    category: "lateral thinking",
+    mechanic: "misleading arithmetic",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_rooster",
+    difficulty: 80,
+    questionType: "multiple_choice",
+    prompt:
+      "A rooster lays an egg right on the peak of a barn roof. The wind is blowing east. Which side does the egg roll down?",
+    choices: ["The east side", "The west side", "Neither side", "Straight down the middle"],
+    correctAnswer: "Neither side",
+    explanation: "Roosters are male. There's no egg. Everything about the wind and the roof was set dressing.",
+    category: "lateral thinking",
+    mechanic: "false premise",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_match",
+    difficulty: 80,
+    questionType: "text",
+    prompt:
+      "You walk into a dark, freezing room holding one match. There is a candle, an oil lamp and a wood stove.\n\nWhat do you light first?",
+    correctAnswer: "the match",
+    acceptedAnswers: ["match"],
+    explanation: "Nothing else can be lit until the match is. The three tempting options are all a step too late.",
+    category: "lateral thinking",
+    mechanic: "chronological order",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_hearts",
+    difficulty: 80,
+    questionType: "multiple_choice",
+    prompt: "What has 13 hearts but no other organs?",
+    choices: ["An octopus", "A deck of cards", "An artichoke", "A coral reef"],
+    correctAnswer: "A deck of cards",
+    explanation: "The suit of hearts has 13 cards, ace through king.",
+    category: "lateral thinking",
+    mechanic: "riddle",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_day_after",
+    difficulty: 80,
+    questionType: "multiple_choice",
+    prompt: "What is the day before two days after Monday?",
+    choices: ["Monday", "Tuesday", "Wednesday", "Thursday"],
+    correctAnswer: "Tuesday",
+    explanation: "Two days after Monday is Wednesday. The day before Wednesday is Tuesday.",
+    category: "sequencing",
+    mechanic: "relative days",
+    sourceType: "original",
+  },
 
   // ============================== 70% ==============================
   {
@@ -131,7 +236,7 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     choices: ["Nunu", "Mary", "Nana", "Nobody"],
     correctAnswer: "Mary",
     explanation:
-      "The pattern pulls you toward Nunu, but the first four words of the question already told you: they are Mary's father's daughters, so the fifth is Mary.",
+      "The pattern pulls you toward Nunu, but the first two words of the question already told you: they are Mary's father's daughters, so the fifth is Mary.",
     category: "lateral thinking",
     mechanic: "pattern misdirection",
     sourceType: "adapted",
@@ -178,6 +283,67 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "adapted",
     sourceReference: "classic anagram",
   },
+  {
+    id: "c70_polygon_seq",
+    difficulty: 70,
+    questionType: "multiple_choice",
+    prompt: "Which shape belongs in the empty box?",
+    choices: ["A hexagon", "A circle", "A heptagon", "An octagon"],
+    correctAnswer: "A hexagon",
+    explanation: "Count the sides: 3, then 4, then 5. Each shape gains one side, so the next has 6 — a hexagon.",
+    visual: {
+      type: "svg",
+      assetId: "seq_polygon_sides",
+      altText: "A triangle, a square and a pentagon in boxes, followed by an empty box with a question mark",
+    },
+    category: "visual reasoning",
+    mechanic: "shape sequence",
+    sourceType: "original",
+  },
+  {
+    id: "c70_apples",
+    difficulty: 70,
+    questionType: "number",
+    prompt: "There are three apples on the table and you take away two. How many apples do you have?",
+    correctAnswer: "2",
+    explanation:
+      "You have the two you took. The question asks what *you* have, not what's left on the table — that's where the 1 comes from.",
+    category: "logic",
+    mechanic: "perspective shift",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c70_planet_lane",
+    difficulty: 70,
+    questionType: "text",
+    prompt: "A four-letter word is hiding in PLANET, in order and without gaps. What is it?",
+    correctAnswer: "lane",
+    explanation: "P-LANE-T. The letters are already sitting in the middle of the word.",
+    category: "hidden information",
+    mechanic: "embedded word",
+    sourceType: "original",
+  },
+  {
+    id: "c70_triplets",
+    difficulty: 70,
+    questionType: "multiple_choice",
+    prompt:
+      "A brother and sister were born to the same mother, on the same day, in the same year — but they are not twins. How is that possible?",
+    choices: [
+      "They are two of a set of triplets",
+      "One of them was adopted",
+      "They are step-siblings",
+      "It isn't possible",
+    ],
+    correctAnswer: "They are two of a set of triplets",
+    explanation:
+      "Two of three is not twins. The word “twins” quietly makes you assume there were only two babies.",
+    category: "lateral thinking",
+    mechanic: "hidden assumption",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
 
   // ============================== 60% ==============================
   {
@@ -208,7 +374,7 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "A, B and D are the same L turned by quarter-turns — the long arm always runs clockwise into the short one. C is a mirror image: no amount of turning gets you there without lifting it off the page.",
+      "A, B and D are the same L turned by quarter-turns. C is a mirror image: no amount of turning gets you there without lifting it off the page.",
     category: "spatial reasoning",
     mechanic: "rotation vs reflection",
     sourceType: "original",
@@ -228,30 +394,79 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceReference: "classic riddle",
   },
   {
-    id: "c60_sevens",
+    id: "c60_palindrome_odd",
     difficulty: 60,
-    questionType: "number",
-    prompt: "If you write out every whole number from 1 to 50, how many times do you write the digit 7?",
-    correctAnswer: "5",
-    explanation: "7, 17, 27, 37 and 47 — five sevens. The seventies (70–79) never arrive, because we stop at 50.",
-    category: "counting",
-    mechanic: "digit frequency",
+    questionType: "multiple_choice",
+    prompt: "Which word doesn't belong with the others?",
+    choices: ["LEVEL", "RADAR", "ROTOR", "MOTOR"],
+    correctAnswer: "MOTOR",
+    explanation:
+      "LEVEL, RADAR and ROTOR all read the same backwards. MOTOR reads as ROTOM — and it's sitting right next to ROTOR to make you look twice.",
+    category: "wordplay",
+    mechanic: "palindrome",
+    sourceType: "original",
+  },
+  {
+    id: "c60_boxes_mislabeled",
+    difficulty: 60,
+    questionType: "multiple_choice",
+    prompt:
+      "Three boxes are labelled APPLES, ORANGES and MIXED. Every single label is wrong.\n\nYou may take one fruit, without looking, from one box — and then you must label all three correctly. Which box do you take from?",
+    choices: ["The one labelled APPLES", "The one labelled ORANGES", "The one labelled MIXED", "Any of them"],
+    correctAnswer: "The one labelled MIXED",
+    explanation:
+      "Because every label is wrong, the MIXED box isn't mixed — it's all apples or all oranges, and one fruit tells you which. From there the other two labels only have one legal way to swap.",
+    category: "deduction",
+    mechanic: "constraint propagation",
+    sourceType: "adapted",
+    sourceReference: "classic logic puzzle",
+  },
+  {
+    id: "c60_heart_earth",
+    difficulty: 60,
+    questionType: "text",
+    prompt: "Take the word HEART and move the first letter to the end. What word do you get?",
+    correctAnswer: "earth",
+    explanation: "HEART → EARTH. The same five letters, just rolled round by one.",
+    category: "letter manipulation",
+    mechanic: "letter shift",
+    sourceType: "original",
+  },
+  {
+    id: "c60_keyboard",
+    difficulty: 60,
+    questionType: "text",
+    prompt:
+      "I have keys but open no locks.\nI have space but no room.\nYou can enter, but you can't go outside.\n\nWhat am I?",
+    correctAnswer: "a keyboard",
+    acceptedAnswers: ["keyboard"],
+    explanation: "Keys, a space bar and an enter key. Every line is about a keyboard pretending to be a building.",
+    category: "lateral thinking",
+    mechanic: "pun riddle",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c60_dot_tile",
+    difficulty: 60,
+    questionType: "multiple_choice",
+    prompt: "The dot moves the same way each step. Where is it in the fourth tile?",
+    choices: ["Top left", "Top right", "Bottom left", "In the middle"],
+    correctAnswer: "Bottom left",
+    explanation:
+      "The dot is walking clockwise round the corners: top-left, top-right, bottom-right — so next is bottom-left.",
+    visual: {
+      type: "svg",
+      assetId: "tile_dot_rotation",
+      altText:
+        "Three tiles divided into quarters with a dot in the top-left, then top-right, then bottom-right, followed by an empty tile",
+    },
+    category: "visual reasoning",
+    mechanic: "position sequence",
     sourceType: "original",
   },
 
   // ============================== 50% ==============================
-  {
-    id: "c50_oblong",
-    difficulty: 50,
-    questionType: "number",
-    prompt: "What number comes next?\n\n2, 6, 12, 20, 30, ?",
-    correctAnswer: "42",
-    explanation:
-      "The gaps grow by 2 each time: +4, +6, +8, +10, then +12. 30 + 12 = 42. (They're also 1×2, 2×3, 3×4, 4×5, 5×6, 6×7.)",
-    category: "number patterns",
-    mechanic: "second difference",
-    sourceType: "original",
-  },
   {
     id: "c50_triangles",
     difficulty: 50,
@@ -302,23 +517,81 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "adapted",
     sourceReference: "classic lateral-thinking puzzle",
   },
+  {
+    id: "c50_ton",
+    difficulty: 50,
+    questionType: "text",
+    prompt: "Forwards I am heavy. Backwards I am not. What word am I?",
+    correctAnswer: "ton",
+    explanation: "A TON is heavy. Spelled backwards it's NOT — and the clue said exactly that.",
+    category: "wordplay",
+    mechanic: "word reversal",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c50_letter_m",
+    difficulty: 50,
+    questionType: "text",
+    prompt: "What occurs once in a minute, twice in a moment, but never in a thousand years?",
+    correctAnswer: "m",
+    acceptedAnswers: ["the letter m"],
+    explanation:
+      "The letter M. One in “minute”, two in “moment”, none in “a thousand years”. You're being asked about the words, not about time.",
+    category: "wordplay",
+    mechanic: "letter counting",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c50_polar_bear",
+    difficulty: 50,
+    questionType: "multiple_choice",
+    prompt:
+      "A house has four walls, and every one of them faces south. A bear walks past. What colour is the bear?",
+    choices: ["Brown", "Black", "White", "There isn't enough information"],
+    correctAnswer: "White",
+    explanation:
+      "The only place every wall can face south is the North Pole — so the bear is a polar bear.",
+    category: "deduction",
+    mechanic: "geographic reasoning",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c50_balance",
+    difficulty: 50,
+    questionType: "multiple_choice",
+    prompt: "Both scales balance.\n\nHow many circles would balance one triangle?",
+    choices: ["2", "3", "4", "5"],
+    correctAnswer: "3",
+    explanation:
+      "The top scale says one square equals two circles. The bottom says a square and a circle equal a triangle — so a triangle is two circles plus one more. Three.",
+    visual: {
+      type: "svg",
+      assetId: "balance_two_scales",
+      altText:
+        "Two balanced scales: the first has two circles against one square, the second has a square and a circle against one triangle",
+    },
+    category: "deduction",
+    mechanic: "substitution",
+    sourceType: "original",
+  },
+  {
+    id: "c50_liar_pair",
+    difficulty: 50,
+    questionType: "multiple_choice",
+    prompt: "Ada says: “Ben is lying.”\nBen says: “We are both lying.”\n\nWho is telling the truth?",
+    choices: ["Ada only", "Ben only", "Both of them", "Neither of them"],
+    correctAnswer: "Ada only",
+    explanation:
+      "If Ben were telling the truth, he'd be admitting he's lying — impossible. So Ben is lying, which makes “we are both lying” false, which means Ada isn't lying. Ada only.",
+    category: "logic",
+    mechanic: "self-referential statements",
+    sourceType: "original",
+  },
 
   // ============================== 40% ==============================
-  {
-    id: "c40_clock_angle",
-    difficulty: 40,
-    questionType: "number",
-    prompt:
-      "A clock reads 3:15. How many degrees is the angle between the hour hand and the minute hand?",
-    correctAnswer: "7.5",
-    acceptedAnswers: ["7.5"],
-    explanation:
-      "At 3:15 the minute hand is exactly on 3 (90°), but the hour hand has already crept a quarter of the way toward 4 — a quarter of 30° is 7.5°. So the gap is 7.5°, not 0.",
-    category: "logic",
-    mechanic: "clock geometry",
-    sourceType: "adapted",
-    sourceReference: "classic puzzle",
-  },
   {
     id: "c40_matrix",
     difficulty: 40,
@@ -344,7 +617,7 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     questionType: "text",
     prompt: "Which letter comes next?\n\nO, T, T, F, F, S, S, ?",
     correctAnswer: "E",
-    acceptedAnswers: ["eight", "e"],
+    acceptedAnswers: ["eight"],
     explanation: "They're the first letters of One, Two, Three, Four, Five, Six, Seven — so next is E for Eight.",
     category: "hidden information",
     mechanic: "initial letters",
@@ -352,34 +625,99 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceReference: "classic sequence puzzle",
   },
   {
-    id: "c40_typists",
+    id: "c40_new_door",
     difficulty: 40,
-    questionType: "number",
-    prompt: "If 2 typists can type 2 pages in 2 minutes, how many typists are needed to type 18 pages in 6 minutes?",
-    correctAnswer: "6",
+    questionType: "text",
+    prompt: "Rearrange the letters of NEW DOOR to make one word.",
+    correctAnswer: "one word",
+    acceptedAnswers: ["oneword"],
     explanation:
-      "One typist types one page in 2 minutes, so in 6 minutes one typist manages 3 pages. 18 ÷ 3 = 6 typists. (The tempting answer, 18, forgets they get three times as long.)",
-    category: "logic",
-    mechanic: "rate reasoning",
+      "NEW DOOR is an anagram of ONE WORD. The instruction was the answer the whole time.",
+    category: "wordplay",
+    mechanic: "self-referential anagram",
     sourceType: "adapted",
-    sourceReference: "classic rate puzzle",
+    sourceReference: "classic word puzzle",
+  },
+  {
+    id: "c40_bookkeeper",
+    difficulty: 40,
+    questionType: "multiple_choice",
+    prompt: "Which of these words has three double letters in a row?",
+    choices: ["Mississippi", "Committee", "Bookkeeper", "Success"],
+    correctAnswer: "Bookkeeper",
+    explanation: "b-OO-KK-EE-per: oo, kk, ee, back to back to back. The others have doubles, but never three in a row.",
+    category: "observation",
+    mechanic: "spelling pattern",
+    sourceType: "adapted",
+    sourceReference: "classic word puzzle",
+  },
+  {
+    id: "c40_wheat",
+    difficulty: 40,
+    questionType: "text",
+    prompt:
+      "I am a five-letter word and people eat me.\nRemove my first letter and I am a form of energy.\nRemove my first two letters and I am something you must do to live.\n\nWhat word am I?",
+    correctAnswer: "wheat",
+    explanation: "WHEAT → HEAT → EAT. Each cut leaves a real word behind.",
+    category: "wordplay",
+    mechanic: "progressive deletion",
+    sourceType: "original",
+  },
+  {
+    id: "c40_slates",
+    difficulty: 40,
+    questionType: "text",
+    prompt: "Put the same letter on the front of LATE and on the end of it to make one six-letter word. What is it?",
+    correctAnswer: "slates",
+    explanation: "S + LATE + S = SLATES.",
+    category: "letter manipulation",
+    mechanic: "letter addition",
+    sourceType: "original",
+  },
+  {
+    id: "c40_tangram",
+    difficulty: 40,
+    questionType: "image_choice",
+    prompt: "Which piece exactly fills the gap in the square?",
+    choices: ["A", "B", "C", "D"],
+    choiceVisuals: [
+      { type: "svg", assetId: "piece_l", altText: "An L-shaped piece" },
+      { type: "svg", assetId: "piece_square", altText: "A square piece" },
+      { type: "svg", assetId: "piece_bar", altText: "A rectangular bar" },
+      { type: "svg", assetId: "piece_t", altText: "A T-shaped piece" },
+    ],
+    correctAnswer: "A",
+    explanation:
+      "The bite out of the square is an L: a wide strip along the bottom with a step up on the right. Only piece A has that shape — B is too big, C is a plain bar, and D has a stem in the middle.",
+    visual: {
+      type: "svg",
+      assetId: "notched_square",
+      altText: "A square with an L-shaped notch missing from its lower right",
+    },
+    category: "spatial reasoning",
+    mechanic: "shape fitting",
+    sourceType: "original",
+  },
+  {
+    id: "c40_odd_polygon",
+    difficulty: 40,
+    questionType: "visual_multiple_choice",
+    prompt: "Three of these shapes have something in common. Which one is the odd one out?",
+    choices: ["A", "B", "C", "D"],
+    correctAnswer: "D",
+    explanation:
+      "It isn't about size or how pointy they look: A, B and C have 5, 3 and 7 sides — all odd. The square has 4.",
+    visual: {
+      type: "svg",
+      assetId: "odd_polygon_out",
+      altText: "Four boxed shapes labelled A to D: a pentagon, a triangle, a heptagon and a square",
+    },
+    category: "visual reasoning",
+    mechanic: "hidden shared property",
+    sourceType: "original",
   },
 
   // ============================== 30% ==============================
-  {
-    id: "c30_bat_ball",
-    difficulty: 30,
-    questionType: "number",
-    prompt:
-      "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How many cents does the ball cost?",
-    correctAnswer: "5",
-    explanation:
-      "Not 10. If the ball were 10¢ the bat would be $1.10 and the total $1.20. The ball is 5¢ and the bat $1.05 — exactly a dollar more, $1.10 together.",
-    category: "logic",
-    mechanic: "intuition trap",
-    sourceType: "adapted",
-    sourceReference: "cognitive reflection test",
-  },
   {
     id: "c30_squares_3x3",
     difficulty: 30,
@@ -403,7 +741,7 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     prompt: "Which letter comes next?\n\nA, E, F, H, I, K, L, M, N, ?",
     correctAnswer: "T",
     explanation:
-      "These are the capital letters you can draw with straight lines only, in alphabetical order: A E F H I K L M N. O, P, Q, R and S all need a curve — so the next one is T.",
+      "These are the capital letters you can draw with straight lines only, in alphabetical order. O, P, Q, R and S all need a curve — so the next one is T.",
     category: "observation",
     mechanic: "letter shape rule",
     sourceType: "adapted",
@@ -423,22 +761,79 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "adapted",
     sourceReference: "classic balance puzzle",
   },
-
-  // ============================== 20% ==============================
   {
-    id: "c20_lily",
-    difficulty: 20,
+    id: "c30_bat_ball",
+    difficulty: 30,
     questionType: "number",
     prompt:
-      "A patch of lily pads doubles in size every day. It covers the whole lake on day 48. On which day does it cover exactly half the lake?",
-    correctAnswer: "47",
+      "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How many cents does the ball cost?",
+    correctAnswer: "5",
     explanation:
-      "It doubles every day, so the day before it's full it must be half full — day 47. (Day 24 is the trap: that's a tiny sliver, not half.)",
+      "Not 10. If the ball were 10¢ the bat would be $1.10 and the total $1.20. The ball is 5¢ and the bat $1.05 — exactly a dollar more, $1.10 together.",
     category: "logic",
-    mechanic: "exponential intuition",
+    mechanic: "intuition trap",
     sourceType: "adapted",
     sourceReference: "cognitive reflection test",
   },
+  {
+    id: "c30_tulips",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt: "“All tulips are flowers.”\n\nWhich of these must also be true?",
+    choices: [
+      "All flowers are tulips",
+      "Nothing that isn't a flower is a tulip",
+      "Some flowers are not tulips",
+      "No tulips are red",
+    ],
+    correctAnswer: "Nothing that isn't a flower is a tulip",
+    explanation:
+      "That's the same statement read backwards: if being a tulip guarantees being a flower, then not being a flower guarantees not being a tulip. The others all add something nobody told you.",
+    category: "logic",
+    mechanic: "contrapositive",
+    sourceType: "original",
+  },
+  {
+    id: "c30_forth",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt: "Which of these is the odd one out?\n\nFIRST · SECOND · FORTH · FIFTH",
+    choices: ["FIRST", "SECOND", "FORTH", "FIFTH"],
+    correctAnswer: "FORTH",
+    explanation:
+      "FORTH means onwards — the number is spelled FOURTH, with a U. The others are all correctly spelled positions. It's a spelling test wearing a sequence puzzle's coat.",
+    category: "observation",
+    mechanic: "spelling trap",
+    sourceType: "adapted",
+    sourceReference: "classic word puzzle",
+  },
+  {
+    id: "c30_qwerty",
+    difficulty: 30,
+    questionType: "text",
+    prompt: "Which letter comes next?\n\nQ, W, E, R, T, ?",
+    correctAnswer: "Y",
+    explanation:
+      "It isn't alphabet order or a maths rule — it's the top row of the keyboard, left to right. After T comes Y.",
+    category: "observation",
+    mechanic: "keyboard layout",
+    sourceType: "original",
+  },
+  {
+    id: "c30_number_letters",
+    difficulty: 30,
+    questionType: "number",
+    prompt: "If 1 = 3, 2 = 3, 3 = 5, 4 = 4 and 5 = 4, then what does 6 equal?",
+    correctAnswer: "3",
+    explanation:
+      "Nothing is being calculated — count the letters. ONE has 3, TWO has 3, THREE has 5, FOUR has 4, FIVE has 4. SIX has 3.",
+    category: "hidden information",
+    mechanic: "word length mapping",
+    sourceType: "adapted",
+    sourceReference: "classic puzzle",
+  },
+
+  // ============================== 20% ==============================
   {
     id: "c20_fold",
     difficulty: 20,
@@ -461,35 +856,109 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceReference: "classic spatial-reasoning format",
   },
   {
-    id: "c20_word_rule",
-    difficulty: 20,
-    questionType: "multiple_choice",
-    prompt: "What do these words have in common?\n\nBANANA · DRESSER · GRAMMAR · POTATO · REVIVE · UNEVEN",
-    choices: [
-      "Move the first letter to the end and the word reads the same backwards",
-      "They all contain a double letter",
-      "They all start and end with the same letter",
-      "They all have exactly three vowels",
-    ],
-    correctAnswer: "Move the first letter to the end and the word reads the same backwards",
-    explanation:
-      "BANANA → ANANAB, and ANANAB read backwards is BANANA. The same trick works for all six: DRESSER → RESSERD, GRAMMAR → RAMMARG, POTATO → OTATOP, REVIVE → EVIVER, UNEVEN → NEVENU.",
-    category: "wordplay",
-    mechanic: "hidden shared rule",
-    sourceType: "adapted",
-    sourceReference: "classic word puzzle",
-  },
-  {
     id: "c20_ages",
     difficulty: 20,
     questionType: "number",
     prompt:
-      "A father is exactly 4 times as old as his son. In 20 years, he will be exactly twice as old as his son. How old is the son now?",
+      "A father is exactly 4 times as old as his son. In 20 years, he will be exactly twice as old. How old is the son now?",
     correctAnswer: "10",
     explanation:
-      "If the son is 10 the father is 40. In 20 years they're 30 and 60 — exactly double. (Solve it as 4s + 20 = 2(s + 20).)",
+      "If the son is 10 the father is 40. In 20 years they're 30 and 60 — exactly double.",
     category: "logic",
-    mechanic: "age algebra",
+    mechanic: "age reasoning",
+    sourceType: "original",
+  },
+  {
+    id: "c20_potato",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "BANANA, DRESSER and GRAMMAR all share an unusual property.\n\nWhich of these words shares it too?",
+    choices: ["POTATO", "TOMATO", "ONION", "CARROT"],
+    correctAnswer: "POTATO",
+    explanation:
+      "Move the first letter to the end, then read it backwards, and you get the word you started with. BANANA → ANANAB → BANANA. POTATO → OTATOP → POTATO. None of the others survive the trip.",
+    category: "wordplay",
+    mechanic: "discover and apply a rule",
+    sourceType: "adapted",
+    sourceReference: "classic word puzzle",
+  },
+  {
+    id: "c20_prize_boxes",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "One of four boxes holds a prize. Each box has a label:\n\nW: “The prize is in X.”\nX: “The prize is not in X.”\nY: “The prize is in Z.”\nZ: “The prize is not in Y.”\n\nExactly one label tells the truth. Where is the prize?",
+    choices: ["W", "X", "Y", "Z"],
+    correctAnswer: "Y",
+    explanation:
+      "Try each box. If it's in Y: W is false, X (“not in X”) is true, Y is false, Z (“not in Y”) is false — exactly one true. Every other box leaves two or three labels true.",
+    category: "deduction",
+    mechanic: "truth counting",
+    sourceType: "original",
+  },
+  {
+    id: "c20_two_guards",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt:
+      "Two doors, two guards. One guard always lies, the other always tells the truth, and you don't know which is which. You get one question, to one guard, to find the safe door.\n\nWhich question works?",
+    choices: [
+      "“Which door would the other guard say is safe?”",
+      "“Is the left door safe?”",
+      "“Which door do you guard?”",
+      "“Are you the truthful guard?”",
+    ],
+    correctAnswer: "“Which door would the other guard say is safe?”",
+    explanation:
+      "Both guards give the same answer to that one — the truthful guard honestly reports the liar's lie, and the liar lies about the honest answer. Either way you're pointed at the wrong door, so you take the other one.",
+    category: "deduction",
+    mechanic: "self-cancelling question",
+    sourceType: "adapted",
+    sourceReference: "classic knights-and-knaves puzzle",
+  },
+  {
+    id: "c20_cipher",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt: "If TODAY is written as UPEBZ, how is YESTERDAY written?",
+    choices: ["ZFTUFSEBZ", "XDRSDQCZX", "ZFSTUSDBZ", "ZFTUESEBZ"],
+    correctAnswer: "ZFTUFSEBZ",
+    explanation:
+      "Every letter moves one place forward: T→U, O→P, D→E, A→B, Y→Z. Do the same to YESTERDAY and you get ZFTUFSEBZ. The wrong options each slip on one letter.",
+    category: "letter manipulation",
+    mechanic: "alphabet shift",
+    sourceType: "original",
+  },
+  {
+    id: "c20_plate_sin",
+    difficulty: 20,
+    questionType: "text",
+    prompt:
+      "Move one letter from the first word into the second word, without reordering anything else, and both become new words:\n\nPLATE + SIN\n\nWhat are the two new words?",
+    correctAnswer: "late spin",
+    acceptedAnswers: ["late and spin", "late, spin", "latespin"],
+    explanation: "Take the P out of PLATE to leave LATE, and drop it into SIN to make SPIN.",
+    category: "letter manipulation",
+    mechanic: "letter transfer",
+    sourceType: "original",
+  },
+  {
+    id: "c20_mirror_clock",
+    difficulty: 20,
+    questionType: "multiple_choice",
+    prompt: "This clock is being seen in a mirror. What is the real time?",
+    choices: ["4:00", "8:00", "2:00", "10:00"],
+    correctAnswer: "4:00",
+    explanation:
+      "The mirror shows the hands at 8 o'clock, and a mirror flips left and right — so subtract from 12. The real time is 4:00.",
+    visual: {
+      type: "svg",
+      assetId: "mirror_clock",
+      altText: "A clock face with no numerals, its hour hand pointing down-left toward the eight and its minute hand straight up",
+    },
+    category: "spatial reasoning",
+    mechanic: "mental reflection",
     sourceType: "original",
   },
 
@@ -510,19 +979,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceReference: "classic riddle",
   },
   {
-    id: "c10_clock_overlap",
-    difficulty: 10,
-    questionType: "number",
-    prompt: "In 24 hours, how many times do the hour hand and the minute hand of a clock overlap exactly?",
-    correctAnswer: "22",
-    explanation:
-      "The hands meet 11 times in each 12-hour cycle, not 12 — between 11:00 and 12:00 they only meet at 12 o'clock itself. 11 × 2 = 22.",
-    category: "logic",
-    mechanic: "clock geometry",
-    sourceType: "adapted",
-    sourceReference: "classic puzzle",
-  },
-  {
     id: "c10_rect_3x3",
     difficulty: 10,
     questionType: "number",
@@ -540,17 +996,73 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "original",
   },
   {
+    id: "c10_wason",
+    difficulty: 10,
+    questionType: "multiple_choice",
+    prompt:
+      "Four cards lie on a table showing A, D, 4 and 7. Every card has a letter on one side and a number on the other.\n\nRule: if a card has a vowel on one side, it has an even number on the other.\n\nWhich cards must you turn over to test the rule?",
+    choices: ["A only", "A and 4", "4 and 7", "A and 7"],
+    correctAnswer: "A and 7",
+    explanation:
+      "A could hide an odd number, which would break the rule. 7 could hide a vowel, which would also break it. Turning over 4 proves nothing — the rule never promised that even numbers have vowels.",
+    category: "logic",
+    mechanic: "conditional testing",
+    sourceType: "adapted",
+    sourceReference: "Wason selection task",
+  },
+  {
+    id: "c10_glasses",
+    difficulty: 10,
+    questionType: "number",
+    prompt:
+      "In a room of 100 people, 99 wear glasses. How many glasses-wearers must leave so that exactly 98% of the people still in the room wear glasses?",
+    correctAnswer: "50",
+    explanation:
+      "Follow the one person without glasses instead. They have to become 2% of the room, so the room must end up at 50 people — which means 50 glasses-wearers walk out.",
+    category: "logic",
+    mechanic: "track the minority",
+    sourceType: "adapted",
+    sourceReference: "classic percentage puzzle",
+  },
+  {
+    id: "c10_guilty",
+    difficulty: 10,
+    questionType: "multiple_choice",
+    prompt:
+      "Exactly one of Ada, Ben and Cy is guilty.\n\nAda says: “Ben did it.”\nBen says: “Cy did it.”\nCy says: “Ben is lying.”\n\nExactly two of them are telling the truth. Who is guilty?",
+    choices: ["Ada", "Ben", "Cy", "It can't be worked out"],
+    correctAnswer: "Ben",
+    explanation:
+      "If Ben is guilty: Ada is right, Ben is wrong, and Cy is right that Ben lied — two truths. Test Ada or Cy as the culprit and you only ever get one.",
+    category: "deduction",
+    mechanic: "truth counting",
+    sourceType: "original",
+  },
+  {
     id: "c10_look_say",
     difficulty: 10,
     questionType: "number",
     prompt: "What comes next?\n\n1, 11, 21, 1211, 111221, ?",
     correctAnswer: "312211",
     explanation:
-      "Each line describes the one above it out loud. 111221 is “three 1s, two 2s, one 1” → 312211.",
+      "Each line describes the one above it out loud. 111221 is “three 1s, two 2s, one 1” → 312211. No arithmetic anywhere.",
     category: "pattern recognition",
     mechanic: "look-and-say",
     sourceType: "adapted",
     sourceReference: "look-and-say sequence",
+  },
+  {
+    id: "c10_family_seven",
+    difficulty: 10,
+    questionType: "number",
+    prompt:
+      "A mother and father have four daughters, and each daughter has exactly one brother. How many people are in the family altogether?",
+    correctAnswer: "7",
+    explanation:
+      "The four daughters share the same brother, so that's five children — plus two parents makes 7. The trap catches you twice: once on the brother, once on forgetting the parents.",
+    category: "deduction",
+    mechanic: "shared relationship",
+    sourceType: "original",
   },
 
   // ============================== 5% ==============================
@@ -575,20 +1087,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "measuring without a clock",
     sourceType: "adapted",
     sourceReference: "classic burning-rope puzzle",
-  },
-  {
-    id: "c5_knockout",
-    difficulty: 5,
-    questionType: "number",
-    prompt:
-      "137 players enter a knockout tournament. Losers are out immediately; byes are given where needed. How many matches are played in total to produce one champion?",
-    correctAnswer: "136",
-    explanation:
-      "Every match eliminates exactly one player, and 136 players must be eliminated to leave one champion. So 136 matches — the bracket shape and byes never matter.",
-    category: "deduction",
-    mechanic: "invariant counting",
-    sourceType: "adapted",
-    sourceReference: "classic counting puzzle",
   },
   {
     id: "c5_tri_grid",
@@ -628,6 +1126,36 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "adapted",
     sourceReference: "classic number curiosity",
   },
+  {
+    id: "c5_lockers",
+    difficulty: 5,
+    questionType: "number",
+    prompt:
+      "100 lockers stand closed. Student 1 opens every locker. Student 2 changes every 2nd locker. Student 3 changes every 3rd, and so on through student 100.\n\nHow many lockers are left open?",
+    correctAnswer: "10",
+    explanation:
+      "A locker is touched once per divisor, so it ends open only if it has an odd number of divisors — and only perfect squares do. 1, 4, 9, 16, 25, 36, 49, 64, 81, 100: ten lockers.",
+    timerSeconds: 60,
+    category: "deduction",
+    mechanic: "divisor parity",
+    sourceType: "adapted",
+    sourceReference: "classic locker problem",
+  },
+  {
+    id: "c5_painted_cube",
+    difficulty: 5,
+    questionType: "number",
+    prompt:
+      "A wooden cube is painted on all six faces, then cut into 64 identical smaller cubes.\n\nHow many of the small cubes have no paint on them at all?",
+    correctAnswer: "8",
+    explanation:
+      "64 cubes means 4 along each edge. Strip off the painted outer shell and what's left is the 2×2×2 block hiding in the middle — 8 cubes.",
+    timerSeconds: 60,
+    category: "spatial reasoning",
+    mechanic: "three-dimensional counting",
+    sourceType: "adapted",
+    sourceReference: "classic painted-cube puzzle",
+  },
 
   // ============================== 0.5% ==============================
   {
@@ -647,34 +1175,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceReference: "Cheryl's Birthday, 2015 Singapore SASMO olympiad problem",
   },
   {
-    id: "c05_sylvester",
-    difficulty: 0.5,
-    questionType: "number",
-    prompt: "What number comes next?\n\n1, 2, 6, 42, 1806, ?",
-    correctAnswer: "3263442",
-    explanation:
-      "Each number is the one before it squared, plus itself: 1²+1 = 2, 2²+2 = 6, 6²+6 = 42, 42²+42 = 1806, and 1806² + 1806 = 3,263,442.",
-    timerSeconds: 60,
-    category: "number patterns",
-    mechanic: "recursive squaring",
-    sourceType: "adapted",
-    sourceReference: "Sylvester's sequence",
-  },
-  {
-    id: "c05_bookkeeper",
-    difficulty: 0.5,
-    questionType: "text",
-    prompt: "Name an everyday English word that contains three double letters in a row.",
-    correctAnswer: "bookkeeper",
-    acceptedAnswers: ["bookkeeping", "book keeper"],
-    explanation: "BOOKKEEPER — oo, kk, ee, back to back to back. (BOOKKEEPING works too.)",
-    timerSeconds: 60,
-    category: "wordplay",
-    mechanic: "letter pattern search",
-    sourceType: "adapted",
-    sourceReference: "classic word puzzle",
-  },
-  {
     id: "c05_pirates",
     difficulty: 0.5,
     questionType: "number",
@@ -682,12 +1182,41 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
       "Five pirates, ranked strictly by seniority, split 100 gold coins. The most senior proposes a split; everyone votes. If at least half vote yes, it stands. Otherwise the proposer goes overboard and the next most senior proposes.\n\nEvery pirate is perfectly logical and wants, in order: to survive, to get the most gold, and to throw others overboard. How many coins does the most senior pirate keep?",
     correctAnswer: "98",
     explanation:
-      "Work backwards. With 2 pirates left, the senior one keeps everything (his own vote is half). So with 3, the most junior would get nothing and will accept 1 coin from the pirate above him. Carrying that logic up, the top pirate only needs two extra votes — he buys them with 1 coin each and keeps 98.",
+      "Work backwards. With 2 pirates left, the senior one keeps everything — his own vote is half. So with 3, the most junior would get nothing and will accept 1 coin from the pirate above him. Carrying that logic up, the top pirate only needs two extra votes — he buys them with 1 coin each and keeps 98.",
     timerSeconds: 120,
     category: "deduction",
     mechanic: "backward induction",
     sourceType: "adapted",
     sourceReference: "classic pirate game-theory puzzle",
+  },
+  {
+    id: "c05_safe_code",
+    difficulty: 0.5,
+    questionType: "number",
+    prompt:
+      "A safe takes a three-digit code. Its digits are all different and none is zero. Reversing the code makes a number exactly 198 larger, and the middle digit is the average of the other two.\n\nWhat is the smallest code that is also divisible by 9?",
+    correctAnswer: "234",
+    explanation:
+      "Reversing adds 198, which forces the last digit to be 2 more than the first. With the middle as their average, the digits must run consecutively: 123, 234, 345… Divisible by 9 means the digits total 9, and 2 + 3 + 4 = 9. So 234.",
+    timerSeconds: 120,
+    category: "deduction",
+    mechanic: "digit constraints",
+    sourceType: "original",
+  },
+  {
+    id: "c05_starting",
+    difficulty: 0.5,
+    questionType: "text",
+    prompt:
+      "Take one letter away at a time, and every step is still a real word:\n\n? → STARING → STRING → STING → SING → SIN → IN → I\n\nWhat is the eight-letter word at the beginning?",
+    correctAnswer: "starting",
+    explanation:
+      "STARTING. Drop the second T for STARING, the A for STRING, the R for STING, the T for SING, the G for SIN, the S for IN, and the N for I.",
+    timerSeconds: 90,
+    category: "wordplay",
+    mechanic: "deletion chain",
+    sourceType: "adapted",
+    sourceReference: "classic word-ladder puzzle",
   },
 ];
 
