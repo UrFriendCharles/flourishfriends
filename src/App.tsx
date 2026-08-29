@@ -44,7 +44,8 @@ import { HighScores } from "./screens/HighScores";
 import { HowToPlay } from "./screens/HowToPlay";
 import { About } from "./screens/About";
 import { PlatformHome } from "./screens/PlatformHome";
-import { ClubSetup } from "./screens/ClubSetup";
+import { ClubSetup, DEFAULT_CLUB_SETTINGS } from "./screens/ClubSetup";
+import { ClubSolo } from "./screens/ClubSolo";
 import { ClubHostRoom } from "./screens/ClubHostRoom";
 import { ClubDisplayRoom } from "./screens/ClubDisplayRoom";
 import { ClubVisualPreview } from "./screens/ClubVisualPreview";
@@ -65,6 +66,7 @@ type AppRoute =
   | { kind: "tvIntro" }
   | { kind: "tvSetup" }
   | { kind: "clubSetup" }
+  | { kind: "clubSolo"; settings: ClubSettings }
   | { kind: "clubVisuals" }
   | { kind: "clubHost"; code: string; hostKey: string }
   | { kind: "clubDisplay"; code: string }
@@ -99,6 +101,8 @@ function parseRoute(): AppRoute {
     return { kind: "join", code };
   }
   if (/^\/club\/visuals\/?$/.test(path)) return { kind: "clubVisuals" };
+  // deep link straight into a solo run (a reload restarts it with defaults)
+  if (/^\/club\/solo\/?$/.test(path)) return { kind: "clubSolo", settings: DEFAULT_CLUB_SETTINGS };
   if (/^\/club\/?$/.test(path)) return { kind: "clubSetup" };
 
   const display = path.match(/^\/display\/([a-zA-Z0-9]+)\/?$/);
@@ -332,12 +336,18 @@ export default function App() {
           <ClubSetup
             notice={clubNotice}
             onStart={createClubRoom}
+            onStartSolo={(settings) => {
+              window.history.pushState(null, "", "/club/solo");
+              setRoute({ kind: "clubSolo", settings });
+            }}
             onBack={() => {
               setClubNotice(null);
               goHome();
             }}
           />
         );
+      case "clubSolo":
+        return <ClubSolo settings={route.settings} onHome={goHome} />;
       case "clubHost":
         return (
           <ClubHostRoom

@@ -240,12 +240,17 @@ export function ClubControllerRoom({ roomCode, playerName, onLeave }: Props) {
         ? { icon: "✅", label: "CORRECT", color: "text-green-300", border: "border-green-400/40" }
         : { icon: "❌", label: result?.timedOut ? "OUT OF TIME" : "WRONG", color: "text-rose-300", border: "border-rose-400/40" };
 
+    const inContention = !survival || (you?.winnerEligible ?? true);
     const subline = result?.passed
-      ? "You're still in."
+      ? inContention
+        ? "You're still in."
+        : "Keep playing."
       : result?.correct
-        ? survival
-          ? "You're still in."
-          : "+1 point."
+        ? !survival
+          ? "+1 point."
+          : inContention
+            ? "You're still in."
+            : "Right answer — but you're not in the running this game."
         : survival
           ? result?.eliminatedHere
             ? "You can no longer win — but keep playing."

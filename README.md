@@ -38,9 +38,15 @@ npm run build && npx wrangler deploy
 
 Eleven rounds, one question per difficulty tier: 90 · 80 · 70 · 60 · 50 · 40 ·
 30 · 20 · 10 · 5 · **0.5%**. Logic, observation, patterns, wordplay and visual
-puzzles — deliberately not trivia. The host creates a room from the home
-screen, up to **10 players** join at `/join/:code`, and `/club/display/:code`
-is a read-only big-screen mirror.
+puzzles — deliberately not trivia.
+
+Play it either way from the same setup screen:
+
+- **Solo, on this device** (`/club/solo`) — no room, no backend, same eleven
+  questions and the same rules. The reducer lives in `src/logic/clubSolo.ts`.
+- **TV room + phones** — the host screen is the game board, up to **10
+  players** join at `/join/:code`, and `/club/display/:code` is a read-only
+  big-screen mirror.
 
 - **Two modes.** *Classic Survival*: a wrong answer, a timeout, or running out
   of Passes ends your shot at winning — but you keep playing and answering
