@@ -10,6 +10,8 @@ interface Props {
   onHighScores: () => void;
   onHowToPlay: () => void;
   onAbout: () => void;
+  /** back to the platform picker (Flag Game / 0.5% Club) */
+  onSwitchGame: () => void;
 }
 
 export function HomeScreen({
@@ -21,9 +23,16 @@ export function HomeScreen({
   onHighScores,
   onHowToPlay,
   onAbout,
+  onSwitchGame,
 }: Props) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-6 py-10">
+      <button
+        onClick={onSwitchGame}
+        className="mb-2 self-start text-sm font-bold text-slate-400 transition active:scale-95"
+      >
+        ← All games
+      </button>
       <div className="flex flex-1 flex-col items-center justify-center gap-8">
         <div className="text-center animate-pop-in">
           <div className="mb-2 flex justify-center">

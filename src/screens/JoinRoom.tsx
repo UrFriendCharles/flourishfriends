@@ -9,7 +9,8 @@ import { loadSavedPlayers } from "../storage/localStore";
 
 interface Props {
   initialCode: string;
-  onJoin: (roomCode: string, playerName: string) => void;
+  /** `game` says which controller to open — room codes span every game. */
+  onJoin: (roomCode: string, playerName: string, game: "flag" | "half-percent-club") => void;
   onHome: () => void;
 }
 
@@ -38,7 +39,14 @@ export function JoinRoom({ initialCode, onJoin, onHome }: Props) {
         setError("No room with that code — double-check the TV!");
         return;
       }
-      onJoin(clean, name.trim().slice(0, 20));
+      const club = info.gameType === "half-percent-club";
+      if (info.canJoin === false && info.status === "lobby") {
+        setError(
+          club ? "This room is full. 0.5% Club supports up to 10 players." : "This room is full."
+        );
+        return;
+      }
+      onJoin(clean, name.trim().slice(0, 20), club ? "half-percent-club" : "flag");
     } catch {
       setError("Couldn't reach the game server. Check your connection and try again.");
     } finally {

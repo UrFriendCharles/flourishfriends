@@ -132,9 +132,15 @@ export interface CreateRoomResponse {
 
 export interface RoomInfoResponse {
   exists: boolean;
-  status: RoomStatus | null;
+  status: string | null;
   playerCount: number;
   canJoin: boolean;
+  /**
+   * Which game the code belongs to. Room codes are one shared space across
+   * every Flourish Friends game, so /join can send the phone to the right
+   * controller. Null/absent means the flag quiz (the original game type).
+   */
+  gameType?: "flag" | "half-percent-club" | null;
 }
 
 export function normalizeRoomCode(raw: string): string {

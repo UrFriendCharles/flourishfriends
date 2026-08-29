@@ -43,6 +43,14 @@ import { GameResults, missedCountryIds } from "./screens/GameResults";
 import { HighScores } from "./screens/HighScores";
 import { HowToPlay } from "./screens/HowToPlay";
 import { About } from "./screens/About";
+import { PlatformHome } from "./screens/PlatformHome";
+import { ClubSetup } from "./screens/ClubSetup";
+import { ClubHostRoom } from "./screens/ClubHostRoom";
+import { ClubDisplayRoom } from "./screens/ClubDisplayRoom";
+import { ClubVisualPreview } from "./screens/ClubVisualPreview";
+import { ClubControllerRoom } from "./screens/ClubControllerRoom";
+import { selectClubQuestions, rememberPlayedQuestions } from "./logic/clubSelect";
+import type { ClubSettings, CreateClubRoomRequest, CreateClubRoomResponse } from "./logic/clubProtocol";
 
 const IN_GAME_SCREENS = new Set(["passDevice", "question", "reveal"]);
 
@@ -56,9 +64,15 @@ type AppRoute =
   | { kind: "host"; code: string; hostKey: string }
   | { kind: "tvIntro" }
   | { kind: "tvSetup" }
+  | { kind: "clubSetup" }
+  | { kind: "clubVisuals" }
+  | { kind: "clubHost"; code: string; hostKey: string }
+  | { kind: "clubDisplay"; code: string }
+  | { kind: "clubController"; code: string; name: string }
   | null;
 
 const hostKeyStorage = (code: string) => `ffq:room:${code}:hostKey`;
+const clubHostKeyStorage = (code: string) => `ffq:club:${code}:hostKey`;
 
 function parseRoute(): AppRoute {
   const path = window.location.pathname;
@@ -70,6 +84,23 @@ function parseRoute(): AppRoute {
   }
   const join = path.match(/^\/join(?:\/([a-zA-Z0-9]*))?\/?$/);
   if (join) return { kind: "join", code: normalizeRoomCode(join[1] ?? "") };
+
+  // 0.5% Club lives under /club/*; players still join through the shared /join.
+  const clubDisplay = path.match(/^\/club\/display\/([a-zA-Z0-9]+)\/?$/);
+  if (clubDisplay) {
+    const code = normalizeRoomCode(clubDisplay[1]);
+    if (isValidRoomCode(code)) return { kind: "clubDisplay", code };
+  }
+  const clubHost = path.match(/^\/club\/host\/([a-zA-Z0-9]+)\/?$/);
+  if (clubHost) {
+    const code = normalizeRoomCode(clubHost[1]);
+    const hostKey = sessionStorage.getItem(clubHostKeyStorage(code));
+    if (isValidRoomCode(code) && hostKey) return { kind: "clubHost", code, hostKey };
+    return { kind: "join", code };
+  }
+  if (/^\/club\/visuals\/?$/.test(path)) return { kind: "clubVisuals" };
+  if (/^\/club\/?$/.test(path)) return { kind: "clubSetup" };
+
   const display = path.match(/^\/display\/([a-zA-Z0-9]+)\/?$/);
   if (display) {
     const code = normalizeRoomCode(display[1]);
@@ -90,6 +121,10 @@ export default function App() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialGameState);
   const [route, setRoute] = useState(parseRoute);
   const [tvNotice, setTvNotice] = useState<string | null>(null);
+  const [clubNotice, setClubNotice] = useState<string | null>(null);
+  const [clubSettings, setClubSettings] = useState<ClubSettings | null>(null);
+  // "picker" = the platform home (§54); "flag" = inside the flag quiz
+  const [gameArea, setGameArea] = useState<"picker" | "flag">("picker");
   const [hasSavedGame, setHasSavedGame] = useState(() => loadSavedGame() !== null);
   const recordedFinishRef = useRef<number | null>(null);
 
@@ -224,6 +259,30 @@ export default function App() {
     }
   };
 
+  // 0.5% Club rooms ride the same room system: the host picks the eleven
+  // questions here (one per tier) and the worker only ever sees those.
+  const createClubRoom = async (settings: ClubSettings) => {
+    try {
+      const questions = selectClubQuestions();
+      const body: CreateClubRoomRequest = { settings, questions };
+      const res = await fetch("/api/club/rooms", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error(`create club room failed: ${res.status}`);
+      const { roomCode, hostKey } = (await res.json()) as CreateClubRoomResponse;
+      rememberPlayedQuestions(questions.map((q) => q.id));
+      sessionStorage.setItem(clubHostKeyStorage(roomCode), hostKey);
+      window.history.pushState(null, "", `/club/host/${roomCode}`);
+      setClubNotice(null);
+      setClubSettings(settings);
+      setRoute({ kind: "clubHost", code: roomCode, hostKey });
+    } catch {
+      setClubNotice("Couldn't create the room — check your connection and try again.");
+    }
+  };
+
   if (route) {
     switch (route.kind) {
       case "score":
@@ -232,9 +291,13 @@ export default function App() {
         return (
           <JoinRoom
             initialCode={route.code}
-            onJoin={(code, name) => {
+            onJoin={(code, name, game) => {
               window.history.replaceState(null, "", `/join/${code}`);
-              setRoute({ kind: "controller", code, name });
+              setRoute(
+                game === "half-percent-club"
+                  ? { kind: "clubController", code, name }
+                  : { kind: "controller", code, name }
+              );
             }}
             onHome={goHome}
           />
@@ -264,24 +327,71 @@ export default function App() {
             }}
           />
         );
+      case "clubSetup":
+        return (
+          <ClubSetup
+            notice={clubNotice}
+            onStart={createClubRoom}
+            onBack={() => {
+              setClubNotice(null);
+              goHome();
+            }}
+          />
+        );
+      case "clubHost":
+        return (
+          <ClubHostRoom
+            roomCode={route.code}
+            hostKey={route.hostKey}
+            onExit={goHome}
+            onPlayAgain={() => {
+              // a brand-new room, so the ladder is a fresh set of questions
+              if (clubSettings) void createClubRoom(clubSettings);
+              else setRoute({ kind: "clubSetup" });
+            }}
+          />
+        );
+      case "clubVisuals":
+        return <ClubVisualPreview onBack={goHome} />;
+      case "clubDisplay":
+        return <ClubDisplayRoom roomCode={route.code} />;
+      case "clubController":
+        return (
+          <ClubControllerRoom roomCode={route.code} playerName={route.name} onLeave={goHome} />
+        );
     }
   }
 
+  const openJoin = () => {
+    window.history.pushState(null, "", "/join");
+    setRoute({ kind: "join", code: "" });
+  };
+
   switch (state.screen) {
     case "home":
+      if (gameArea === "picker") {
+        return (
+          <PlatformHome
+            onFlagGame={() => setGameArea("flag")}
+            onClub={() => {
+              window.history.pushState(null, "", "/club");
+              setRoute({ kind: "clubSetup" });
+            }}
+            onJoinRoom={openJoin}
+          />
+        );
+      }
       return (
         <HomeScreen
           hasSavedGame={hasSavedGame}
+          onSwitchGame={() => setGameArea("picker")}
           onStart={() => dispatch({ type: "NAVIGATE", screen: "playerSetup" })}
           onContinue={() => {
             const saved = loadSavedGame();
             if (saved) dispatch({ type: "RESUME_GAME", state: saved, now: Date.now() });
           }}
           onHostTv={() => setRoute({ kind: "tvIntro" })}
-          onJoinRoom={() => {
-            window.history.pushState(null, "", "/join");
-            setRoute({ kind: "join", code: "" });
-          }}
+          onJoinRoom={openJoin}
           onHighScores={() => dispatch({ type: "NAVIGATE", screen: "highScores" })}
           onHowToPlay={() => dispatch({ type: "NAVIGATE", screen: "howToPlay" })}
           onAbout={() => dispatch({ type: "NAVIGATE", screen: "about" })}

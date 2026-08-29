@@ -21,6 +21,7 @@
     "src/types.ts",
     "src/logic/scoring.ts",
     "src/logic/roomProtocol.ts",
+    "src/logic/clubProtocol.ts",
     "src/logic/scoreShareWire.ts"
   ]
 }
