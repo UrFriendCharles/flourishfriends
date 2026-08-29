@@ -23,6 +23,7 @@ const BANK = "src/data/clubQuestions.ts";
 
 if (!FILE) {
   console.error("usage: node scripts/importQuestions.mjs <batch.jsonl> [--write out.ts]");
+  console.error("       node scripts/importQuestions.mjs --digest");
   process.exit(2);
 }
 
@@ -37,6 +38,30 @@ const norm = (s) =>
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+// --digest prints what the bank already covers, so a question worker can be
+// told what not to send us again. Workers can't dedupe against a bank they
+// have never seen, which is how four of them sent LISTEN/SILENT.
+if (FILE === "--digest") {
+  const blocks = readFileSync(BANK, "utf8").split(/\n  \{\n/).slice(1);
+  const rows = blocks
+    .map((b) => ({
+      tier: (b.match(/difficulty:\s*([\d.]+)/) || [])[1],
+      mechanic: (b.match(/mechanic:\s*"([^"]*)"/) || [])[1],
+      answer: (b.match(/correctAnswer:\s*"((?:[^"\\]|\\.)*)"/) || [])[1],
+    }))
+    .filter((r) => r.tier);
+  console.log("Already in the Flourish Friends bank — do not send these puzzles again.");
+  console.log("(The same broad mechanic is fine on a genuinely different puzzle.)\n");
+  for (const tier of TIERS) {
+    const at = rows.filter((r) => Number(r.tier) === tier);
+    if (!at.length) continue;
+    console.log(`${tier}%`);
+    for (const r of at) console.log(`  ${r.mechanic} → ${String(r.answer).slice(0, 42)}`);
+  }
+  console.log(`\n${rows.length} questions in the bank.`);
+  process.exit(0);
+}
 
 // ---------- read the live bank so we can spot repeats ----------
 
