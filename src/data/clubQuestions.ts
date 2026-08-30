@@ -1555,6 +1555,322 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "two-layer constraint grid",
     sourceType: "original",
   },
+
+  // ===================================================================
+  // Third intake — generated via a two-stage tier pipeline (per-tier
+  // authoring, then independent blind-solve + audit of every candidate),
+  // run through scripts/importQuestions.mjs as a structural gate, and
+  // hand-checked against this bank for duplicates before landing here.
+  // Three visual candidates needing new art (a diamond rotation, a
+  // mirror-image flag, and a 180° grid rotation) were held back — see
+  // batch.jsonl in the repo root once art exists for them.
+  // ===================================================================
+
+  {
+    id: "c90_word_count_sentence",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt: 'How many words are in this sentence?\n\n"The quick brown fox jumps over the lazy dog"',
+    choices: ["7", "8", "9", "10"],
+    correctAnswer: "9",
+    explanation:
+      "Count them one by one: The, quick, brown, fox, jumps, over, the, lazy, dog — that's 9 words.",
+    category: "counting",
+    mechanic: "direct count",
+    sourceType: "original",
+  },
+  {
+    id: "c90_height_chain_shortest",
+    difficulty: 90,
+    questionType: "multiple_choice",
+    prompt: "Tom is taller than Jerry. Jerry is taller than Spike.\n\nWho is the shortest?",
+    choices: ["Tom", "Jerry", "Spike", "Can't tell"],
+    correctAnswer: "Spike",
+    explanation:
+      "Tom > Jerry > Spike in height, so Spike is at the bottom of the chain — the shortest.",
+    category: "logic",
+    mechanic: "transitive ordering",
+    sourceType: "original",
+  },
+  {
+    id: "c90_two_weeks_days",
+    difficulty: 90,
+    questionType: "true_false",
+    prompt: "A week has seven days.\n\nTrue or false: two weeks have fourteen days.",
+    correctAnswer: "true",
+    explanation: "Two weeks is 7 + 7 days, which is 14.",
+    category: "everyday reasoning",
+    mechanic: "direct arithmetic check",
+    sourceType: "original",
+  },
+  {
+    id: "c80_months_28days",
+    difficulty: 80,
+    questionType: "multiple_choice",
+    prompt: "How many months of the year have 28 days?",
+    choices: ["11", "12", "28", "30"],
+    correctAnswer: "12",
+    explanation:
+      "Every month has AT LEAST 28 days — even February, which has exactly 28 (or 29 in a leap year). So all 12 months qualify.",
+    category: "logic",
+    mechanic: "false premise",
+    sourceType: "adapted",
+    sourceReference: "classic riddle",
+  },
+  {
+    id: "c80_digit_nine_count",
+    difficulty: 80,
+    questionType: "number",
+    prompt: "Write out the numbers from 1 to 20. How many times does the digit 9 appear in total?",
+    correctAnswer: "2",
+    explanation:
+      "Only two numbers in that range contain the digit 9 at all: 9 itself and 19. Each contributes exactly one 9, so the digit 9 appears twice in total.",
+    category: "counting",
+    mechanic: "digit counting",
+    sourceType: "original",
+  },
+  {
+    id: "c70_overtake_last",
+    difficulty: 70,
+    questionType: "multiple_choice",
+    prompt:
+      "In a running race, you overtake the runner who is currently in last place. What position are you in now?",
+    choices: ["Last place", "Second-to-last place", "You can't — that situation is impossible", "First place"],
+    correctAnswer: "You can't — that situation is impossible",
+    explanation:
+      "If someone is in last place, there is nobody behind them to have been ahead of. So there's no one in last place for you to overtake — the situation the question describes can't happen.",
+    category: "logic",
+    mechanic: "impossible premise",
+    sourceType: "adapted",
+    sourceReference: "classic 'overtake the last-place runner' trick question, popularised by The 1% Club",
+  },
+  {
+    id: "c60_anagram_intruder",
+    difficulty: 60,
+    questionType: "multiple_choice",
+    prompt:
+      "Three of these four words are anagrams of each other — made from exactly the same letters. Which one isn't?\n\nMEAT, MATE, TEAM, TAMP",
+    choices: ["MEAT", "MATE", "TEAM", "TAMP"],
+    correctAnswer: "TAMP",
+    explanation:
+      "MEAT, MATE and TEAM are all built from the same four letters: M, E, A, T. TAMP swaps the E for a P, so it's the odd one out.",
+    category: "wordplay",
+    mechanic: "anagram intruder",
+    sourceType: "original",
+  },
+  {
+    id: "c50_relative_days",
+    difficulty: 50,
+    questionType: "multiple_choice",
+    prompt: "Two days ago, it was three days before Saturday. What day is today?",
+    choices: ["Wednesday", "Thursday", "Friday", "Saturday"],
+    correctAnswer: "Friday",
+    explanation:
+      "Three days before Saturday is Wednesday, so two days ago was Wednesday. Today is two days after that Wednesday, which is Friday.",
+    category: "logic",
+    mechanic: "compound relative-day reasoning",
+    sourceType: "original",
+  },
+  {
+    id: "c50_second_diff_sequence",
+    difficulty: 50,
+    questionType: "number",
+    prompt: "What number comes next?\n\n1, 2, 4, 7, 11, ?",
+    correctAnswer: "16",
+    explanation:
+      "The gaps between the numbers grow by one each time: +1, +2, +3, +4. The next gap is +5, and 11 + 5 = 16.",
+    category: "number patterns",
+    mechanic: "second-order sequence",
+    sourceType: "original",
+  },
+  {
+    id: "c40_hidden_number_word",
+    difficulty: 40,
+    questionType: "multiple_choice",
+    prompt:
+      "Three of these four words have a number secretly spelled out inside their letters (in order, with no gaps). Which one does NOT?",
+    choices: ["STONE", "KITTEN", "CANINE", "CANDLE"],
+    correctAnswer: "CANDLE",
+    explanation:
+      "STONE hides ONE, KITTEN hides TEN, and CANINE hides NINE, all as unbroken runs of letters. CANDLE has no number spelled out anywhere inside it.",
+    category: "wordplay",
+    mechanic: "embedded number",
+    sourceType: "adapted",
+    sourceReference: "generic 'hidden smaller word inside a bigger word' puzzle genre, applied here to number names",
+  },
+  {
+    id: "c40_polygon_side_sum",
+    difficulty: 40,
+    questionType: "visual_multiple_choice",
+    prompt:
+      "Add together the number of sides of the shape in box B and the shape in box D. Which lettered box holds a shape with exactly that many sides?",
+    choices: ["A", "B", "C", "D"],
+    correctAnswer: "C",
+    explanation:
+      "Box B is a triangle (3 sides) and box D is a square (4 sides); 3 + 4 = 7. Box C's heptagon is the only shape with 7 sides.",
+    visual: {
+      type: "svg",
+      assetId: "odd_polygon_out",
+      altText: "Four labelled boxes, A, B, C and D, containing a pentagon, a triangle, a heptagon and a square, in that order.",
+    },
+    category: "spatial reasoning",
+    mechanic: "shape property arithmetic",
+    sourceType: "original",
+  },
+  {
+    id: "c30_silver_key_fallacy",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt:
+      "Every silver key in the drawer opens the shed. James's key opens the shed. What can you actually conclude?",
+    choices: [
+      "James's key is silver",
+      "James's key is not silver",
+      "You can't tell whether James's key is silver",
+      "Every key that opens the shed is silver",
+    ],
+    correctAnswer: "You can't tell whether James's key is silver",
+    explanation:
+      "The rule only says silver keys open the shed - it never says only silver keys do. A key can open the shed without being silver, so all we really know is that James's key works. Its material is still unknown.",
+    category: "logic",
+    mechanic: "affirming the consequent",
+    sourceType: "adapted",
+    sourceReference:
+      "classic 'affirming the consequent' logical fallacy (e.g. 'all cats have four legs, Rex has four legs...')",
+  },
+  {
+    id: "c30_yesterdays_tomorrow",
+    difficulty: 30,
+    questionType: "multiple_choice",
+    prompt: "If yesterday's tomorrow is Wednesday, what day is tomorrow's yesterday?",
+    choices: ["Tuesday", "Wednesday", "Thursday", "Friday"],
+    correctAnswer: "Wednesday",
+    explanation:
+      "\"Yesterday's tomorrow\" is just today, so today is Wednesday. \"Tomorrow's yesterday\" is also just today. Both phrases describe the exact same day.",
+    category: "lateral thinking",
+    mechanic: "temporal reference reduction",
+    sourceType: "adapted",
+    sourceReference: "classic 'yesterday's tomorrow' day-of-the-week riddle genre",
+  },
+  {
+    id: "c20_three_box_prize",
+    difficulty: 20,
+    questionType: "number",
+    prompt:
+      "Three boxes are numbered 1, 2 and 3. A prize is hidden in exactly one of them. Exactly one of these labels is true:\n\nBox 1: 'The prize is in box 2.'\nBox 2: 'The prize is in box 3.'\nBox 3: 'The prize is in box 2.'\n\nWhich box has the prize? (Answer with just the number.)",
+    correctAnswer: "3",
+    explanation:
+      "If the prize were in box 1, all three labels would be false. If it were in box 2, both Box 1's and Box 3's labels would be true - two truths, not one. Only if the prize is in box 3 does exactly one label (Box 2's) come out true.",
+    category: "deduction",
+    mechanic: "constraint satisfaction with a single true label",
+    sourceType: "adapted",
+    sourceReference: "classic 'exactly one label is true' box puzzle format",
+  },
+  {
+    id: "c20_atbash_game",
+    difficulty: 20,
+    questionType: "text",
+    prompt:
+      "In a code, every letter swaps with its mirror partner in the alphabet: A<->Z, B<->Y, C<->X, and so on (so M<->N). Using this code, the word 'TZNV' decodes to a common word. What is it?",
+    correctAnswer: "game",
+    acceptedAnswers: ["game"],
+    explanation: "Mirror each letter using the pairing: T<->G, Z<->A, N<->M, V<->E. So TZNV decodes to GAME.",
+    category: "wordplay",
+    mechanic: "mirror-alphabet substitution cipher",
+    sourceType: "adapted",
+    sourceReference: "Atbash cipher, a classic mirror-alphabet substitution",
+  },
+  {
+    id: "c10_switches_bulb",
+    difficulty: 10,
+    questionType: "multiple_choice",
+    prompt:
+      "Three light switches are outside a windowless room. Exactly one of them controls the single bulb inside — you can't see the bulb until you go in, and once you enter you can't touch the switches again. You flip switch 1 on, wait a couple of minutes, then flip it back off. Then you flip switch 2 on and leave switch 3 off. You walk into the room: the bulb is off, but warm when you touch it. Which switch controls the bulb?",
+    choices: ["Switch 1", "Switch 2", "Switch 3", "It's impossible to tell"],
+    correctAnswer: "Switch 1",
+    explanation:
+      "Switch 1 was on long enough to heat the bulb, then got turned off before you entered — so a warm, dark bulb means switch 1 was the one lighting it. Switch 2 would leave it on and bright; switch 3 would leave it off and cold.",
+    category: "deduction",
+    mechanic: "physical clue elimination",
+    sourceType: "adapted",
+    sourceReference: "classic 'three switches and a light bulb' logic puzzle",
+  },
+  {
+    id: "c10_knights_knaves_atleast_one",
+    difficulty: 10,
+    questionType: "multiple_choice",
+    prompt:
+      "On an island, knights always tell the truth and knaves always lie. You meet two islanders, A and B. A says: 'At least one of us is a knave.' What are A and B?",
+    choices: ["A is a knight, B is a knave", "A is a knave, B is a knight", "Both are knights", "Both are knaves"],
+    correctAnswer: "A is a knight, B is a knave",
+    explanation:
+      "If A were a knave, the statement 'at least one of us is a knave' would actually be true — but knaves can't say true things, so that's impossible. A must be a knight, which makes the statement true, so B has to be the knave.",
+    category: "logic",
+    mechanic: "knights and knaves",
+    sourceType: "adapted",
+    sourceReference: "Raymond Smullyan-style knights and knaves puzzle",
+  },
+  {
+    id: "c10_coin_rotation_paradox",
+    difficulty: 10,
+    questionType: "number",
+    prompt:
+      "Two identical coins are placed flat on a table, touching. Keeping them touching and without any slipping, you roll one coin all the way around the outside of the other one until it gets back to where it started. How many full rotations has the rolling coin made around its own centre?",
+    correctAnswer: "2",
+    explanation:
+      "It looks like one full trip around should be one rotation, but going around the outside means the coin also has to keep spinning to face 'outward' the whole way, which adds one extra spin — so it actually turns twice.",
+    category: "spatial reasoning",
+    mechanic: "coin rotation paradox",
+    sourceType: "adapted",
+    sourceReference: "coin rotation paradox, classic geometry puzzle",
+  },
+  {
+    id: "c5_bertrand_box",
+    difficulty: 5,
+    questionType: "multiple_choice",
+    prompt:
+      "There are three identical boxes. One holds two gold coins, one holds two silver coins, and one holds one gold and one silver coin. You pick a box at random and pull out one coin without looking at the other — it's gold. What is the chance the other coin in that same box is also gold?",
+    choices: ["1/4", "1/3", "1/2", "2/3"],
+    correctAnswer: "2/3",
+    explanation:
+      "A gold coin is twice as likely to have come from the gold-gold box as from the mixed box, because the gold-gold box gives you two separate chances to hand you a gold coin, while the mixed box only gives you one. So it's twice as likely you're holding the gold-gold box as the mixed one — a 2-in-3 chance the other coin is also gold.",
+    timerSeconds: 90,
+    category: "probability",
+    mechanic: "conditional probability paradox",
+    sourceType: "adapted",
+    sourceReference: "Bertrand's box paradox, classical probability puzzle (Joseph Bertrand, 1889)",
+  },
+  {
+    id: "c5_circle_elimination_survivor",
+    difficulty: 5,
+    questionType: "number",
+    prompt:
+      "Seven people stand in a circle, numbered 1 to 7 in order. Starting the count at person 1, every 2nd person is eliminated — so person 2 goes first, then person 4, then person 6 — continuing round and round the circle (skipping anyone already eliminated) until only one person is left. What number is the last person remaining?",
+    correctAnswer: "7",
+    explanation:
+      "Eliminating every 2nd person going around removes 2, 4, 6, then wraps to remove 1, then 5, then 3 — leaving person 7 as the sole survivor.",
+    timerSeconds: 120,
+    category: "logic",
+    mechanic: "elimination survivor",
+    sourceType: "adapted",
+    sourceReference: "Josephus problem, classic elimination-counting puzzle (n=7, k=2 case)",
+  },
+  {
+    id: "c05_muddy_children",
+    difficulty: 0.5,
+    questionType: "multiple_choice",
+    prompt:
+      "Three children have been playing outside and all three now have a muddy smudge on their forehead. Each child can see the other two foreheads but not their own, and nothing has been said about it. Their teacher announces to all three at once: 'At least one of you has a muddy forehead.' She then asks, 'Do you know whether YOUR forehead is muddy?' — and repeats that exact question every few seconds. Everyone answers honestly and thinks perfectly logically. On which time she asks will all three finally say 'Yes' together, for the very first time?",
+    choices: ["The 1st time", "The 2nd time", "The 3rd time", "They never will"],
+    correctAnswer: "The 3rd time",
+    explanation:
+      "At the 1st asking, everyone already sees two muddy foreheads, so the teacher's hint tells them nothing new and all say no. At the 2nd asking, each child reasons that if only one other child were muddy, that child would already have worked it out at the 1st asking — since nobody did, everyone realises at least two must be muddy, but still can't tell if it's them. Only at the 3rd asking, once two rounds of silence have ruled out the two-muddy scenario, does each child work out that all three, including themselves, must be muddy.",
+    category: "deduction",
+    mechanic: "epistemic induction",
+    sourceType: "adapted",
+    sourceReference:
+      "The Muddy Children Puzzle (also called the Cheating Wives/Husbands puzzle), a classic epistemic-logic puzzle about common knowledge",
+  },
 ];
 
 /** Ids grouped by tier — the selector picks one from each list. */
