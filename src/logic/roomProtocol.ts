@@ -9,6 +9,11 @@ import type { Collection, Difficulty, GameSettings, Question } from "../types";
 export type RoomStatus = "lobby" | "question" | "reveal" | "guessing" | "ended";
 
 export const MAX_ROOM_PLAYERS = 8;
+/** Head-to-head rooms are exactly two phones. */
+export const HEAD_TO_HEAD_PLAYERS = 2;
+/** Head to head: "3-2-1" before the first flag, and how long each reveal stays up. */
+export const H2H_START_DELAY_MS = 3500;
+export const H2H_REVEAL_MS = 4500;
 /** Bonus for correctly guessing the game's biggest hint-user. */
 export const HINT_GUESS_BONUS = 100;
 export const ROOM_CODE_LENGTH = 4;
@@ -59,6 +64,7 @@ export interface RoomSettingsView {
   speedBonusEnabled: boolean;
   hintsEnabled: boolean;
   hintGuessRound: boolean;
+  headToHead: boolean;
 }
 
 export interface RoomSnapshot {
@@ -85,6 +91,10 @@ export interface RoomSnapshot {
   finishedAt: number | null;
   /** ended only: ids tied for most hints used (empty if nobody used any) */
   biggestHintUserIds: string[] | null;
+  /** head to head: server time the room moves on by itself (start / next flag) */
+  autoAdvanceAt: number | null;
+  /** head to head: a player set up a rematch room — everyone can follow this code */
+  rematch: { roomCode: string; byId: string } | null;
 }
 
 /** Private per-connection data sent alongside every snapshot. */
@@ -102,6 +112,7 @@ export type ClientMessage =
   | { type: "answer"; choice: string }
   | { type: "hint" } // player: reveal my next hint on this question
   | { type: "guess"; targetId: string } // player: guess the biggest hint-user
+  | { type: "rematch"; roomCode: string } // player (head to head): point everyone at a new room
   | { type: "start" }
   | { type: "reveal" }
   | { type: "next" }

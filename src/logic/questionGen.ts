@@ -9,6 +9,8 @@ import {
   usStates,
 } from "../data/countries";
 import { CAPITAL_TRAPS } from "../data/capitalTraps";
+import { greetingFor } from "../data/greetings";
+import { capitalHintText, postalCode, stateFacts } from "../data/placeFacts";
 import { MAX_ROOM_HINTS } from "./scoring";
 
 /** A single-pack question type (everything mode mixes these). */
@@ -293,9 +295,10 @@ function maskAnswer(text: string, names: string[]): string {
   for (const name of [...names].sort((a, b) => b.length - a.length)) {
     if (!name) continue;
     const safe = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // whole words only, so "Mongolian" isn't mangled into "this placen"
     out = out
-      .replace(new RegExp(`${safe}'s`, "gi"), "its")
-      .replace(new RegExp(safe, "gi"), "this place");
+      .replace(new RegExp(`\\b${safe}'s\\b`, "gi"), "its")
+      .replace(new RegExp(`\\b${safe}\\b`, "gi"), "this place");
   }
   return out;
 }
@@ -304,18 +307,30 @@ function maskAnswer(text: string, names: string[]): string {
 function roomHints(country: Country, kind: Question["kind"], correctAnswer: string): string[] {
   const isState = country.id.startsWith("state-");
   const mask = (t: string) => maskAnswer(t, [country.country, correctAnswer]);
+  if (!isState && kind !== "capital") {
+    // Guess the Flag / Guess the Country: vaguest first, capital last (biggest giveaway)
+    return [
+      `🌍 Continent: ${country.continent}`,
+      `👋 They say hello like this: "${greetingFor(country.id) ?? "Hello"}"`,
+      mask(`🗣️ Language: ${country.languages.join(", ")}`),
+      `🏛️ Capital: ${capitalHintText(country)}`,
+    ].slice(0, MAX_ROOM_HINTS);
+  }
+  if (isState && kind !== "capital") {
+    // US state flags: nickname first, postal code last (biggest giveaway)
+    return [
+      mask(`🏷️ Nickname: "${stateFacts(country.id)?.nickname ?? "—"}"`),
+      `🗺️ Region: ${country.region}`,
+      `🏛️ Capital: ${capitalHintText(country)}`,
+      `📮 Postal code: ${postalCode(country.countryCode)}`,
+    ].slice(0, MAX_ROOM_HINTS);
+  }
+  // capital questions (hints are currently off for these packs)
   const candidates: string[] = [];
   if (!isState) candidates.push(`Continent: ${country.continent}`);
   candidates.push(`Region: ${country.region}`);
-  if (kind === "capital") {
-    // don't reveal the capital itself (it's the answer) — nudge with its initial
-    candidates.push(`The capital begins with "${correctAnswer.charAt(0).toUpperCase()}"`);
-  } else {
-    const geo = [`Capital: ${country.capital}`];
-    if (country.landlocked) geo.push("landlocked");
-    else if (country.neighbors.length) geo.push(`borders ${country.neighbors.slice(0, 2).join(", ")}`);
-    candidates.push(mask(geo.join(" · ")));
-  }
+  // don't reveal the capital itself (it's the answer) — nudge with its initial
+  candidates.push(`The capital begins with "${correctAnswer.charAt(0).toUpperCase()}"`);
   candidates.push(mask(country.flagFact));
   if (country.funFacts[0]) candidates.push(mask(country.funFacts[0]));
 

@@ -1,45 +1,50 @@
 import type { Country, HintKey } from "../types";
+import { greetingFor } from "../data/greetings";
+import { capitalHintText, countryFacts, postalCode, stateFacts } from "../data/placeFacts";
 import { pointsAfterHints } from "../logic/scoring";
 
 interface Props {
   country: Country;
   revealed: HintKey[];
   isLearningMode: boolean;
-  /** Hints to omit (e.g. continent is meaningless for US states). */
-  skipHints?: HintKey[];
   onReveal: (hint: HintKey) => void;
 }
 
-/** Mask the country's own name so hints don't spoil the answer. */
-function mask(text: string, countryName: string): string {
-  const safe = countryName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/**
+ * Mask the country's own name so hints don't spoil the answer. Whole words
+ * only, so a language like "Mongolian" stays readable instead of being mangled.
+ */
+function mask(text: string, place: Country): string {
+  const safe = place.country.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const noun = place.id.startsWith("state-") ? "this state" : "this country";
   return text
-    .replace(new RegExp(`${safe}'s`, "gi"), "this country's")
-    .replace(new RegExp(safe, "gi"), "this country");
+    .replace(new RegExp(`\\b${safe}'s\\b`, "gi"), `${noun}'s`)
+    .replace(new RegExp(`\\b${safe}\\b`, "gi"), noun);
 }
 
-function geographyHint(c: Country): string {
-  const parts: string[] = [`Capital: ${c.capital}.`];
-  if (c.landlocked) parts.push("It is landlocked.");
-  if (c.neighbors.length > 0) {
-    parts.push(`Borders: ${c.neighbors.slice(0, 4).join(", ")}.`);
-  } else {
-    parts.push("It has no land borders.");
-  }
-  return parts.join(" ");
-}
+type HintDef = { key: HintKey; label: string; text: (c: Country) => string };
 
-const HINTS: { key: HintKey; label: string; text: (c: Country) => string }[] = [
-  { key: "continent", label: "Continent", text: (c) => c.continent },
-  { key: "region", label: "Region", text: (c) => c.region },
-  { key: "geography", label: "Geography", text: geographyHint },
-  { key: "flagFact", label: "Flag Fact", text: (c) => c.flagFact },
-  { key: "funFact", label: "Fun Fact", text: (c) => c.funFacts[0] },
+/** Guess the Flag / Guess the Country. */
+const COUNTRY_HINTS: HintDef[] = [
+  { key: "hello", label: "👋 Say Hello", text: (c) => `"${greetingFor(c.id) ?? "Hello"}"` },
+  { key: "capital", label: "🏛️ Capital", text: capitalHintText },
+  { key: "language", label: "🗣️ Language", text: (c) => c.languages.join(", ") },
+  { key: "continent", label: "🌍 Continent", text: (c) => c.continent },
+  { key: "currency", label: "💰 Money", text: (c) => countryFacts(c.id)?.currency ?? "—" },
+  { key: "founded", label: "📅 Founded", text: (c) => countryFacts(c.id)?.founded ?? "—" },
 ];
 
-export function HintPanel({ country, revealed, isLearningMode, skipHints = [], onReveal }: Props) {
+/** US state flags: hello/language/continent are the same for every state. */
+const STATE_HINTS: HintDef[] = [
+  { key: "nickname", label: "🏷️ Nickname", text: (c) => `"${stateFacts(c.id)?.nickname ?? "—"}"` },
+  { key: "region", label: "🗺️ Region", text: (c) => c.region },
+  { key: "capital", label: "🏛️ Capital", text: capitalHintText },
+  { key: "postal", label: "📮 Postal Code", text: (c) => postalCode(c.countryCode) },
+];
+
+export function HintPanel({ country, revealed, isLearningMode, onReveal }: Props) {
   const available = pointsAfterHints(revealed.length);
-  const hints = HINTS.filter((h) => !skipHints.includes(h.key));
+  const hints = country.id.startsWith("state-") ? STATE_HINTS : COUNTRY_HINTS;
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3">
       <div className="mb-2 flex items-center justify-between">
@@ -49,7 +54,7 @@ export function HintPanel({ country, revealed, isLearningMode, skipHints = [], o
         {isLearningMode && (
           <span className="text-xs font-semibold text-slate-300">
             Worth <span className="font-bold text-gold-400">{available}</span> pts
-            {revealed.length > 0 && (
+            {revealed.length > 0 && revealed.length < hints.length && (
               <span className="text-slate-500"> (next hint: {pointsAfterHints(revealed.length + 1)})</span>
             )}
           </span>
@@ -71,11 +76,12 @@ export function HintPanel({ country, revealed, isLearningMode, skipHints = [], o
       {revealed.length > 0 && (
         <ul className="mt-2 space-y-1.5">
           {revealed.map((key) => {
-            const hint = HINTS.find((h) => h.key === key)!;
+            const hint = hints.find((h) => h.key === key);
+            if (!hint) return null;
             return (
               <li key={key} className="text-sm text-slate-200 animate-slide-up">
                 <span className="font-bold text-violet-300">{hint.label}: </span>
-                {mask(hint.text(country), country.country)}
+                {mask(hint.text(country), country)}
               </li>
             );
           })}

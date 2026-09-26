@@ -1,7 +1,11 @@
 import type { GameSettings, Question } from "../src/types";
 import { hintPenalty, MAX_ROOM_HINTS, scoreCorrectAnswer } from "../src/logic/scoring";
 import {
+  H2H_REVEAL_MS,
+  H2H_START_DELAY_MS,
+  HEAD_TO_HEAD_PLAYERS,
   HINT_GUESS_BONUS,
+  isValidRoomCode,
   MAX_ROOM_PLAYERS,
   ROOM_PLAYER_COLORS,
   type ClientMessage,
@@ -48,6 +52,13 @@ interface StoredRoom {
   questionStartedAt: number;
   finishedAt: number | null;
   lastActivity: number;
+  /** head to head: when the room moves on by itself (lobby -> Q1, reveal -> next) */
+  autoAdvanceAt?: number | null;
+  rematch?: { roomCode: string; byId: string } | null;
+}
+
+function playerCap(room: StoredRoom): number {
+  return room.settings.headToHead ? HEAD_TO_HEAD_PLAYERS : MAX_ROOM_PLAYERS;
 }
 
 interface Attachment {
@@ -82,7 +93,7 @@ function validateInit(body: InitRequest): string | null {
     if (
       q.hints !== undefined &&
       (!Array.isArray(q.hints) ||
-        q.hints.length > 3 ||
+        q.hints.length > MAX_ROOM_HINTS ||
         q.hints.some((h) => typeof h !== "string" || h.length > 200))
     ) {
       return "bad hints";
@@ -143,8 +154,7 @@ export class GameRoom {
         exists: room !== null,
         status: room?.status ?? null,
         playerCount: room?.players.length ?? 0,
-        canJoin:
-          room !== null && room.status === "lobby" && room.players.length < MAX_ROOM_PLAYERS,
+        canJoin: room !== null && room.status === "lobby" && room.players.length < playerCap(room),
       });
     }
 
@@ -188,6 +198,11 @@ export class GameRoom {
       this.handleHint(room, who.playerId);
     } else if (msg.type === "guess" && who.role === "player" && who.playerId) {
       this.handleGuess(room, who.playerId, msg.targetId);
+    } else if (msg.type === "rematch" && who.role === "player" && who.playerId) {
+      // first rematch wins; everyone else is offered the same new room
+      if (room.status === "ended" && !room.rematch && isValidRoomCode(msg.roomCode)) {
+        room.rematch = { roomCode: msg.roomCode, byId: who.playerId };
+      }
     } else if (who.role === "host") {
       if (msg.type === "start" && room.status === "lobby" && room.players.length > 0) {
         this.startQuestion(room, 0);
@@ -234,6 +249,12 @@ export class GameRoom {
       this.revealAnswers(room);
       await this.save();
       this.broadcast(room);
+    } else if (room.autoAdvanceAt && now >= room.autoAdvanceAt) {
+      room.autoAdvanceAt = null;
+      if (room.status === "lobby") this.startQuestion(room, 0);
+      else if (room.status === "reveal") this.nextQuestion(room);
+      await this.save();
+      this.broadcast(room);
     } else {
       await this.armAlarm(room);
     }
@@ -266,7 +287,7 @@ export class GameRoom {
           ws.close(1000, "already-started");
           return;
         }
-        if (room.players.length >= MAX_ROOM_PLAYERS) {
+        if (room.players.length >= playerCap(room)) {
           this.sendError(ws, "room-full", "This room is full.");
           ws.close(1000, "room-full");
           return;
@@ -289,6 +310,10 @@ export class GameRoom {
         };
         room.players.push(player);
         ws.serializeAttachment({ role: "player", playerId: player.id } satisfies Attachment);
+        // head to head has no host: the second phone joining kicks off the countdown
+        if (room.settings.headToHead && room.players.length >= HEAD_TO_HEAD_PLAYERS) {
+          room.autoAdvanceAt = Date.now() + H2H_START_DELAY_MS;
+        }
       }
     }
     void this.save().then(() => this.broadcast(room));
@@ -340,6 +365,7 @@ export class GameRoom {
     room.status = "question";
     room.questionIndex = index;
     room.questionStartedAt = Date.now();
+    room.autoAdvanceAt = null;
     for (const p of room.players) {
       p.answer = null;
       p.lastAnswer = null;
@@ -375,6 +401,7 @@ export class GameRoom {
       p.answer = null;
     }
     room.status = "reveal";
+    if (room.settings.headToHead) room.autoAdvanceAt = Date.now() + H2H_REVEAL_MS;
     void this.armAlarm(room);
   }
 
@@ -443,6 +470,7 @@ export class GameRoom {
     const candidates = [room.lastActivity + IDLE_TIMEOUT_MS];
     const deadline = this.questionDeadline(room);
     if (deadline !== null) candidates.push(deadline + REVEAL_GRACE_MS);
+    if (room.autoAdvanceAt) candidates.push(room.autoAdvanceAt);
     await this.state.storage.setAlarm(Math.min(...candidates));
   }
 
@@ -497,6 +525,7 @@ export class GameRoom {
         speedBonusEnabled: room.settings.speedBonusEnabled,
         hintsEnabled: room.settings.hintsEnabled ?? false,
         hintGuessRound: room.settings.hintGuessRound !== false,
+        headToHead: room.settings.headToHead === true,
       },
       questionIndex: room.questionIndex,
       totalQuestions: room.questions.length,
@@ -517,6 +546,8 @@ export class GameRoom {
       serverNow: Date.now(),
       finishedAt: room.finishedAt,
       biggestHintUserIds: room.status === "ended" ? this.biggestHintUserIds(room) : null,
+      autoAdvanceAt: room.autoAdvanceAt ?? null,
+      rematch: room.rematch ?? null,
     };
   }
 

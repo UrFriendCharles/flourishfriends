@@ -2,16 +2,16 @@ import type { GameSettings } from "../types";
 
 export const BASE_POINTS = 100;
 
-/** Points available after hint penalties: 100 / 75 / 50 / 25 (floor at 25). */
+/** Points available after hint penalties: 100 / 85 / 70 / 55 / 40 / 25 (floor at 25). */
 export function pointsAfterHints(hintsUsed: number): number {
-  return Math.max(25, BASE_POINTS - hintsUsed * 25);
+  return Math.max(25, BASE_POINTS - hintsUsed * 15);
 }
 
 /**
  * Per-hint point penalty for TV-room hints: escalating and cumulative.
- * 1 hint = -5, 2 = -15, 3 = -30 (i.e. each successive hint costs 5/10/15).
+ * 1 hint = -5, 2 = -15, 3 = -30, 4 = -50 (each successive hint costs 5/10/15/20).
  */
-export const ROOM_HINT_STEPS = [5, 10, 15];
+export const ROOM_HINT_STEPS = [5, 10, 15, 20];
 export const MAX_ROOM_HINTS = ROOM_HINT_STEPS.length;
 
 export function hintPenalty(hintsUsed: number): number {

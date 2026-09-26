@@ -11,7 +11,8 @@ import {
   roundPlayers,
   usedCountryIds,
 } from "./logic/gameReducer";
-import { generateQuestions, generateTieBreakerQuestions, withRoomHints } from "./logic/questionGen";
+import { generateQuestions, generateTieBreakerQuestions } from "./logic/questionGen";
+import { createFlagRoom } from "./logic/createRoom";
 import { simulateCrowdVote } from "./logic/crowd";
 import {
   addHighScores,
@@ -28,12 +29,7 @@ import { PartyIntro } from "./screens/PartyIntro";
 import { ControllerRoom } from "./screens/ControllerRoom";
 import { HostRoom } from "./screens/HostRoom";
 import { DisplayRoom } from "./screens/DisplayRoom";
-import {
-  isValidRoomCode,
-  normalizeRoomCode,
-  type CreateRoomRequest,
-  type CreateRoomResponse,
-} from "./logic/roomProtocol";
+import { isValidRoomCode, normalizeRoomCode } from "./logic/roomProtocol";
 import { PlayerSetup } from "./screens/PlayerSetup";
 import { GameSetup } from "./screens/GameSetup";
 import { PassDevice } from "./screens/PassDevice";
@@ -65,6 +61,7 @@ type AppRoute =
   | { kind: "host"; code: string; hostKey: string }
   | { kind: "tvIntro" }
   | { kind: "tvSetup" }
+  | { kind: "h2hSetup" }
   | { kind: "clubSetup" }
   | { kind: "clubSolo"; settings: ClubSettings }
   | { kind: "clubVisuals" }
@@ -236,30 +233,25 @@ export default function App() {
 
   const createTvRoom = async (settings: GameSettings) => {
     try {
-      const questions = generateQuestions(
-        settings.questionCount,
-        settings.difficulty,
-        settings.continents,
-        settings.collection
-      );
-      const body: CreateRoomRequest = {
-        settings,
-        // bake hint lines here on the host so the worker never needs the dataset
-        questions: settings.hintsEnabled ? withRoomHints(questions) : questions,
-      };
-      const res = await fetch("/api/rooms", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) throw new Error(`create room failed: ${res.status}`);
-      const { roomCode, hostKey } = (await res.json()) as CreateRoomResponse;
+      const { roomCode, hostKey } = await createFlagRoom(settings);
       sessionStorage.setItem(hostKeyStorage(roomCode), hostKey);
       window.history.pushState(null, "", `/host/${roomCode}`);
       setTvNotice(null);
       setRoute({ kind: "host", code: roomCode, hostKey });
     } catch {
       setTvNotice("Couldn't create the room — check your connection and try again.");
+    }
+  };
+
+  // Head to head: the creator is just the first player — no host screen.
+  const createHeadToHead = async (settings: GameSettings, name: string) => {
+    try {
+      const { roomCode } = await createFlagRoom(settings);
+      window.history.pushState(null, "", `/join/${roomCode}`);
+      setTvNotice(null);
+      setRoute({ kind: "controller", code: roomCode, name });
+    } catch {
+      setTvNotice("Couldn't create the game — check your connection and try again.");
     }
   };
 
@@ -307,7 +299,18 @@ export default function App() {
           />
         );
       case "controller":
-        return <ControllerRoom roomCode={route.code} playerName={route.name} onLeave={goHome} />;
+        return (
+          <ControllerRoom
+            key={route.code}
+            roomCode={route.code}
+            playerName={route.name}
+            onLeave={goHome}
+            onRematch={(code) => {
+              window.history.pushState(null, "", `/join/${code}`);
+              setRoute({ kind: "controller", code, name: route.name });
+            }}
+          />
+        );
       case "display":
         return <DisplayRoom roomCode={route.code} />;
       case "host":
@@ -328,6 +331,20 @@ export default function App() {
             onBack={() => {
               setTvNotice(null);
               setRoute({ kind: "tvIntro" });
+            }}
+          />
+        );
+      case "h2hSetup":
+        return (
+          <GameSetup
+            tv
+            headToHead
+            notice={tvNotice}
+            onStart={createTvRoom}
+            onStartHeadToHead={createHeadToHead}
+            onBack={() => {
+              setTvNotice(null);
+              setRoute(null);
             }}
           />
         );
@@ -401,6 +418,7 @@ export default function App() {
             if (saved) dispatch({ type: "RESUME_GAME", state: saved, now: Date.now() });
           }}
           onHostTv={() => setRoute({ kind: "tvIntro" })}
+          onHeadToHead={() => setRoute({ kind: "h2hSetup" })}
           onJoinRoom={openJoin}
           onHighScores={() => dispatch({ type: "NAVIGATE", screen: "highScores" })}
           onHowToPlay={() => dispatch({ type: "NAVIGATE", screen: "howToPlay" })}

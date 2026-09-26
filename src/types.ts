@@ -34,7 +34,16 @@ export interface Country {
   confusableWith: string[];
 }
 
-export type HintKey = "continent" | "region" | "geography" | "flagFact" | "funFact" | "flag";
+export type HintKey =
+  | "hello"
+  | "capital"
+  | "language"
+  | "continent"
+  | "currency"
+  | "founded"
+  | "nickname"
+  | "region"
+  | "postal";
 
 export interface Question {
   id: string;
@@ -106,6 +115,8 @@ export interface GameSettings {
   continents: Continent[]; // empty = all
   /** TV rooms: end-game round where players guess who used the most hints */
   hintGuessRound?: boolean;
+  /** Room with no TV/host: two phones, auto-start and auto-advance */
+  headToHead?: boolean;
 }
 
 export interface QuestionRuntime {

@@ -9,7 +9,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "🇺🇸 Quiz packs & typed answers",
-    body: "Pick a pack in game setup: World Flags, US State Flags, State Capitals, World Capitals (name a country's capital from its flag), Guess the Country (name it from its map outline — spend clues to reveal the flag or a fact, each lowering the points), or Everything — a mix of the packs. Feeling brave? On flag packs switch answers to Type It In and spell the name yourself — small typos are forgiven, but lifelines are off.",
+    body: "Pick a pack in game setup: World Flags, US State Flags, State Capitals, World Capitals (name a country's capital from its flag), Guess the Country (name it from its map outline — spend hints, each lowering the points), or Everything — a mix of the packs. Feeling brave? On flag packs switch answers to Type It In and spell the name yourself — small typos are forgiven, but lifelines are off.",
   },
   {
     title: "👥 Playing with friends",
@@ -21,7 +21,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "📚 Learning Mode",
-    body: "Reveal hints (continent, region, geography, flag facts) one at a time. Each hint lowers the question's value: 100 → 75 → 50 → 25.",
+    body: "Reveal hints one at a time — how they say hello, the capital city, the language, the continent, the money they use and the year it was founded (US state flags get nickname, region, capital and postal code instead). Each hint lowers the question's value: 100 → 85 → 70 → 55 → 40 → 25.",
   },
   {
     title: "⭐ Lifelines",

@@ -2,6 +2,7 @@ import type { Country, Player, Question } from "../types";
 import { flagUrl } from "../data/countries";
 import { AnswerGrid } from "../components/AnswerGrid";
 import { FlagDisplay } from "../components/FlagDisplay";
+import { FactStrip } from "../components/FactStrip";
 import { PlayerScoreboard } from "../components/PlayerScoreboard";
 
 interface Props {
@@ -131,6 +132,8 @@ export function AnswerReveal({
           </>
         )}
       </div>
+
+      <FactStrip place={country} />
 
       <PlayerScoreboard players={allPlayers} />
 

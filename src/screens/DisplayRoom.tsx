@@ -3,6 +3,7 @@ import { countryById } from "../data/countries";
 import { HINT_GUESS_BONUS } from "../logic/roomProtocol";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomTimerBar } from "../components/RoomBits";
 import { QrCode } from "../components/QrCode";
+import { FactStrip } from "../components/FactStrip";
 
 interface Props {
   roomCode: string;
@@ -159,6 +160,7 @@ export function DisplayRoom({ roomCode }: Props) {
             <p className="mx-auto mt-3 max-w-2xl text-slate-300">💡 {country.flagFact}</p>
           ) : null}
         </div>
+        {country && <FactStrip place={country} large />}
         <div className="mx-auto w-full max-w-xl space-y-2">
           {[...snapshot.players]
             .sort((a, b) => b.score - a.score)

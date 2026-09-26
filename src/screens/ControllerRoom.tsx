@@ -1,21 +1,33 @@
 import { useEffect, useState } from "react";
 import type { ScoreShare } from "../types";
 import { useRoomSocket } from "../hooks/useRoomSocket";
-import { nextHintCost } from "../logic/scoring";
+import { hintPenalty, MAX_ROOM_HINTS, nextHintCost } from "../logic/scoring";
 import { HINT_GUESS_BONUS } from "../logic/roomProtocol";
 import { CHOICE_LETTERS, RoomFinalStandings, RoomLeaderboard, RoomTimerBar } from "../components/RoomBits";
 import { ScoreShareWidget } from "../components/ScoreShareWidget";
 import { newShareId, saveScoreShare } from "../storage/scoreShares";
+import { countryById } from "../data/countries";
+import { FactStrip } from "../components/FactStrip";
+import {
+  ChallengeInvite,
+  useCountdown,
+  VersusBar,
+  VersusReveal,
+  WinnerBanner,
+} from "../components/HeadToHead";
+import { createFlagRoom, settingsFromRoom } from "../logic/createRoom";
 
 interface Props {
   roomCode: string;
   playerName: string;
   onLeave: () => void;
+  /** head to head: move this phone into the rematch room */
+  onRematch?: (roomCode: string) => void;
 }
 
 const playerIdKey = (code: string) => `ffq:room:${code}:playerId`;
 
-export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
+export function ControllerRoom({ roomCode, playerName, onLeave, onRematch }: Props) {
   const { snapshot, you, connected, fatalError, clockOffset, send } = useRoomSocket(
     roomCode,
     () => ({
@@ -26,11 +38,32 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
     })
   );
   const [share, setShare] = useState<ScoreShare | null>(null);
+  const [rematchState, setRematchState] = useState<"idle" | "creating" | "failed">("idle");
+  const countdown = useCountdown(snapshot?.autoAdvanceAt ?? null, clockOffset);
 
   // remember our server-assigned id so reloads/reconnects rejoin as us
   useEffect(() => {
     if (you?.playerId) sessionStorage.setItem(playerIdKey(roomCode), you.playerId);
   }, [you?.playerId, roomCode]);
+
+  // we asked for a rematch: follow whichever room the server accepted (if both
+  // players tapped at once, the first one wins and we both go there)
+  const rematchCode = snapshot?.rematch?.roomCode ?? null;
+  useEffect(() => {
+    if (rematchCode && rematchState === "creating") onRematch?.(rematchCode);
+  }, [rematchCode, rematchState, onRematch]);
+
+  const startRematch = async () => {
+    if (!snapshot) return;
+    if (rematchCode) return onRematch?.(rematchCode);
+    setRematchState("creating");
+    try {
+      const { roomCode: code } = await createFlagRoom(settingsFromRoom(snapshot.settings));
+      send({ type: "rematch", roomCode: code });
+    } catch {
+      setRematchState("failed");
+    }
+  };
 
   const shell = (children: React.ReactNode) => (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 px-5 py-6">
@@ -62,6 +95,34 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
   }
 
   const me = snapshot.players.find((p) => p.id === you?.playerId) ?? null;
+  const h2h = snapshot.settings.headToHead;
+  const them = snapshot.players.find((p) => p.id !== me?.id) ?? null;
+
+  if (snapshot.status === "lobby" && h2h) {
+    return shell(
+      <>
+        <div className="text-center animate-pop-in">
+          <div className="text-5xl">⚔️</div>
+          <h2 className="mt-2 text-2xl font-black">
+            {them ? `${me?.name ?? "You"} vs ${them.name}` : "Challenge ready!"}
+          </h2>
+          {!them && (
+            <p className="mt-1 text-sm text-slate-400">
+              Send the link — the game starts as soon as your friend joins.
+            </p>
+          )}
+        </div>
+        {them ? (
+          <div className="my-auto text-center animate-pop-in">
+            <p className="text-sm font-bold uppercase tracking-widest text-slate-400">Get ready!</p>
+            <div className="text-8xl font-black text-sky-200">{countdown || "GO"}</div>
+          </div>
+        ) : (
+          <ChallengeInvite roomCode={roomCode} myName={me?.name ?? playerName} />
+        )}
+      </>
+    );
+  }
 
   if (snapshot.status === "lobby") {
     return shell(
@@ -80,6 +141,7 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
     const locked = you?.choice ?? null;
     return shell(
       <>
+        {h2h && me && <VersusBar me={me} them={them} />}
         <div className="text-center text-xs font-bold uppercase tracking-wider text-slate-400">
           Question {snapshot.questionIndex + 1} of {snapshot.totalQuestions}
         </div>
@@ -115,7 +177,7 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
                 ))}
               </ul>
             )}
-            {(you?.hints ?? []).length < 3 ? (
+            {(you?.hints ?? []).length < MAX_ROOM_HINTS ? (
               <button
                 onClick={() => send({ type: "hint" })}
                 className="w-full rounded-xl border border-violet-400/40 bg-violet-500/20 px-3 py-2 text-sm font-bold text-violet-100 active:scale-95"
@@ -124,7 +186,7 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
               </button>
             ) : (
               <p className="text-center text-xs font-semibold text-slate-400">
-                All 3 hints used (−30)
+                All {MAX_ROOM_HINTS} hints used (−{hintPenalty(MAX_ROOM_HINTS)})
               </p>
             )}
           </div>
@@ -152,7 +214,16 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
         </div>
         {locked !== null && (
           <p className="text-center text-sm font-bold text-sky-200 animate-pop-in">
-            🔒 Locked in — waiting for the others…
+            🔒 Locked in — waiting for {h2h && them ? them.name : "the others"}…
+          </p>
+        )}
+        {h2h && them && locked === null && (
+          <p className="text-center text-xs font-semibold text-slate-400">
+            {!them.connected
+              ? `🟡 ${them.name} lost connection`
+              : them.answered
+                ? `⚡ ${them.name} already answered!`
+                : `🤔 ${them.name} is thinking…`}
           </p>
         )}
       </>
@@ -187,8 +258,25 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
             </>
           )}
         </div>
-        <RoomLeaderboard players={snapshot.players} highlightId={me?.id} />
-        <p className="text-center text-xs text-slate-400">Waiting for the host…</p>
+        {h2h && me ? (
+          <>
+            <VersusReveal me={me} them={them} />
+            <VersusBar me={me} them={them} />
+            {snapshot.countryId && countryById.get(snapshot.countryId) && (
+              <FactStrip place={countryById.get(snapshot.countryId)!} />
+            )}
+            <p className="text-center text-xs font-bold text-slate-400">
+              {snapshot.questionIndex + 1 >= snapshot.totalQuestions
+                ? `Final results in ${countdown ?? 0}…`
+                : `Next flag in ${countdown ?? 0}…`}
+            </p>
+          </>
+        ) : (
+          <>
+            <RoomLeaderboard players={snapshot.players} highlightId={me?.id} />
+            <p className="text-center text-xs text-slate-400">Waiting for the host…</p>
+          </>
+        )}
       </>
     );
   }
@@ -259,13 +347,44 @@ export function ControllerRoom({ roomCode, playerName, onLeave }: Props) {
     void saveScoreShare(s);
   };
 
+  const rematchByThem = snapshot.rematch && snapshot.rematch.byId !== me?.id;
+
   return shell(
     <>
-      <div className="text-center animate-pop-in">
-        <div className="text-6xl">🏁</div>
-        <h2 className="mt-2 text-3xl font-black">Game Over!</h2>
-      </div>
-      {biggest.length > 0 && (
+      {h2h && me ? (
+        <WinnerBanner me={me} them={them} />
+      ) : (
+        <div className="text-center animate-pop-in">
+          <div className="text-6xl">🏁</div>
+          <h2 className="mt-2 text-3xl font-black">Game Over!</h2>
+        </div>
+      )}
+      {h2h && onRematch && (
+        <div className="space-y-2">
+          {rematchByThem && (
+            <p className="text-center text-sm font-bold text-rose-200 animate-pop-in">
+              🔁 {them?.name ?? "Your friend"} wants a rematch!
+            </p>
+          )}
+          <button
+            onClick={startRematch}
+            disabled={rematchState === "creating"}
+            className="w-full rounded-2xl bg-gradient-to-r from-rose-500 to-violet-500 px-6 py-4 text-lg font-bold shadow-lg shadow-rose-500/25 transition active:scale-95 disabled:opacity-50"
+          >
+            {rematchState === "creating"
+              ? "Setting up…"
+              : rematchByThem
+                ? "⚔️ Accept Rematch"
+                : "🔁 Rematch"}
+          </button>
+          {rematchState === "failed" && (
+            <p className="text-center text-xs font-semibold text-rose-300">
+              Couldn't set up the rematch — check your connection and try again.
+            </p>
+          )}
+        </div>
+      )}
+      {!h2h && biggest.length > 0 && (
         <div className="rounded-xl border border-violet-400/25 bg-violet-500/10 p-3 text-sm animate-slide-up">
           <div className="font-bold text-violet-200">🎲 Hint-Guess Round</div>
           <p className="mt-1 text-slate-200">

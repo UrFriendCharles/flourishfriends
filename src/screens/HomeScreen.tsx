@@ -6,6 +6,7 @@ interface Props {
   onStart: () => void;
   onContinue: () => void;
   onHostTv: () => void;
+  onHeadToHead: () => void;
   onJoinRoom: () => void;
   onHighScores: () => void;
   onHowToPlay: () => void;
@@ -19,6 +20,7 @@ export function HomeScreen({
   onStart,
   onContinue,
   onHostTv,
+  onHeadToHead,
   onJoinRoom,
   onHighScores,
   onHowToPlay,
@@ -64,6 +66,15 @@ export function HomeScreen({
               ▶️ Continue Game
             </button>
           )}
+          <button
+            onClick={onHeadToHead}
+            className="w-full rounded-2xl border border-rose-400/50 bg-rose-500/15 px-6 py-3.5 font-bold text-rose-200 transition active:scale-95"
+          >
+            ⚔️ Head to Head
+            <span className="block text-xs font-semibold text-rose-200/70">
+              Challenge a friend — send them a link
+            </span>
+          </button>
           <div className="flex gap-3">
             <button
               onClick={onHostTv}

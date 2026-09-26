@@ -3,7 +3,6 @@ import type { Country, GameSettings, HintKey, Player, Question } from "../types"
 import { AnswerGrid } from "../components/AnswerGrid";
 import { FlagDisplay } from "../components/FlagDisplay";
 import { HintPanel } from "../components/HintPanel";
-import { ShapeCluePanel } from "../components/ShapeCluePanel";
 import { LifelinePanel } from "../components/LifelinePanel";
 import { PlayerScoreboard } from "../components/PlayerScoreboard";
 import { ProgressBar } from "../components/ProgressBar";
@@ -162,25 +161,14 @@ export function QuestionScreen(props: Props) {
         {pendingAnswer ? "🔒 Lock It In!" : isTyped ? "Type your answer…" : "Pick an answer…"}
       </button>
 
-      {question.kind === "shape"
-        ? !isTieBreaker && (
-            <ShapeCluePanel
-              country={country}
-              revealed={hintsRevealed}
-              showPoints={settings.mode === "learning"}
-              onReveal={onRevealHint}
-            />
-          )
-        : settings.hintsEnabled &&
-          !isTieBreaker && (
-            <HintPanel
-              country={country}
-              revealed={hintsRevealed}
-              isLearningMode={settings.mode === "learning"}
-              skipHints={settings.collection === "usStates" ? ["continent"] : []}
-              onReveal={onRevealHint}
-            />
-          )}
+      {(settings.hintsEnabled || question.kind === "shape") && !isTieBreaker && (
+        <HintPanel
+          country={country}
+          revealed={hintsRevealed}
+          isLearningMode={settings.mode === "learning"}
+          onReveal={onRevealHint}
+        />
+      )}
 
       {settings.lifelinesEnabled && !isTyped && !isTieBreaker && (
         <LifelinePanel

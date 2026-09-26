@@ -17,7 +17,20 @@ interface Props {
   onBack: () => void;
   /** TV-room setup: multiple choice + classic only, no hints/lifelines */
   tv?: boolean;
+  /** Head to head (implies tv rules): asks for your name, then onStartHeadToHead */
+  headToHead?: boolean;
+  onStartHeadToHead?: (settings: GameSettings, name: string) => void;
   notice?: string | null;
+}
+
+const H2H_NAME_KEY = "ffq:h2hName";
+
+function loadH2hName(): string {
+  try {
+    return localStorage.getItem(H2H_NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
 }
 
 function Chip({
@@ -52,7 +65,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export function GameSetup({ onStart, onBack, tv, notice }: Props) {
+export function GameSetup({ onStart, onBack, tv, headToHead, onStartHeadToHead, notice }: Props) {
+  const [name, setName] = useState(loadH2hName);
+  const [creating, setCreating] = useState(false);
   const [settings, setSettings] = useState<GameSettings>(
     // merge so settings saved before newer options existed still get defaults
     () => ({ ...DEFAULT_SETTINGS, ...loadSettings() })
@@ -63,7 +78,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
     setSettings((s) => ({ ...s, [key]: value }));
 
   // capitals & everything are multiple-choice classic (hints/typed are flag-centric);
-  // shapes is multiple-choice with its own clue flow (forced learning for point decay)
+  // shapes is multiple-choice with hints always on (forced learning for point decay)
   const isCapitals =
     settings.collection === "usCapitals" || settings.collection === "worldCapitals";
   const isEverything = settings.collection === "everything";
@@ -88,7 +103,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
       isCapitals || isEverything
         ? { answerStyle: "choices", mode: "classic", hintsEnabled: false }
         : {};
-    // shapes: multiple choice + learning so the flag/fact clues cost points
+    // shapes: multiple choice + learning so the hints cost points
     const shapesOverride: Partial<GameSettings> =
       isShapes ? { answerStyle: "choices", mode: "learning", hintsEnabled: true } : {};
     // TV rooms keep their own hints toggle (penalized hints on phones); other
@@ -96,7 +111,23 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
     const tvOverride: Partial<GameSettings> = tv
       ? { answerStyle: "choices", mode: "classic", lifelinesEnabled: false }
       : {};
-    onStart({ ...clean, ...capitalsOverride, ...shapesOverride, ...tvOverride });
+    const final = { ...clean, ...capitalsOverride, ...shapesOverride, ...tvOverride };
+    if (headToHead && onStartHeadToHead) {
+      const trimmed = name.trim().slice(0, 20);
+      if (!trimmed || creating) return;
+      try {
+        localStorage.setItem(H2H_NAME_KEY, trimmed);
+      } catch {
+        // private mode — just don't remember it
+      }
+      setCreating(true);
+      // no host to run a guessing round, and no TV — keep it quick
+      Promise.resolve(
+        onStartHeadToHead({ ...final, headToHead: true, hintGuessRound: false }, trimmed)
+      ).finally(() => setCreating(false));
+      return;
+    }
+    onStart(final);
   };
 
   return (
@@ -105,12 +136,35 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
         <button onClick={onBack} className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold">
           ←
         </button>
-        <h2 className="text-2xl font-black">{tv ? "📺 TV Game Setup" : "Game Setup"}</h2>
+        <h2 className="text-2xl font-black">
+          {headToHead ? "⚔️ Head to Head" : tv ? "📺 TV Game Setup" : "Game Setup"}
+        </h2>
       </div>
-      {tv && (
-        <p className="-mt-2 text-xs text-slate-400">
-          Everyone answers on their own phone — multiple choice, classic scoring.
-        </p>
+      {headToHead ? (
+        <>
+          <p className="-mt-2 text-xs text-slate-400">
+            Pick the rules, then send your friend a link. You both get the same flags at the same
+            time on your own phones — fastest right answer wins!
+          </p>
+          <div>
+            <div className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+              Your Name
+            </div>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={20}
+              placeholder="Type your name"
+              className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-bold outline-none focus:border-sky-300"
+            />
+          </div>
+        </>
+      ) : (
+        tv && (
+          <p className="-mt-2 text-xs text-slate-400">
+            Everyone answers on their own phone — multiple choice, classic scoring.
+          </p>
+        )
       )}
 
       <Section title="Quiz Pack">
@@ -147,8 +201,9 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
       )}
       {isShapes && (
         <p className="-mt-3 text-xs text-slate-400">
-          Name the country from its map outline. Stuck? Spend a clue to reveal its flag, then another
-          for a fact — but each clue lowers the points. Nail it from the shape alone for the full 100!
+          Name the country from its map outline. Stuck? Spend a hint — how they say hello, the
+          capital, the language or the continent — but each hint lowers the points. Nail it from the
+          shape alone for the full 100!
         </p>
       )}
       {isEverything && (
@@ -278,7 +333,7 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
             💡 Hints {settings.hintsEnabled ? "On" : "Off"}
           </Chip>
         )}
-        {tv && settings.hintsEnabled && (
+        {tv && !headToHead && settings.hintsEnabled && (
           <Chip
             active={settings.hintGuessRound !== false}
             onClick={() => set("hintGuessRound", settings.hintGuessRound === false)}
@@ -289,9 +344,10 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
       </Section>
       {tv && settings.hintsEnabled && (
         <p className="-mt-3 text-xs text-slate-400">
-          Players can reveal up to 3 hints per question on their own phone — each costs points
-          (−5 / −10 / −15).{" "}
-          {settings.hintGuessRound !== false &&
+          Players can reveal up to 4 hints per question on their own phone — each costs points
+          (−5 / −10 / −15 / −20).{" "}
+          {!headToHead &&
+            settings.hintGuessRound !== false &&
             "At the end, everyone guesses who leaned on hints the most for bonus points."}
         </p>
       )}
@@ -314,9 +370,18 @@ export function GameSetup({ onStart, onBack, tv, notice }: Props) {
         )}
         <button
           onClick={start}
-          className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 px-6 py-4 text-lg font-bold shadow-lg shadow-sky-500/25 transition active:scale-95"
+          disabled={headToHead && (!name.trim() || creating)}
+          className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 px-6 py-4 text-lg font-bold shadow-lg shadow-sky-500/25 transition active:scale-95 disabled:opacity-40"
         >
-          {tv ? "Create Room 📺" : "Let's Play! 🚀"}
+          {headToHead
+            ? creating
+              ? "Creating…"
+              : name.trim()
+                ? "Create Challenge ⚔️"
+                : "Type your name first"
+            : tv
+              ? "Create Room 📺"
+              : "Let's Play! 🚀"}
         </button>
       </div>
     </div>

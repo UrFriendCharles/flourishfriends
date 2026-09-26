@@ -82,7 +82,9 @@ node scripts/clubSmokeTest.mjs      # plays whole games over the real protocol
   handed between players each question so nobody sees another player's pick
   before the reveal.
 - **Classic Mode** (straight points) and **Learning Mode** (reveal hints one at
-  a time — each hint drops the question's value 100 → 75 → 50 → 25).
+  a time — each hint drops the question's value 100 → 85 → 70 → 55 → 40 → 25).
+  Countries: say hello, capital, language, continent, money, founded. US states:
+  nickname, region, capital, postal code.
 - **Easy / Medium / Hard difficulty** with smart wrong answers: easy uses
   different continents, medium uses the same region, hard uses deliberately
   confusable flags (Chad/Romania, Monaco/Indonesia, Central Asia, Caribbean…).
