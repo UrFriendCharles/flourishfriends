@@ -102,6 +102,12 @@ export function addMissedFlags(countryIds: string[]): void {
 
 // --- in-progress game (Continue Game) ---
 
-export const loadSavedGame = (): GameState | null => read<GameState>("lastGame");
+/** Ignores games saved by the old pass-and-play mode, which can't be resumed. */
+export function loadSavedGame(): GameState | null {
+  const saved = read<GameState>("lastGame");
+  if (!saved || saved.players.length !== 1) return null;
+  if (saved.screen !== "question" && saved.screen !== "reveal") return null;
+  return saved;
+}
 export const saveGame = (state: GameState) => write("lastGame", state);
 export const clearSavedGame = () => remove("lastGame");

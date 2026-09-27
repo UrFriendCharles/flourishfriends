@@ -13,7 +13,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "👥 Playing with friends",
-    body: "In multiplayer, the phone is passed between players each question. Everyone answers in secret, then all picks are revealed together — both players can score on the same flag!",
+    body: "Everyone plays on their own phone. Tap ⚔️ Head to Head to send a friend a link, or 📺 Host TV Game to put the flags on a big screen while players answer on their phones.",
   },
   {
     title: "⚡ Bonuses",

@@ -2,29 +2,17 @@ import { useState } from "react";
 import { PLAYER_COLORS } from "../logic/gameReducer";
 import { loadSavedPlayers, saveSavedPlayers } from "../storage/localStore";
 
-const MAX_PLAYERS = 4;
-
 interface Props {
   onConfirm: (players: { name: string; color: string }[]) => void;
   onBack: () => void;
 }
 
+/** Solo play only — friends play together through Head to Head or a TV room. */
 export function PlayerSetup({ onConfirm, onBack }: Props) {
-  const [names, setNames] = useState<string[]>(() => {
-    const saved = loadSavedPlayers();
-    return saved.length > 0 ? saved.map((p) => p.name) : ["", ""];
-  });
-
-  const setName = (i: number, value: string) =>
-    setNames((prev) => prev.map((n, j) => (j === i ? value : n)));
-
-  const addPlayer = () => setNames((prev) => [...prev, ""]);
-  const removePlayer = (i: number) => setNames((prev) => prev.filter((_, j) => j !== i));
+  const [name, setName] = useState(() => loadSavedPlayers()[0]?.name ?? "");
 
   const confirm = () => {
-    const players = names
-      .map((n, i) => ({ name: n.trim() || `Player ${i + 1}`, color: PLAYER_COLORS[i] }))
-      .slice(0, MAX_PLAYERS);
+    const players = [{ name: name.trim() || "Player 1", color: PLAYER_COLORS[0] }];
     saveSavedPlayers(players);
     onConfirm(players);
   };
@@ -35,44 +23,27 @@ export function PlayerSetup({ onConfirm, onBack }: Props) {
         <button onClick={onBack} className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold">
           ←
         </button>
-        <h2 className="text-2xl font-black">Who's Playing?</h2>
+        <h2 className="text-2xl font-black">What's your name?</h2>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {names.map((name, i) => (
-          <div key={i} className="flex items-center gap-2 animate-slide-up">
-            <span
-              className="h-9 w-9 shrink-0 rounded-full border-2 border-white/30"
-              style={{ backgroundColor: PLAYER_COLORS[i] }}
-            />
-            <input
-              value={name}
-              onChange={(e) => setName(i, e.target.value)}
-              placeholder={`Player ${i + 1}`}
-              maxLength={16}
-              className="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-semibold text-white placeholder-slate-500 outline-none focus:border-sky-400"
-            />
-            {names.length > 1 && (
-              <button
-                onClick={() => removePlayer(i)}
-                aria-label={`Remove player ${i + 1}`}
-                className="rounded-full bg-red-500/20 px-3 py-2 text-sm font-bold text-red-300 active:scale-95"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        ))}
+      <div className="flex items-center gap-2 animate-slide-up">
+        <span
+          className="h-9 w-9 shrink-0 rounded-full border-2 border-white/30"
+          style={{ backgroundColor: PLAYER_COLORS[0] }}
+        />
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && confirm()}
+          placeholder="Player 1"
+          maxLength={16}
+          className="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-semibold text-white placeholder-slate-500 outline-none focus:border-sky-400"
+        />
       </div>
 
-      {names.length < MAX_PLAYERS && (
-        <button
-          onClick={addPlayer}
-          className="rounded-xl border border-dashed border-white/25 px-4 py-3 text-sm font-bold text-slate-300 active:scale-95"
-        >
-          + Add Player
-        </button>
-      )}
+      <p className="text-sm text-slate-400">
+        Playing with friends? Use ⚔️ Head to Head or 📺 Host TV Game on the home screen.
+      </p>
 
       <div className="mt-auto">
         <button

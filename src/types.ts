@@ -97,7 +97,6 @@ export type Screen =
   | "highScores"
   | "playerSetup"
   | "gameSetup"
-  | "passDevice"
   | "question"
   | "reveal"
   | "results";
@@ -137,7 +136,7 @@ export interface GameState {
   players: Player[];
   questions: Question[];
   currentQuestionIndex: number;
-  activePlayerIndex: number; // whose turn to answer (pass-and-play)
+  activePlayerIndex: number; // whose turn to answer (always 0 now that local play is solo)
   questionRuntime: QuestionRuntime;
   tieBreaker: TieBreakerState | null;
   tieBreakerQuestions: Question[];

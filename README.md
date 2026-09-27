@@ -3,8 +3,8 @@
 A mobile-first party-game platform: the shared screen is the game board, every
 phone is a controller. Two games so far —
 
-- **🌎 Flag Game** — a game-show-style flag quiz. Play solo or pass-and-play on
-  one device (all local, no backend), or host a **TV room**.
+- **🌎 Flag Game** — a game-show-style flag quiz. Play solo on one device (all
+  local, no backend), challenge a friend **head to head**, or host a **TV room**.
 - **🧠 0.5% Club** — eleven logic and observation puzzles that get harder every
   round, from the 90% question down to the 0.5% question.
 
@@ -78,9 +78,8 @@ node scripts/clubSmokeTest.mjs      # plays whole games over the real protocol
 
 ## What's in the flag quiz
 
-- **Single-player and pass-and-play multiplayer** (2–4 players): the device is
-  handed between players each question so nobody sees another player's pick
-  before the reveal.
+- **Single-player** local games. Playing with friends goes through rooms:
+  Head to Head (send a link) or a TV room — each player uses their own phone.
 - **Classic Mode** (straight points) and **Learning Mode** (reveal hints one at
   a time — each hint drops the question's value 100 → 85 → 70 → 55 → 40 → 25).
   Countries: say hello, capital, language, continent, money, founded. US states:

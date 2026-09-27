@@ -60,7 +60,6 @@ export type GameAction =
   | { type: "NAVIGATE"; screen: Screen }
   | { type: "SET_PLAYERS"; players: { name: string; color: string }[] }
   | { type: "START_GAME"; settings: GameSettings; questions: Question[]; now: number }
-  | { type: "PLAYER_READY"; now: number }
   | { type: "REVEAL_HINT"; hint: HintKey }
   | { type: "USE_FIFTY_FIFTY"; removed: string[] }
   | { type: "USE_CROWD"; votes: Record<string, number> }
@@ -135,14 +134,13 @@ function resetPlayersForNewGame(players: Player[]): Player[] {
   }));
 }
 
-/** First screen of a round: pass-device interstitial in multiplayer, else the question. */
+/** Start a round: straight to the question, with the answer clock running. */
 function enterRound(state: GameState, now: number): GameState {
-  const multi = roundPlayers(state).length > 1;
   return {
     ...state,
     activePlayerIndex: 0,
-    questionRuntime: { ...EMPTY_RUNTIME, shownAt: multi ? 0 : now },
-    screen: multi ? "passDevice" : "question",
+    questionRuntime: { ...EMPTY_RUNTIME, shownAt: now },
+    screen: "question",
   };
 }
 
@@ -180,19 +178,6 @@ function recordAnswer(state: GameState, choice: string, now: number): GameState 
         }
       : p
   );
-
-  const round = roundPlayers({ ...state, players });
-  const nextIndex = state.activePlayerIndex + 1;
-  if (nextIndex < round.length) {
-    // hand the device to the next player
-    return {
-      ...state,
-      players,
-      activePlayerIndex: nextIndex,
-      questionRuntime: { ...EMPTY_RUNTIME },
-      screen: "passDevice",
-    };
-  }
   return { ...state, players, screen: "reveal" };
 }
 
@@ -232,14 +217,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
       return enterRound(next, action.now);
     }
-
-    case "PLAYER_READY":
-      if (state.screen !== "passDevice") return state;
-      return {
-        ...state,
-        screen: "question",
-        questionRuntime: { ...state.questionRuntime, shownAt: action.now },
-      };
 
     case "REVEAL_HINT": {
       if (state.questionRuntime.hintsRevealed.includes(action.hint)) return state;

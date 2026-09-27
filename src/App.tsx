@@ -32,7 +32,6 @@ import { DisplayRoom } from "./screens/DisplayRoom";
 import { isValidRoomCode, normalizeRoomCode } from "./logic/roomProtocol";
 import { PlayerSetup } from "./screens/PlayerSetup";
 import { GameSetup } from "./screens/GameSetup";
-import { PassDevice } from "./screens/PassDevice";
 import { QuestionScreen } from "./screens/QuestionScreen";
 import { AnswerReveal } from "./screens/AnswerReveal";
 import { GameResults, missedCountryIds } from "./screens/GameResults";
@@ -49,7 +48,7 @@ import { ClubControllerRoom } from "./screens/ClubControllerRoom";
 import { selectClubQuestions, rememberPlayedQuestions } from "./logic/clubSelect";
 import type { ClubSettings, CreateClubRoomRequest, CreateClubRoomResponse } from "./logic/clubProtocol";
 
-const IN_GAME_SCREENS = new Set(["passDevice", "question", "reveal"]);
+const IN_GAME_SCREENS = new Set(["question", "reveal"]);
 
 // URL-addressed views (shared scores, multiplayer rooms) live outside the
 // game state machine, so the reducer stays purely about local gameplay.
@@ -448,17 +447,6 @@ export default function App() {
         <GameSetup
           onStart={startGame}
           onBack={() => dispatch({ type: "NAVIGATE", screen: "playerSetup" })}
-        />
-      );
-
-    case "passDevice":
-      if (!active) return null;
-      return (
-        <PassDevice
-          player={active}
-          questionLabel={questionLabel}
-          isTieBreaker={state.tieBreaker !== null}
-          onReady={() => dispatch({ type: "PLAYER_READY", now: Date.now() })}
         />
       );
 
