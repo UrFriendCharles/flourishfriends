@@ -1,6 +1,6 @@
 import type { Country, HintKey } from "../types";
 import { greetingFor } from "../data/greetings";
-import { capitalHintText, countryFacts, postalCode, stateFacts } from "../data/placeFacts";
+import { capitalHintText, countryFacts, currencyHint, postalCode, stateFacts } from "../data/placeFacts";
 import { pointsAfterHints } from "../logic/scoring";
 
 interface Props {
@@ -30,7 +30,10 @@ const COUNTRY_HINTS: HintDef[] = [
   { key: "capital", label: "🏛️ Capital", text: capitalHintText },
   { key: "language", label: "🗣️ Language", text: (c) => c.languages.join(", ") },
   { key: "continent", label: "🌍 Continent", text: (c) => c.continent },
-  { key: "currency", label: "💰 Money", text: (c) => countryFacts(c.id)?.currency ?? "—" },
+  { key: "currency", label: "💰 Money", text: (c) => {
+    const currency = countryFacts(c.id)?.currency;
+    return currency ? currencyHint(currency) : "—";
+  } },
   { key: "founded", label: "📅 Founded", text: (c) => countryFacts(c.id)?.founded ?? "—" },
 ];
 

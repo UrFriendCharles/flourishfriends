@@ -284,6 +284,36 @@ export function countryFacts(id: string): CountryFacts | undefined {
   return { currency, founded, areaKm2, population };
 }
 
+/** Hint-safe names where the "drop the nationality" rule doesn't fit. */
+const CURRENCY_HINT_OVERRIDES: Record<string, string> = {
+  "Pound sterling": "pound",
+  "Renminbi (yuan)": "yuan",
+  "Zimbabwe Gold (ZiG)": "gold",
+  "Central African CFA franc": "CFA franc",
+  "West African CFA franc": "CFA franc",
+  "Israeli new shekel": "shekel",
+};
+
+/**
+ * Currency without the country adjective, so the Money hint doesn't give the
+ * answer away: "Canadian dollar" -> "dollar", "Israeli shekel & Jordanian
+ * dinar" -> "shekel & dinar". Keeps the trailing lowercase words (the unit
+ * itself); "Euro" has none and is shown as-is.
+ */
+export function currencyHint(currency: string): string {
+  return currency
+    .split(" & ")
+    .map((part) => {
+      const override = CURRENCY_HINT_OVERRIDES[part];
+      if (override) return override;
+      const words = part.split(" ");
+      let i = words.length;
+      while (i > 0 && words[i - 1][0] === words[i - 1][0].toLowerCase()) i--;
+      return i < words.length ? words.slice(i).join(" ") : part;
+    })
+    .join(" & ");
+}
+
 export function stateFacts(id: string): StateFacts | undefined {
   const row = STATE_ROWS[id.replace(/^state-/, "")];
   if (!row) return undefined;
