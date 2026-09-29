@@ -1593,17 +1593,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     sourceType: "original",
   },
   {
-    id: "c90_two_weeks_days",
-    difficulty: 90,
-    questionType: "true_false",
-    prompt: "A week has seven days.\n\nTrue or false: two weeks have fourteen days.",
-    correctAnswer: "true",
-    explanation: "Two weeks is 7 + 7 days, which is 14.",
-    category: "everyday reasoning",
-    mechanic: "direct arithmetic check",
-    sourceType: "original",
-  },
-  {
     id: "c80_months_28days",
     difficulty: 80,
     questionType: "multiple_choice",
@@ -1616,18 +1605,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "false premise",
     sourceType: "adapted",
     sourceReference: "classic riddle",
-  },
-  {
-    id: "c80_digit_nine_count",
-    difficulty: 80,
-    questionType: "number",
-    prompt: "Write out the numbers from 1 to 20. How many times does the digit 9 appear in total?",
-    correctAnswer: "2",
-    explanation:
-      "Only two numbers in that range contain the digit 9 at all: 9 itself and 19. Each contributes exactly one 9, so the digit 9 appears twice in total.",
-    category: "counting",
-    mechanic: "digit counting",
-    sourceType: "original",
   },
   {
     id: "c70_overtake_last",
@@ -1697,25 +1674,6 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     mechanic: "embedded number",
     sourceType: "adapted",
     sourceReference: "generic 'hidden smaller word inside a bigger word' puzzle genre, applied here to number names",
-  },
-  {
-    id: "c40_polygon_side_sum",
-    difficulty: 40,
-    questionType: "visual_multiple_choice",
-    prompt:
-      "Add together the number of sides of the shape in box B and the shape in box D. Which lettered box holds a shape with exactly that many sides?",
-    choices: ["A", "B", "C", "D"],
-    correctAnswer: "C",
-    explanation:
-      "Box B is a triangle (3 sides) and box D is a square (4 sides); 3 + 4 = 7. Box C's heptagon is the only shape with 7 sides.",
-    visual: {
-      type: "svg",
-      assetId: "odd_polygon_out",
-      altText: "Four labelled boxes, A, B, C and D, containing a pentagon, a triangle, a heptagon and a square, in that order.",
-    },
-    category: "spatial reasoning",
-    mechanic: "shape property arithmetic",
-    sourceType: "original",
   },
   {
     id: "c30_silver_key_fallacy",
@@ -2121,6 +2079,750 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     category: "logic",
     mechanic: "pattern finding",
     sourceType: "adapted",
+  },
+
+  // ===================================================================
+  // 1% Club-style intake: logic, wordplay and pattern puzzles
+  // ===================================================================
+  {
+    "id": "c90_reversed_word",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these does NOT make a word when the letters are reversed?",
+    "choices": [
+      "SNUB",
+      "STUN",
+      "DUST"
+    ],
+    "correctAnswer": "DUST",
+    "explanation": "STUN gives NUTS and SNUB gives BUNS, but DUST gives TSUD.",
+    "category": "wordplay",
+    "mechanic": "reversal",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c80_cannot_be_true",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these statements CANNOT be true? At least one contestant on the show today...",
+    "choices": [
+      "was born in a month containing the letter B",
+      "was born on a day of the week containing the letter B",
+      "was born in a country containing the letter B"
+    ],
+    "correctAnswer": "was born on a day of the week containing the letter B",
+    "explanation": "No day of the week contains a B. Months like September and countries like Brazil do.",
+    "category": "logic",
+    "mechanic": "impossible condition",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c80_next_name",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "Which name comes next?\n\nAshley Banjo, Charles Dickens, Ella Fitzgerald, ___ ___",
+    "choices": [
+      "Greta Thunberg",
+      "Hugh Grant",
+      "Gloria Hunniford",
+      "Gwyneth Paltrow"
+    ],
+    "correctAnswer": "Gloria Hunniford",
+    "explanation": "The initials run alphabetically in pairs: A B, C D, E F, so the next pair is G H.",
+    "category": "patterns",
+    "mechanic": "alphabet pattern",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c70_hidden_lad",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "If there's a MAN in Germany and a GENT in Argentina, which of these countries has a LAD in it?",
+    "choices": [
+      "Finland",
+      "Spain",
+      "Bangladesh",
+      "Morocco"
+    ],
+    "correctAnswer": "Bangladesh",
+    "explanation": "The hidden words are inside the country names: GerMANy, ArGENTina, BangLADesh.",
+    "category": "wordplay",
+    "mechanic": "hidden word",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c70_cocktail_share",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "A cocktail is one-fifth vodka and 60% lemonade. How much of it is strawberry liqueur?",
+    "choices": [
+      "20%",
+      "Two-thirds",
+      "35%",
+      "Two-fifths"
+    ],
+    "correctAnswer": "20%",
+    "explanation": "One-fifth is 20%. 20% + 60% = 80%, so the remaining 20% is strawberry liqueur.",
+    "category": "arithmetic",
+    "mechanic": "percentages",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c70_electoral_anagram",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "Serena votes for the candidate whose name is an anagram of 'ELECTORAL SYSTEM'. Who is it?",
+    "choices": [
+      "Scarlett Moseley",
+      "Caroline Genteel",
+      "Nicola Gollete",
+      "Lexi Plot",
+      "Phil Gobolton"
+    ],
+    "correctAnswer": "Scarlett Moseley",
+    "explanation": "Both use exactly the same 15 letters.",
+    "category": "wordplay",
+    "mechanic": "anagram",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c60_lee_bath_day",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Lee takes his bath on the same day each week, following strict rules:\n\n1. No more than three days after the weekend.\n2. Never on a day with an even number of letters.\n3. Never on a Wednesday.\n\nWhich day is Lee's bath day?",
+    "choices": [
+      "Saturday",
+      "Tuesday",
+      "Monday",
+      "Thursday"
+    ],
+    "correctAnswer": "Tuesday",
+    "explanation": "Rule 1 leaves Monday, Tuesday, Wednesday. Monday has 6 letters (even) and Wednesday is banned, leaving Tuesday (7 letters).",
+    "category": "deduction",
+    "mechanic": "constraint elimination",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c60_switzerland_anagram",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these countries can be spelled using exactly the letters of the words LIZARD and NEWTS?",
+    "choices": [
+      "New Zealand",
+      "Brazil",
+      "Switzerland",
+      "Netherlands"
+    ],
+    "correctAnswer": "Switzerland",
+    "explanation": "LIZARD NEWTS rearranges to SWITZERLAND, using every letter once.",
+    "category": "wordplay",
+    "mechanic": "anagram",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_bob_sign_letters",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Bob has individual letters for a new shop sign: one A, two Bs, three Cs, and so on through the alphabet (four Ds, five Es...).\n\nWhich sign could he NOT make?",
+    "choices": [
+      "BOB SELLS ANTIQUES",
+      "ANTIQUE SHOP",
+      "ANTIQUE BITS AND BOBS",
+      "OLD ANTIQUES"
+    ],
+    "correctAnswer": "ANTIQUE BITS AND BOBS",
+    "explanation": "That sign needs three Bs (BITS, BOBS x2) but Bob only has two. It also needs two As but he has one.",
+    "category": "counting",
+    "mechanic": "resource constraint",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_missing_day",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which day of the week is missing from these letters?\n\ntdrmauayorauddrtytyysnhaudsandssdyaaufiey",
+    "choices": [
+      "Saturday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "correctAnswer": "Wednesday",
+    "explanation": "The letters are the days of the week mixed together, but there is no W anywhere, so Wednesday is missing.",
+    "category": "wordplay",
+    "mechanic": "letter inventory",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_vowel_once_number",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Including the word 'and', which of these numbers uses every vowel (A, E, I, O, U) exactly once when spelled out?",
+    "choices": [
+      "206",
+      "107",
+      "305",
+      "404"
+    ],
+    "correctAnswer": "206",
+    "explanation": "TWO HUNDRED AND SIX: O, U, E, A, I, each exactly once. The others repeat a vowel.",
+    "category": "wordplay",
+    "mechanic": "letter inventory",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_alistair_surname",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Alistair's dream dinner guests are Cameron Diaz, Ella Fitzgerald and Glenn Hoddle.\n\nWhat is Alistair's surname?",
+    "choices": [
+      "Brown",
+      "White",
+      "Coral",
+      "Green"
+    ],
+    "correctAnswer": "Brown",
+    "explanation": "The guests' initials run C.D., E.F., G.H. Working back, the pair before them is A.B., so Alistair Brown.",
+    "category": "patterns",
+    "mechanic": "initials pattern",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_hidden_fruit",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Without reordering any letters, what fruit appears hidden in this sentence?\n\n\"I'D MAKE MY OWN JUICE WHILE MONEY ROLLS IN\"",
+    "choices": [
+      "Lemon",
+      "Melon",
+      "Mango",
+      "Lime"
+    ],
+    "correctAnswer": "Lemon",
+    "explanation": "It is hidden across two words: whi-LE MON-ey.",
+    "category": "wordplay",
+    "mechanic": "hidden word",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c50_two_truths_one_lie",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Gloria tells two truths and one lie. Which is the lie?\n\nA) I was born when my parents' ages both contained the digits 2 and 3.\nB) When I turned 18, my mother was 50 and my father was 41.\nC) My parents were both born on 29th February, 11 years apart.",
+    "choices": [
+      "A",
+      "B",
+      "C"
+    ],
+    "correctAnswer": "C",
+    "explanation": "29th February only occurs every 4 years, so two people born on it must be a multiple of 4 years apart. 11 is not.",
+    "category": "deduction",
+    "mechanic": "impossibility",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c40_countdown_pauses",
+    "difficulty": 40,
+    "questionType": "number",
+    "prompt": "You count down from 10 to 1, pausing for one second between each number. How many seconds in total will you have paused by the time you finish?",
+    "correctAnswer": "9",
+    "explanation": "There are 10 numbers but only 9 gaps between them, so 9 pauses.",
+    "category": "counting",
+    "mechanic": "fencepost",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c40_no_vowels_thirteenth",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "If there were no vowels at all, what would be the 13th letter of the alphabet?",
+    "choices": [
+      "M",
+      "Q",
+      "R",
+      "P"
+    ],
+    "correctAnswer": "Q",
+    "explanation": "Without A, E, I, O, U the alphabet runs B C D F G H J K L M N P Q, so the 13th letter is Q.",
+    "category": "logic",
+    "mechanic": "remove and recount",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c40_letter_fill",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "One letter replaces every asterisk. What is it?\n\n*I**A'S  *AM*ERED  *U**IES  *OO*  ON  *UR*LE  *A*ER",
+    "choices": [
+      "M",
+      "S",
+      "B",
+      "P"
+    ],
+    "correctAnswer": "P",
+    "explanation": "Every word starts with P: PIPPA'S PAMPERED PUPPIES POOP ON PURPLE PAPER.",
+    "category": "wordplay",
+    "mechanic": "constraint fill",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c40_odd_sound_out",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Which word in this question sounds like the odd one out?\n\n\"Why are you out?\"",
+    "choices": [
+      "Why",
+      "are",
+      "you",
+      "out"
+    ],
+    "correctAnswer": "out",
+    "explanation": "Why, are and you sound like the letters Y, R and U. Out is the only one that is not a letter.",
+    "category": "wordplay",
+    "mechanic": "sound pattern",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c30_body_parts_backwards",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "These groups of letters share a pattern: EOT, MRA, RAE.\n\nWhich could also be included?",
+    "choices": [
+      "GEL",
+      "RAB",
+      "CRA",
+      "MIA"
+    ],
+    "correctAnswer": "GEL",
+    "explanation": "Read backwards they are body parts: TOE, ARM, EAR, and LEG (GEL). CRA, MIA and RAB reverse to ARC, AIM and BAR.",
+    "category": "patterns",
+    "mechanic": "reversed words",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c30_silent_letters",
+    "difficulty": 30,
+    "questionType": "text",
+    "prompt": "Put together all the silent letters from these words, in order, to spell a new word:\n\nANCHOR, GUITAR, MNEMONIC, CRUMB, GUILD, GNAT",
+    "correctAnswer": "humbug",
+    "acceptedAnswers": [
+      "humbug"
+    ],
+    "explanation": "The silent letters are H, U, M, B, U, G, which spell HUMBUG.",
+    "category": "wordplay",
+    "mechanic": "silent letters",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c30_anagram_pairs",
+    "difficulty": 30,
+    "questionType": "number",
+    "prompt": "How many pairs of anagrams are in this sentence?\n\n\"Alice, Dan, Celia and Enid hoped to dine well on the plane from Nepal.\"",
+    "correctAnswer": "4",
+    "explanation": "Alice/Celia, Dan/and, Enid/dine and plane/Nepal.",
+    "category": "wordplay",
+    "mechanic": "anagram search",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c30_dog_walk",
+    "difficulty": 30,
+    "questionType": "number",
+    "prompt": "A sister jogs at 8mph and her brother walks at 4mph, both setting off together in the same direction. Their dog runs at 10mph back and forth between them without stopping. How far has the dog run after one hour?",
+    "correctAnswer": "10",
+    "explanation": "The dog runs at 10mph for the full hour, so 10 miles. The distance between the siblings does not matter.",
+    "category": "arithmetic",
+    "mechanic": "irrelevant detail",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c30_odd_town",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "Which UK town is the odd one out?",
+    "choices": [
+      "Sidmouth",
+      "Whitby",
+      "Hitchin",
+      "Gateshead"
+    ],
+    "correctAnswer": "Whitby",
+    "explanation": "Sidmouth ends in MOUTH, Gateshead in HEAD and Hitchin in CHIN. Whitby ends in no body part.",
+    "category": "wordplay",
+    "mechanic": "hidden word",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_daisy_negatives",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "\"Daisy doesn't not not not dislike dancing...\"\n\nDoes she like dancing?",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "correctAnswer": "No",
+    "explanation": "Doesn't, not, not, not are four negatives, which cancel out. That leaves plain 'dislike', so she does not like dancing.",
+    "category": "logic",
+    "mechanic": "stacked negation",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_third_thursday",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "The summer fair takes place on the third Thursday of July. What is the earliest date in July it could fall on?",
+    "correctAnswer": "15",
+    "explanation": "The earliest the first Thursday can be is the 1st. Then the third Thursday is 1 + 14 = the 15th.",
+    "category": "calendar",
+    "mechanic": "edge case",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_common_names",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "The words that complete these sentences have something in common.\n\n\"The thief was arrested for trying to ___ a bank.\"\n\"The teacher needed all night to ___ the homework.\"\n\"The waiter brought the ___.\"\n\nWhat do the missing words share?",
+    "choices": [
+      "They're all names",
+      "They're all body parts",
+      "They're all animals",
+      "They're all colours"
+    ],
+    "correctAnswer": "They're all names",
+    "explanation": "The words are rob, mark and bill: Rob, Mark and Bill are all first names.",
+    "category": "wordplay",
+    "mechanic": "double meaning",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_month_letters",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "What number replaces the question mark?\n\n7  8  5  5  3  4  4  ?  9  7  8  8",
+    "correctAnswer": "6",
+    "explanation": "Each number is the letter count of a month in order: January 7, February 8, ... July 4, August 6, September 9.",
+    "category": "patterns",
+    "mechanic": "letter counts",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_weather_phrase",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "What weather phrase is represented here?\n\nEmperor Tiger. King Tabby. Queen Spaniel. Empress Labrador.",
+    "choices": [
+      "Bolt from the blue",
+      "Raining cats and dogs",
+      "Under the weather",
+      "Storm in a teacup"
+    ],
+    "correctAnswer": "Raining cats and dogs",
+    "explanation": "Emperors, kings, queens and empresses REIGN. Big cats, cats and dogs together give \"reigning cats and dogs\", which sounds like raining cats and dogs.",
+    "category": "wordplay",
+    "mechanic": "rebus",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_two_letter_prefix",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "What two letters can go in front of all five of these to make five new words?\n\n__APED   __INK   __ONE   __OWNED   __OUGHT",
+    "choices": [
+      "DR",
+      "CR",
+      "GR",
+      "TR"
+    ],
+    "correctAnswer": "DR",
+    "explanation": "DRAPED, DRINK, DRONE, DROWNED, DROUGHT.",
+    "category": "wordplay",
+    "mechanic": "prefix",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_bat_ball",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "A bat and a ball cost 110p in total. The bat costs 100p more than the ball. How much does the ball cost, in pence?",
+    "correctAnswer": "5",
+    "explanation": "Ball 5p, bat 105p: the bat is 100p more and the total is 110p. (10p would make the total 120p.)",
+    "category": "arithmetic",
+    "mechanic": "intuition trap",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_missing_anagram",
+    "difficulty": 20,
+    "questionType": "text",
+    "prompt": "Which four-letter word is missing from this list?\n\nspot, opts, pots, stop, tops, ____",
+    "correctAnswer": "post",
+    "acceptedAnswers": [
+      "post"
+    ],
+    "explanation": "They are all anagrams of SPOT; the missing one is POST.",
+    "category": "wordplay",
+    "mechanic": "anagram",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c20_number_pair",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "If 2, 3 and 10 go together, and 6 and 7 go together, which two of 1, 4, 5, 8 and 9 are a pair?",
+    "choices": [
+      "1 and 9",
+      "4 and 5",
+      "1 and 8",
+      "8 and 9"
+    ],
+    "correctAnswer": "4 and 5",
+    "explanation": "Group by first letter of the spelled number: Two, Three, Ten; Six, Seven; Four, Five.",
+    "category": "patterns",
+    "mechanic": "spelling pattern",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c10_equal_vowels_consonants",
+    "difficulty": 10,
+    "questionType": "multiple_choice",
+    "prompt": "These numbers all contain the same number of vowels as consonants: FOUR, FIVE, NINE, ELEVEN, FOURTEEN.\n\nWhat is next?",
+    "choices": [
+      "TWENTY",
+      "EIGHTEEN",
+      "SEVENTEEN",
+      "SIXTEEN"
+    ],
+    "correctAnswer": "EIGHTEEN",
+    "explanation": "EIGHTEEN has 4 vowels (E, I, E, E) and 4 consonants (G, H, T, N). SIXTEEN and SEVENTEEN have more consonants than vowels.",
+    "category": "patterns",
+    "mechanic": "letter-type balance",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c10_cinema_rows",
+    "difficulty": 10,
+    "questionType": "number",
+    "prompt": "My favourite cinema seat is right in the middle: three rows from the back and twelve rows from the front. How many rows does the cinema have?",
+    "correctAnswer": "14",
+    "explanation": "My row is counted in both figures, so 12 + 3 - 1 = 14 rows.",
+    "category": "counting",
+    "mechanic": "double counting",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c10_season_letters",
+    "difficulty": 10,
+    "questionType": "multiple_choice",
+    "prompt": "What letter replaces the question mark?\n\nSG  SR  AN  W?",
+    "choices": [
+      "N",
+      "R",
+      "M",
+      "T"
+    ],
+    "correctAnswer": "R",
+    "explanation": "Each pair is the first and last letter of a season: SpringG, SummeR, AutumN, WinteR.",
+    "category": "patterns",
+    "mechanic": "first and last letters",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c10_clothes_swap",
+    "difficulty": 10,
+    "questionType": "multiple_choice",
+    "prompt": "Change the first letter of the first word, the middle letter of the second, and the last letter of the third. They then have something in common. What?\n\nCAT   BOATS   SCARE",
+    "choices": [
+      "Weather",
+      "Vehicles",
+      "Animals",
+      "Clothes"
+    ],
+    "correctAnswer": "Clothes",
+    "explanation": "HAT, BOOTS, SCARF are all clothing.",
+    "category": "wordplay",
+    "mechanic": "letter swap",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c10_palindrome_mileage",
+    "difficulty": 10,
+    "questionType": "number",
+    "prompt": "Lee is driving when he notices his milometer reads 16961, the same forwards and backwards. What will the next such mileage be?",
+    "correctAnswer": "17071",
+    "explanation": "Mirror the first two digits 17 around a middle digit: 17071 is the next palindrome after 16961.",
+    "category": "patterns",
+    "mechanic": "palindrome",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_card_sort_last",
+    "difficulty": 5,
+    "questionType": "multiple_choice",
+    "prompt": "You sort a pack of cards alphabetically by name. The first four placed down are ACE of CLUBS, ACE of DIAMONDS, ACE of HEARTS, ACE of SPADES.\n\nWhat is the LAST card you place down?",
+    "choices": [
+      "TWO of SPADES",
+      "THREE of SPADES",
+      "TEN of SPADES",
+      "TWO of CLUBS"
+    ],
+    "correctAnswer": "TWO of SPADES",
+    "explanation": "Alphabetically the last rank is TWO (after TEN and THREE), and the last suit is SPADES.",
+    "category": "logic",
+    "mechanic": "alphabetical ordering",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_sum_to_100",
+    "difficulty": 5,
+    "questionType": "number",
+    "prompt": "Given that 0+100=100, 1+99=100 and 2+98=100, what is the sum of all the whole numbers from 0 to 100?",
+    "correctAnswer": "5050",
+    "explanation": "Pair numbers to make 100: 50 pairs give 5000, and 50 is left unpaired in the middle. Total 5050.",
+    "category": "arithmetic",
+    "mechanic": "pairing",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_alphabetical_letters",
+    "difficulty": 5,
+    "questionType": "multiple_choice",
+    "prompt": "What unusual pattern do these words share?\n\nFIRST, ALMOST, BEGIN, EMPTY, BELOW",
+    "choices": [
+      "They are all palindromes",
+      "They all have exactly one vowel",
+      "Their letters are in alphabetical order",
+      "They all start with a vowel"
+    ],
+    "correctAnswer": "Their letters are in alphabetical order",
+    "explanation": "F-I-R-S-T, A-L-M-O-S-T, B-E-G-I-N, E-M-P-T-Y and B-E-L-O-W each run through the alphabet in order.",
+    "category": "patterns",
+    "mechanic": "letter order",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_left_handed_room",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "In a room of 100 people, 99% are left-handed. How many left-handed people must leave the room to bring the percentage of left-handers down to 98%?",
+    "correctAnswer": "50",
+    "explanation": "Only 1 person is right-handed. For that 1 person to be 2% of the room, the room must hold 50 people, so 50 left-handers leave.",
+    "category": "arithmetic",
+    "mechanic": "percentage trap",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_hidden_metal",
+    "difficulty": 0.5,
+    "questionType": "multiple_choice",
+    "prompt": "BANDLEADER, NICKELODEON and SILVERBACK share a pattern. Why could VOTING also be part of the group?",
+    "choices": [
+      "It hides an animal",
+      "It hides a metal: TIN",
+      "It hides a colour",
+      "It hides a body part"
+    ],
+    "correctAnswer": "It hides a metal: TIN",
+    "explanation": "The others hide the metals LEAD, NICKEL and SILVER. VOTING hides TIN.",
+    "category": "wordplay",
+    "mechanic": "hidden word",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_look_and_say",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "What number comes next?\n\n1, 11, 21, 1211, 111221, 312211, ?",
+    "correctAnswer": "13112221",
+    "explanation": "Each term describes the one before: 312211 is three 1s, one 2, two 1s, giving 13112221.",
+    "category": "patterns",
+    "mechanic": "look-and-say",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_tea_prefix",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "Which commonly used word can go in front of all three to make three new words?\n\nSING, BAG, RING",
+    "correctAnswer": "tea",
+    "acceptedAnswers": [
+      "tea"
+    ],
+    "explanation": "TEASING, TEABAG, TEARING.",
+    "category": "wordplay",
+    "mechanic": "prefix",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_hundredth_digit",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "If you write out the numbers from 1 to 100 in order as one long string of digits, what is the 100th digit?",
+    "correctAnswer": "5",
+    "explanation": "Numbers 1-9 use 9 digits. The remaining 91 digits cover 45 two-digit numbers (10 to 54) plus the first digit of the next one, 55. That digit is 5.",
+    "category": "counting",
+    "mechanic": "digit counting",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
+  },
+  {
+    "id": "c05_only_gap",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "What four-letter word fits the gap in all three sentences so each makes sense?\n\n\"____ I am certain that he had read the man's notes.\"\n\"I am certain that ____ he had read the man's notes.\"\n\"I am certain that he had read the man's ____ notes.\"",
+    "correctAnswer": "only",
+    "acceptedAnswers": [
+      "only"
+    ],
+    "explanation": "ONLY works in every position, changing the meaning each time.",
+    "category": "wordplay",
+    "mechanic": "word placement",
+    "sourceType": "adapted",
+    "sourceReference": "The 1% Club (TV show) style logic puzzle"
   },
 ];
 
