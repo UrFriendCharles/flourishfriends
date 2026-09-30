@@ -19,6 +19,11 @@ export const FINAL_TIER: ClubTier = 0.5;
 export const FINAL_ROUND_INDEX = CLUB_ROUND_COUNT - 1;
 
 export const MAX_CLUB_PLAYERS = 10;
+/** Head-to-head rooms are exactly two phones and have no host. */
+export const CLUB_H2H_PLAYERS = 2;
+/** Head to head: pause once both phones are in, then how long each reveal stays up. */
+export const CLUB_H2H_START_DELAY_MS = 3500;
+export const CLUB_H2H_REVEAL_MS = 9000;
 
 /** Seconds the round-intro card ("60% — 3… 2… 1…") holds before the question. */
 export const ROUND_INTRO_SECONDS = 4;
@@ -141,6 +146,8 @@ export interface ClubSettings {
   /** starting Passes in Classic Survival; ignored in High Score mode */
   passes: number;
   pack: ClubPack;
+  /** two phones, no host: the room starts and advances by itself */
+  headToHead?: boolean;
 }
 
 /** Per-question aggregates, handed back at the end of the game (§36). */
@@ -187,6 +194,10 @@ export interface ClubSnapshot {
   winnerIds: string[] | null;
   /** ended only */
   questionStats: ClubQuestionStat[] | null;
+  /** head to head: server time the room moves on by itself (start / next round) */
+  autoAdvanceAt: number | null;
+  /** head to head: a player set up a rematch room — the other can follow this code */
+  rematch: { roomCode: string; byId: string } | null;
 }
 
 /** Private per-connection data sent alongside every snapshot. */
@@ -208,6 +219,7 @@ export type ClubClientMessage =
   | { type: "hello"; role: "display" }
   | { type: "answer"; answer: string }
   | { type: "pass" }
+  | { type: "rematch"; roomCode: string } // player (head to head): point the other phone at a new room
   | { type: "start" } // lobby → intro → first round
   | { type: "next" } // reveal → next round
   | { type: "pause" }

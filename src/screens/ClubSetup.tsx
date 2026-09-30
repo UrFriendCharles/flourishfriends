@@ -13,11 +13,24 @@ interface Props {
   onStart: (settings: ClubSettings) => void;
   /** play the same eleven questions alone, on this device */
   onStartSolo: (settings: ClubSettings) => void;
+  /** two phones, no host: create the room and send a friend the link */
+  onStartHeadToHead: (settings: ClubSettings, name: string) => Promise<void>;
   onBack: () => void;
   notice?: string | null;
 }
 
-type PlayStyle = "solo" | "room";
+type PlayStyle = "solo" | "h2h" | "room";
+
+// shared with the flag game's head to head, so your name carries over
+const H2H_NAME_KEY = "ffq:h2hName";
+
+function loadH2hName(): string {
+  try {
+    return localStorage.getItem(H2H_NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
 
 export const DEFAULT_CLUB_SETTINGS: ClubSettings = {
   mode: "survival",
@@ -73,15 +86,35 @@ const MODES: { value: ClubMode; label: string; blurb: string }[] = [
   },
 ];
 
-export function ClubSetup({ onStart, onStartSolo, onBack, notice }: Props) {
+export function ClubSetup({ onStart, onStartSolo, onStartHeadToHead, onBack, notice }: Props) {
   const [settings, setSettings] = useState<ClubSettings>(DEFAULT_CLUB_SETTINGS);
   const [style, setStyle] = useState<PlayStyle>("room");
+  const [name, setName] = useState(loadH2hName);
+  const [creating, setCreating] = useState(false);
   const bank = clubBankReport();
 
   const set = <K extends keyof ClubSettings>(key: K, value: ClubSettings[K]) =>
     setSettings((s) => ({ ...s, [key]: value }));
 
   const mode = MODES.find((m) => m.value === settings.mode)!;
+
+  const startHeadToHead = () => {
+    const trimmed = name.trim().slice(0, 20);
+    if (!trimmed || creating) return;
+    try {
+      localStorage.setItem(H2H_NAME_KEY, trimmed);
+    } catch {
+      // private mode — just don't remember it
+    }
+    setCreating(true);
+    void onStartHeadToHead(settings, trimmed).finally(() => setCreating(false));
+  };
+
+  const start = () => {
+    if (style === "solo") onStartSolo(settings);
+    else if (style === "h2h") startHeadToHead();
+    else onStart(settings);
+  };
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-5 px-6 py-8">
@@ -97,6 +130,9 @@ export function ClubSetup({ onStart, onStartSolo, onBack, notice }: Props) {
         <Chip active={style === "solo"} onClick={() => setStyle("solo")}>
           🙋 Just me, on this device
         </Chip>
+        <Chip active={style === "h2h"} onClick={() => setStyle("h2h")}>
+          ⚔️ Head to Head
+        </Chip>
         <Chip active={style === "room"} onClick={() => setStyle("room")}>
           📺 TV room + phones
         </Chip>
@@ -104,8 +140,25 @@ export function ClubSetup({ onStart, onStartSolo, onBack, notice }: Props) {
       <p className="-mt-3 text-xs leading-relaxed text-slate-400">
         {style === "solo"
           ? "The same eleven questions, played right here — nothing to join, no one else needed."
-          : `This screen becomes the game board. Up to ${MAX_CLUB_PLAYERS} players join from their own phones.`}
+          : style === "h2h"
+            ? "Send a friend a link. You both get the same eleven questions at the same time, each on your own phone."
+            : `This screen becomes the game board. Up to ${MAX_CLUB_PLAYERS} players join from their own phones.`}
       </p>
+
+      {style === "h2h" && (
+        <div>
+          <div className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            Your Name
+          </div>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={20}
+            placeholder="Type your name"
+            className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-bold outline-none focus:border-sky-300"
+          />
+        </div>
+      )}
 
       <Section title="Game mode">
         {MODES.map((m) => (
@@ -165,10 +218,19 @@ export function ClubSetup({ onStart, onStartSolo, onBack, notice }: Props) {
           {bank.total} questions in the bank · one picked per tier, freshest first
         </p>
         <button
-          onClick={() => (style === "solo" ? onStartSolo(settings) : onStart(settings))}
-          className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 px-6 py-4 text-lg font-bold shadow-lg shadow-sky-500/25 transition active:scale-95"
+          onClick={start}
+          disabled={style === "h2h" && (!name.trim() || creating)}
+          className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 px-6 py-4 text-lg font-bold shadow-lg shadow-sky-500/25 transition active:scale-95 disabled:opacity-50"
         >
-          {style === "solo" ? "▶️ Start Playing" : "📺 Create Room"}
+          {style === "solo"
+            ? "▶️ Start Playing"
+            : style === "h2h"
+              ? creating
+                ? "Setting up…"
+                : name.trim()
+                  ? "Create Challenge ⚔️"
+                  : "Type your name first"
+              : "📺 Create Room"}
         </button>
         <button
           onClick={onBack}

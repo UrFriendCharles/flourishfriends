@@ -17,10 +17,18 @@ export function useCountdown(at: number | null, clockOffset: number): number | n
 }
 
 /** Lobby card for the challenger: share the link, then wait for the friend. */
-export function ChallengeInvite({ roomCode, myName }: { roomCode: string; myName: string }) {
+export function ChallengeInvite({
+  roomCode,
+  myName,
+  gameName = "Flag Quiz",
+}: {
+  roomCode: string;
+  myName: string;
+  gameName?: string;
+}) {
   const [copied, setCopied] = useState(false);
   const url = joinLink(roomCode);
-  const text = `⚔️ ${myName} challenged you to a Flag Quiz head to head! Tap to play:`;
+  const text = `⚔️ ${myName} challenged you to a ${gameName} head to head! Tap to play:`;
 
   const copy = async () => {
     try {
@@ -33,7 +41,7 @@ export function ChallengeInvite({ roomCode, myName }: { roomCode: string; myName
   };
   const share = () => {
     if (typeof navigator.share === "function") {
-      navigator.share({ title: "Flag Quiz Challenge", text, url }).catch(() => {});
+      navigator.share({ title: `${gameName} Challenge`, text, url }).catch(() => {});
     } else {
       void copy();
     }

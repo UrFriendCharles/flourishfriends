@@ -42,7 +42,7 @@ export function JoinRoom({ initialCode, onJoin, onHome }: Props) {
       const club = info.gameType === "half-percent-club";
       if (info.canJoin === false && info.status === "lobby") {
         setError(
-          club ? "This room is full. 0.5% Club supports up to 10 players." : "This room is full."
+          club ? "This room is full — or it's a head-to-head that already has two players." : "This room is full."
         );
         return;
       }

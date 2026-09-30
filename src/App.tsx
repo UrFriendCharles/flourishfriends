@@ -45,8 +45,8 @@ import { ClubHostRoom } from "./screens/ClubHostRoom";
 import { ClubDisplayRoom } from "./screens/ClubDisplayRoom";
 import { ClubVisualPreview } from "./screens/ClubVisualPreview";
 import { ClubControllerRoom } from "./screens/ClubControllerRoom";
-import { selectClubQuestions, rememberPlayedQuestions } from "./logic/clubSelect";
-import type { ClubSettings, CreateClubRoomRequest, CreateClubRoomResponse } from "./logic/clubProtocol";
+import { createClubRoom as requestClubRoom } from "./logic/createClubRoom";
+import type { ClubSettings } from "./logic/clubProtocol";
 
 const IN_GAME_SCREENS = new Set(["question", "reveal"]);
 
@@ -258,16 +258,7 @@ export default function App() {
   // questions here (one per tier) and the worker only ever sees those.
   const createClubRoom = async (settings: ClubSettings) => {
     try {
-      const questions = selectClubQuestions();
-      const body: CreateClubRoomRequest = { settings, questions };
-      const res = await fetch("/api/club/rooms", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) throw new Error(`create club room failed: ${res.status}`);
-      const { roomCode, hostKey } = (await res.json()) as CreateClubRoomResponse;
-      rememberPlayedQuestions(questions.map((q) => q.id));
+      const { roomCode, hostKey } = await requestClubRoom(settings);
       sessionStorage.setItem(clubHostKeyStorage(roomCode), hostKey);
       window.history.pushState(null, "", `/club/host/${roomCode}`);
       setClubNotice(null);
@@ -275,6 +266,18 @@ export default function App() {
       setRoute({ kind: "clubHost", code: roomCode, hostKey });
     } catch {
       setClubNotice("Couldn't create the room — check your connection and try again.");
+    }
+  };
+
+  // Club head to head: like the flag version, the creator is just player one.
+  const createClubHeadToHead = async (settings: ClubSettings, name: string) => {
+    try {
+      const { roomCode } = await requestClubRoom({ ...settings, headToHead: true });
+      window.history.pushState(null, "", `/join/${roomCode}`);
+      setClubNotice(null);
+      setRoute({ kind: "clubController", code: roomCode, name });
+    } catch {
+      setClubNotice("Couldn't create the game — check your connection and try again.");
     }
   };
 
@@ -352,6 +355,7 @@ export default function App() {
           <ClubSetup
             notice={clubNotice}
             onStart={createClubRoom}
+            onStartHeadToHead={createClubHeadToHead}
             onStartSolo={(settings) => {
               window.history.pushState(null, "", "/club/solo");
               setRoute({ kind: "clubSolo", settings });
@@ -383,7 +387,16 @@ export default function App() {
         return <ClubDisplayRoom roomCode={route.code} />;
       case "clubController":
         return (
-          <ClubControllerRoom roomCode={route.code} playerName={route.name} onLeave={goHome} />
+          <ClubControllerRoom
+            key={route.code}
+            roomCode={route.code}
+            playerName={route.name}
+            onLeave={goHome}
+            onRematch={(code) => {
+              window.history.pushState(null, "", `/join/${code}`);
+              setRoute({ kind: "clubController", code, name: route.name });
+            }}
+          />
         );
     }
   }

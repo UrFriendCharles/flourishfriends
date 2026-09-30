@@ -7,6 +7,9 @@ import {
   MAX_CLUB_PLAYERS,
   ROUND_INTRO_SECONDS,
   CLUB_PLAYER_COLORS,
+  CLUB_H2H_PLAYERS,
+  CLUB_H2H_REVEAL_MS,
+  CLUB_H2H_START_DELAY_MS,
   clubAnswerCorrect,
   validateClubQuestion,
   type ClubClientMessage,
@@ -22,6 +25,7 @@ import {
   type ClubTier,
   type ClubYouView,
 } from "../src/logic/clubProtocol";
+import { isValidRoomCode } from "../src/logic/roomProtocol";
 import type { Env } from "./index";
 
 // One ClubRoom instance per 0.5% Club room code. Like GameRoom, this DO is the
@@ -77,6 +81,13 @@ interface StoredClubRoom {
   stats: StoredStat[];
   finishedAt: number | null;
   lastActivity: number;
+  /** head to head: when the room moves on by itself (lobby -> round 1, reveal -> next) */
+  autoAdvanceAt?: number | null;
+  rematch?: { roomCode: string; byId: string } | null;
+}
+
+function maxPlayers(room: StoredClubRoom): number {
+  return room.settings.headToHead ? CLUB_H2H_PLAYERS : MAX_CLUB_PLAYERS;
 }
 
 interface Attachment {
@@ -112,6 +123,7 @@ function validateInit(body: InitRequest): string | null {
     return "bad timer";
   }
   if (typeof s.passes !== "number" || s.passes < 0 || s.passes > 3) return "bad pass count";
+  if (s.headToHead !== undefined && typeof s.headToHead !== "boolean") return "bad headToHead";
   return null;
 }
 
@@ -160,6 +172,8 @@ export class ClubRoom {
         })),
         finishedAt: null,
         lastActivity: Date.now(),
+        autoAdvanceAt: null,
+        rematch: null,
       };
       await this.save();
       return Response.json({ ok: true }, { status: 201 });
@@ -172,7 +186,7 @@ export class ClubRoom {
         gameType: room ? CLUB_GAME_TYPE : null,
         status: room?.status ?? null,
         playerCount: room?.players.length ?? 0,
-        canJoin: room !== null && room.status === "lobby" && room.players.length < MAX_CLUB_PLAYERS,
+        canJoin: room !== null && room.status === "lobby" && room.players.length < maxPlayers(room),
       });
     }
 
@@ -212,6 +226,18 @@ export class ClubRoom {
     if (who.role === "player" && who.playerId) {
       if (msg.type === "answer") this.handleAnswer(room, who.playerId, msg.answer);
       else if (msg.type === "pass") this.handlePass(room, who.playerId);
+      else if (msg.type === "rematch") {
+        // first rematch wins; the other phone is offered the same new room
+        if (
+          room.settings.headToHead &&
+          room.status === "ended" &&
+          !room.rematch &&
+          typeof msg.roomCode === "string" &&
+          isValidRoomCode(msg.roomCode)
+        ) {
+          room.rematch = { roomCode: msg.roomCode, byId: who.playerId };
+        }
+      }
     } else if (who.role === "host") {
       this.handleHostMessage(room, msg);
     }
@@ -243,7 +269,19 @@ export class ClubRoom {
     }
 
     let changed = false;
-    if (room.pausedAt === null) {
+    const due = room.autoAdvanceAt ?? null;
+    if (room.settings.headToHead && due !== null && now >= due) {
+      room.autoAdvanceAt = null;
+      if (room.status === "lobby" && room.players.length >= CLUB_H2H_PLAYERS) {
+        this.startRound(room, 0);
+        changed = true;
+      } else if (room.status === "reveal") {
+        if (room.roundIndex >= FINAL_ROUND_INDEX) this.endGame(room);
+        else this.startRound(room, room.roundIndex + 1);
+        changed = true;
+      }
+    }
+    if (!changed && room.pausedAt === null) {
       if (room.status === "round_intro" && room.introEndsAt !== null && now >= room.introEndsAt) {
         this.beginAnswering(room);
         changed = true;
@@ -293,11 +331,13 @@ export class ClubRoom {
           ws.close(1000, "already-started");
           return;
         }
-        if (room.players.length >= MAX_CLUB_PLAYERS) {
+        if (room.players.length >= maxPlayers(room)) {
           this.sendError(
             ws,
             "room-full",
-            `This room is full. 0.5% Club supports up to ${MAX_CLUB_PLAYERS} players.`
+            room.settings.headToHead
+              ? "This head-to-head game already has two players."
+              : `This room is full. 0.5% Club supports up to ${MAX_CLUB_PLAYERS} players.`
           );
           ws.close(1000, "room-full");
           return;
@@ -318,6 +358,10 @@ export class ClubRoom {
         };
         room.players.push(player);
         ws.serializeAttachment({ role: "player", playerId: player.id } satisfies Attachment);
+        // head to head has no host: the second phone joining kicks off the countdown
+        if (room.settings.headToHead && room.players.length >= CLUB_H2H_PLAYERS) {
+          room.autoAdvanceAt = Date.now() + CLUB_H2H_START_DELAY_MS;
+        }
       }
     }
     void this.save().then(() => this.broadcast(room));
@@ -401,6 +445,7 @@ export class ClubRoom {
   // ---------- game flow ----------
 
   private startRound(room: StoredClubRoom, index: number): void {
+    room.autoAdvanceAt = null;
     room.status = "round_intro";
     room.roundIndex = index;
     room.questionStartedAt = null;
@@ -495,6 +540,7 @@ export class ClubRoom {
 
     room.status = "reveal";
     room.questionEndsAt = null;
+    if (room.settings.headToHead) room.autoAdvanceAt = Date.now() + CLUB_H2H_REVEAL_MS;
   }
 
   private endGame(room: StoredClubRoom): void {
@@ -505,6 +551,7 @@ export class ClubRoom {
       for (const p of room.players) p.isWinner = p.correctCount === best;
     }
     room.status = "ended";
+    room.autoAdvanceAt = null;
     room.finishedAt = Date.now();
     room.introEndsAt = null;
     room.questionEndsAt = null;
@@ -521,6 +568,7 @@ export class ClubRoom {
 
   private async armAlarm(room: StoredClubRoom): Promise<void> {
     const candidates = [room.lastActivity + IDLE_TIMEOUT_MS];
+    if (room.autoAdvanceAt) candidates.push(room.autoAdvanceAt);
     if (room.pausedAt === null) {
       if (room.status === "round_intro" && room.introEndsAt !== null) candidates.push(room.introEndsAt);
       if (room.status === "question" && room.questionEndsAt !== null) {
@@ -640,6 +688,8 @@ export class ClubRoom {
       finishedAt: room.finishedAt,
       winnerIds: ended ? room.players.filter((p) => p.isWinner).map((p) => p.id) : null,
       questionStats: ended ? this.questionStats(room) : null,
+      autoAdvanceAt: room.autoAdvanceAt ?? null,
+      rematch: room.rematch ?? null,
     };
   }
 

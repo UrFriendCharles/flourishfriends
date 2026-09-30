@@ -47,6 +47,10 @@ Play it either way from the same setup screen:
 - **TV room + phones** — the host screen is the game board, up to **10
   players** join at `/join/:code`, and `/club/display/:code` is a read-only
   big-screen mirror.
+- **⚔️ Head to Head** — two phones, no host. You get a link to send a friend;
+  when they join, the room starts by itself, both phones get the same question
+  at the same time, each reveal shows how you both did, and the next round
+  starts on its own. Rematch sets up a fresh ladder for both of you.
 
 - **Two modes.** *Classic Survival*: a wrong answer, a timeout, or running out
   of Passes ends your shot at winning — but you keep playing and answering
@@ -68,12 +72,13 @@ Play it either way from the same setup screen:
 - **Explanations** on every question, plus per-question analytics (attempts,
   correct, passes, timeouts, response times, actual solve rate) returned when
   the game ends, ready to calibrate the difficulty labels later.
-- The bank lives in `src/data/clubQuestions.ts` — 44 questions, four per tier.
+- The bank lives in `src/data/clubQuestions.ts` — 188 questions, at least 11 per tier.
   Append to it; nothing else needs to change.
 
 ```bash
 npx wrangler dev                    # then, in another shell:
 node scripts/clubSmokeTest.mjs      # plays whole games over the real protocol
+node scripts/clubH2hSmokeTest.mjs   # a full head-to-head game, rematch included
 ```
 
 ## What's in the flag quiz
