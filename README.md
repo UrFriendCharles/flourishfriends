@@ -75,6 +75,13 @@ Play it either way from the same setup screen:
   the game ends, ready to calibrate the difficulty labels later.
 - The bank lives in `src/data/clubQuestions.ts` — 294 questions, at least 21 per tier.
   Append to it; nothing else needs to change.
+- **Adding a batch of questions**: write them as JSONL and run
+  `node scripts/importQuestions.mjs batch.jsonl --write out.ts`, read the report,
+  then paste the accepted entries into the bank. Ids from the 1% Club PDF pack
+  (added 2026-10-10, 106 questions; the PDF's 1% round sits in the 0.5% tier) start
+  with `pdf`. Heads-up: the importer's duplicate check only reads entries written
+  with unquoted keys (`prompt: "..."`), so it can't see the JSON-style entries in
+  the second half of the bank — check repeats against the whole file by hand.
 
 ```bash
 npx wrangler dev                    # then, in another shell:
