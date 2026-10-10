@@ -2824,6 +2824,1644 @@ export const CLUB_QUESTIONS: ClubQuestion[] = [
     "sourceType": "adapted",
     "sourceReference": "The 1% Club (TV show) style logic puzzle"
   },
+  // ===================================================================
+  // added: 1% Club PDF pack (rounds 90%→1%; the PDF's 1% round sits in 0.5%)
+  // ===================================================================
+  {
+    "id": "pdf90_creature_anagram",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these is NOT an anagram of a creature?",
+    "choices": [
+      "SNEAK",
+      "LOIN",
+      "BULB",
+      "LUGS"
+    ],
+    "correctAnswer": "BULB",
+    "explanation": "SNEAK = SNAKE, LOIN = LION, LUGS = SLUG. BULB doesn't rearrange into anything that crawls.",
+    "category": "anagrams",
+    "mechanic": "anagram intruder",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_weather_hidden",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these does NOT have a type of weather hidden in it?",
+    "choices": [
+      "RHINOCEROS",
+      "STRAINER",
+      "MISUNDERSTAND",
+      "HEADMISTRESS"
+    ],
+    "correctAnswer": "RHINOCEROS",
+    "explanation": "stRAINer hides RAIN, miSUNderstand hides SUN, headMISTress hides MIST. Rhinoceros has none.",
+    "category": "hidden words",
+    "mechanic": "embedded word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_most_legs",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these has the most legs?",
+    "choices": [
+      "Seven bald eagles",
+      "Five spotty dogs",
+      "Three hairy spiders"
+    ],
+    "correctAnswer": "Three hairy spiders",
+    "explanation": "Eagles: 7 × 2 = 14. Dogs: 5 × 4 = 20. Spiders: 3 × 8 = 24. The fewest animals wins.",
+    "category": "counting",
+    "mechanic": "multiply and compare",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_yesterday_tomorrow",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "What is the yesterday of tomorrow and the tomorrow of yesterday?",
+    "choices": [
+      "Yesterday",
+      "Today",
+      "Tomorrow"
+    ],
+    "correctAnswer": "Today",
+    "explanation": "Tomorrow's yesterday is today, and yesterday's tomorrow is today too.",
+    "category": "logic",
+    "mechanic": "relative days",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_lorry_lolly",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Sorted into alphabetical order, which of these comes first?",
+    "choices": [
+      "Red Lorry",
+      "Yellow Lorry",
+      "Red Lolly",
+      "Yellow Lolly"
+    ],
+    "correctAnswer": "Red Lolly",
+    "explanation": "Red beats Yellow, and LOL beats LOR because L comes before R.",
+    "category": "ordering",
+    "mechanic": "alphabetical order",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_missing_vowel",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of the five vowels is missing from this question?",
+    "choices": [
+      "A",
+      "E",
+      "I",
+      "O",
+      "U"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Read it again — there's an E, I, O and U, but not a single A.",
+    "category": "observation",
+    "mechanic": "self-referential sentence",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_colour_anagram",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these is NOT an anagram of a colour?",
+    "choices": [
+      "SLIVER",
+      "LUBE",
+      "GENRE",
+      "RIPPLE"
+    ],
+    "correctAnswer": "RIPPLE",
+    "explanation": "SLIVER = SILVER, LUBE = BLUE, GENRE = GREEN. RIPPLE isn't PURPLE — it has an I and two Ps too many.",
+    "category": "anagrams",
+    "mechanic": "anagram intruder",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_kttn",
+    "difficulty": 90,
+    "questionType": "multiple_choice",
+    "prompt": "If a young cat is a KTTN, what is a young dog?",
+    "choices": [
+      "DG",
+      "PPY",
+      "PPPY",
+      "PPP"
+    ],
+    "correctAnswer": "PPPY",
+    "explanation": "KTTN is KITTEN with the vowels taken out. Do the same to PUPPY and you get PPPY.",
+    "category": "letter manipulation",
+    "mechanic": "vowel removal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf90_two_words",
+    "difficulty": 90,
+    "questionType": "text",
+    "prompt": "Make TWO WORDS using all these jumbled-up letters:\n\nSTOWRODW",
+    "correctAnswer": "two words",
+    "acceptedAnswers": [
+      "twowords"
+    ],
+    "explanation": "The answer was in the question: STOWRODW unscrambles to TWO WORDS.",
+    "category": "anagrams",
+    "mechanic": "read it again",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_shampoo_meat",
+    "difficulty": 80,
+    "questionType": "text",
+    "prompt": "What type of meat can be found in SHAMPOO?",
+    "correctAnswer": "ham",
+    "explanation": "sHAMpoo.",
+    "category": "hidden words",
+    "mechanic": "embedded word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_letter_names",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "Say these out loud. Which one is NOT a girl's name?",
+    "choices": [
+      "LC",
+      "EW",
+      "KT",
+      "IV"
+    ],
+    "correctAnswer": "EW",
+    "explanation": "LC sounds like Elsie, KT like Katie, IV like Ivy. EW is just… ew.",
+    "category": "wordplay",
+    "mechanic": "spoken letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_happy_birthday",
+    "difficulty": 80,
+    "questionType": "number",
+    "prompt": "If you sang 'Happy Birthday' to someone named Happy, how many times would you sing the word 'Happy'?",
+    "correctAnswer": "5",
+    "explanation": "Happy birthday to you (1), happy birthday to you (2), happy birthday dear Happy (3, 4), happy birthday to you (5).",
+    "category": "counting",
+    "mechanic": "careful counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_not_alphabetical",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "The letters of which of these words are NOT in alphabetical order?",
+    "choices": [
+      "ABHOR",
+      "ACCENT",
+      "ALLIGATOR",
+      "ACCOST"
+    ],
+    "correctAnswer": "ALLIGATOR",
+    "explanation": "A-B-H-O-R, A-C-C-E-N-T and A-C-C-O-S-T all run in order. ALLIGATOR goes backwards straight away: the I comes after the L.",
+    "category": "letter manipulation",
+    "mechanic": "letters in order",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_reversed_reverse",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these is 'REVERSED' written in reverse?",
+    "choices": [
+      "DESVERER",
+      "DEVRESER",
+      "DEVSERER",
+      "DESREVER"
+    ],
+    "correctAnswer": "DESREVER",
+    "explanation": "Read REVERSED from the end: D-E-S-R-E-V-E-R.",
+    "category": "letter manipulation",
+    "mechanic": "word reversal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_see_o_double_u",
+    "difficulty": 80,
+    "questionType": "text",
+    "prompt": "Crack the code — which animal is this?\n\nSEE  O  DOUBLE U",
+    "correctAnswer": "cow",
+    "explanation": "SEE sounds like C, then O, then DOUBLE U is W: C-O-W.",
+    "category": "wordplay",
+    "mechanic": "spoken letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_count_sevens",
+    "difficulty": 80,
+    "questionType": "number",
+    "prompt": "How many 7s are in this sequence?\n\n71477Y771477Y77YV777V7Y7VY7",
+    "correctAnswer": "15",
+    "explanation": "There are 15. The Ys and Vs are there to make your eyes slide off the 7s.",
+    "timerSeconds": 45,
+    "category": "observation",
+    "mechanic": "careful counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_sloppy_biden",
+    "difficulty": 80,
+    "questionType": "text",
+    "prompt": "What three-letter name links these two?\n\nSLOPPY _ _ _ BIDEN",
+    "correctAnswer": "Joe",
+    "explanation": "Sloppy JOE and JOE Biden.",
+    "category": "wordplay",
+    "mechanic": "missing link word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_christmas_opposites",
+    "difficulty": 80,
+    "questionType": "text",
+    "prompt": "Swap each word for its opposite to make the title of a Christmas film:\n\nAWAY  ACCOMPANIED",
+    "correctAnswer": "Home Alone",
+    "explanation": "The opposite of away is HOME, and the opposite of accompanied is ALONE.",
+    "category": "wordplay",
+    "mechanic": "opposites",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf80_az_by",
+    "difficulty": 80,
+    "questionType": "multiple_choice",
+    "prompt": "Which pair comes next?\n\nAZ  BY  CX  DW  EV  ??",
+    "choices": [
+      "FU",
+      "FV",
+      "GU",
+      "EU"
+    ],
+    "correctAnswer": "FU",
+    "explanation": "The first letter walks forward from A; the second walks backwards from Z. Next is F and U.",
+    "category": "letter manipulation",
+    "mechanic": "alphabet from both ends",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_extra_t",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "At doublet-deckert its mtost liketly tot bet at typte tof twhat?",
+    "choices": [
+      "Bust",
+      "Waist",
+      "Ankle"
+    ],
+    "correctAnswer": "Bust",
+    "explanation": "Every word has a stray T. Remove them: 'A double-decker is most likely to be a type of what?' — and BUST becomes BUS.",
+    "category": "observation",
+    "mechanic": "remove the extra letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_cd_half",
+    "difficulty": 70,
+    "questionType": "number",
+    "prompt": "A CD has 8 tracks, all the same length. Which track do you start on to hear the second half of the CD?",
+    "correctAnswer": "5",
+    "explanation": "Tracks 1–4 are the first half, so the second half starts on track 5 — not 4.",
+    "category": "logic",
+    "mechanic": "halfway point",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_day_100",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "If day 1 is January 1st, which month is day 100 in?",
+    "choices": [
+      "March",
+      "April",
+      "May",
+      "June"
+    ],
+    "correctAnswer": "April",
+    "explanation": "January (31) + February (28) + March (31) = 90 days, so day 100 is April 10th.",
+    "category": "logic",
+    "mechanic": "calendar counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_letter_a_numbers",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "How many times does the letter A appear when you spell out every number from one to ninety-nine?",
+    "choices": [
+      "0",
+      "9",
+      "10",
+      "18"
+    ],
+    "correctAnswer": "0",
+    "explanation": "None! The first A doesn't turn up until one hundred AND… or one thousAnd.",
+    "category": "observation",
+    "mechanic": "spelling trap",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_message_bottle",
+    "difficulty": 70,
+    "questionType": "text",
+    "prompt": "What well-known phrase do you get from this?\n\nBOTMESSAGETLE",
+    "correctAnswer": "message in a bottle",
+    "acceptedAnswers": [
+      "a message in a bottle"
+    ],
+    "explanation": "The word MESSAGE sits inside the word BOTTLE.",
+    "category": "wordplay",
+    "mechanic": "word picture",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_no_repeats",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these does NOT contain any repeated letters?",
+    "choices": [
+      "SINGULAR",
+      "INDIVIDUAL",
+      "UNIQUE"
+    ],
+    "correctAnswer": "SINGULAR",
+    "explanation": "INDIVIDUAL repeats I and D, UNIQUE repeats U. SINGULAR's eight letters are all different.",
+    "category": "observation",
+    "mechanic": "letter counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_coin_heads",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "A fair coin lands on heads 4 times in a row. What are the chances it lands on heads next time?",
+    "choices": [
+      "20%",
+      "50%",
+      "10%",
+      "25%"
+    ],
+    "correctAnswer": "50%",
+    "explanation": "The coin has no memory. Every flip is a fresh 50/50, no matter what came before.",
+    "category": "logic",
+    "mechanic": "independent events",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_month_alpha",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "If January is Month 1, which of these comes first alphabetically?",
+    "choices": [
+      "Month 6",
+      "Month 7",
+      "Month 8"
+    ],
+    "correctAnswer": "Month 8",
+    "explanation": "Month 6 is June, Month 7 is July, Month 8 is August — and August comes first alphabetically.",
+    "category": "ordering",
+    "mechanic": "decode then sort",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf70_bag_afternoon_pot",
+    "difficulty": 70,
+    "questionType": "text",
+    "prompt": "What three-letter word links BAG, AFTERNOON and POT?",
+    "correctAnswer": "tea",
+    "explanation": "Teabag, afternoon tea and teapot.",
+    "category": "wordplay",
+    "mechanic": "missing link word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_forty_two",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Which number replaces the question mark?\n\n42 - ? - 62 - 72",
+    "choices": [
+      "32",
+      "52"
+    ],
+    "correctAnswer": "52",
+    "explanation": "Those dashes aren't minus signs — it's just a list going up by 10.",
+    "category": "number patterns",
+    "mechanic": "misleading notation",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_hidden_bird",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these has a well-known bird hidden in it?",
+    "choices": [
+      "Bahrain",
+      "Botswana",
+      "Bolivia"
+    ],
+    "correctAnswer": "Botswana",
+    "explanation": "BotSWANa.",
+    "category": "hidden words",
+    "mechanic": "embedded word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_second_letters",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Going by their SECOND letters, which day of the week comes first alphabetically?",
+    "choices": [
+      "Monday",
+      "Wednesday",
+      "Thursday",
+      "Saturday"
+    ],
+    "correctAnswer": "Saturday",
+    "explanation": "SAturday's second letter is A — nothing beats that.",
+    "category": "ordering",
+    "mechanic": "alphabetical by position",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_spokes",
+    "difficulty": 60,
+    "questionType": "number",
+    "prompt": "A bike wheel has 12 spokes. How many gaps are there between them?",
+    "correctAnswer": "12",
+    "explanation": "It's a circle, so the last gap wraps round to the first spoke: 12 spokes, 12 gaps.",
+    "category": "logic",
+    "mechanic": "intervals in a loop",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_no_vowels",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "n ths qstn wht s mssng?",
+    "choices": [
+      "Vowels",
+      "Consonants",
+      "Spaces",
+      "Punctuation"
+    ],
+    "correctAnswer": "Vowels",
+    "explanation": "In this question, what is missing? The vowels.",
+    "category": "observation",
+    "mechanic": "vowel removal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_satin_saint",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these is holy and made of SATIN?",
+    "choices": [
+      "VICAR",
+      "PRIEST",
+      "SAINT"
+    ],
+    "correctAnswer": "SAINT",
+    "explanation": "Rearrange SATIN and you get SAINT.",
+    "category": "anagrams",
+    "mechanic": "anagram",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_ssftw",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "What are the next two letters in this everyday sequence?\n\nS  S  F  T  W  ?  ?",
+    "choices": [
+      "T M",
+      "T F",
+      "M T",
+      "S M"
+    ],
+    "correctAnswer": "T M",
+    "explanation": "Days of the week, backwards: Sunday, Saturday, Friday, Thursday, Wednesday, Tuesday, Monday.",
+    "category": "letter manipulation",
+    "mechanic": "initial letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_pop_singer_sorted",
+    "difficulty": 60,
+    "questionType": "text",
+    "prompt": "Which pop singer's name is written here with all its letters in alphabetical order?\n\nADEEEHNRS",
+    "correctAnswer": "Ed Sheeran",
+    "acceptedAnswers": [
+      "Sheeran"
+    ],
+    "explanation": "Sort the letters of ED SHEERAN and you get A, D, E, E, E, H, N, R, S.",
+    "category": "anagrams",
+    "mechanic": "sorted letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_lee_value",
+    "difficulty": 60,
+    "questionType": "number",
+    "prompt": "If A = 1, B = 2, C = 3 and so on, what is L + E + E?",
+    "correctAnswer": "22",
+    "explanation": "L = 12 and E = 5, so 12 + 5 + 5 = 22.",
+    "category": "letter manipulation",
+    "mechanic": "letter values",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_missing_from_alphabet",
+    "difficulty": 50,
+    "questionType": "text",
+    "prompt": "What five-letter word is missing from this alphabet?\n\nABCDEFHIJKMNPQSTUVWXZ",
+    "correctAnswer": "glory",
+    "explanation": "The missing letters are G, L, O, R and Y.",
+    "timerSeconds": 45,
+    "category": "observation",
+    "mechanic": "missing letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_fish_and_chips",
+    "difficulty": 50,
+    "questionType": "number",
+    "prompt": "How many letters appear more than once in FISH AND CHIPS?",
+    "correctAnswer": "3",
+    "explanation": "I, S and H each appear twice. Everything else appears once.",
+    "category": "observation",
+    "mechanic": "letter counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_country_first_letter",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these can you NOT turn into a country by changing the first letter?",
+    "choices": [
+      "Logo",
+      "While",
+      "Petal",
+      "Trance"
+    ],
+    "correctAnswer": "Petal",
+    "explanation": "Logo → Togo, While → Chile, Trance → France. Petal is one letter away from nothing.",
+    "category": "letter manipulation",
+    "mechanic": "change one letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_hidden_drink",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these has a well-known drink hidden in it?",
+    "choices": [
+      "ROBOT",
+      "DALEK",
+      "CYBORG"
+    ],
+    "correctAnswer": "DALEK",
+    "explanation": "dALEk.",
+    "category": "hidden words",
+    "mechanic": "embedded word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_missing_two_letters",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which two letters are missing from all of these?\n\nNADA   MEROON   AMERI",
+    "choices": [
+      "CA",
+      "AN",
+      "CH",
+      "RE"
+    ],
+    "correctAnswer": "CA",
+    "explanation": "CAnada, CAmeroon and AmeriCA.",
+    "category": "letter manipulation",
+    "mechanic": "missing letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_ough_rhyme",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these does NOT rhyme with any English word ending in 'ough'?",
+    "choices": [
+      "Cow",
+      "Poo",
+      "Wee"
+    ],
+    "correctAnswer": "Wee",
+    "explanation": "Cow rhymes with plough, Poo rhymes with through. Nothing ending in -ough sounds like Wee.",
+    "category": "wordplay",
+    "mechanic": "spelling vs sound",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_largest_number",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these is the largest number?",
+    "choices": [
+      "1/3",
+      "0.0330",
+      "30% of 10",
+      "3/10",
+      "3.01"
+    ],
+    "correctAnswer": "3.01",
+    "explanation": "1/3 ≈ 0.33, 0.0330 is tiny, 30% of 10 = 3, 3/10 = 0.3. 3.01 just edges out 3.",
+    "category": "number patterns",
+    "mechanic": "compare forms",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_centre_of_nothing",
+    "difficulty": 50,
+    "questionType": "text",
+    "prompt": "Which character is literally at the centre of NOTHING?",
+    "correctAnswer": "H",
+    "acceptedAnswers": [
+      "the letter h",
+      "letter h"
+    ],
+    "explanation": "N-O-T-H-I-N-G: seven letters, and the fourth is H.",
+    "category": "observation",
+    "mechanic": "middle letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_country_anagrams",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Which of these words is the odd one out?",
+    "choices": [
+      "Rain",
+      "Mail",
+      "Plane",
+      "Stale"
+    ],
+    "correctAnswer": "Stale",
+    "explanation": "Rain = IRAN, Mail = MALI, Plane = NEPAL. Stale isn't an anagram of a country.",
+    "category": "anagrams",
+    "mechanic": "anagram intruder",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_month_verb",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Which is the first month of the year whose name is also a verb?",
+    "choices": [
+      "January",
+      "February",
+      "March",
+      "May"
+    ],
+    "correctAnswer": "March",
+    "explanation": "You can march. You can't january or february.",
+    "category": "wordplay",
+    "mechanic": "double meaning",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_donwer_derunth",
+    "difficulty": 40,
+    "questionType": "text",
+    "prompt": "Unscramble these to make two rhyming words:\n\nDONWER  &  DERUNTH",
+    "correctAnswer": "wonder and thunder",
+    "acceptedAnswers": [
+      "wonder thunder",
+      "thunder and wonder",
+      "thunder wonder"
+    ],
+    "explanation": "DONWER = WONDER, DERUNTH = THUNDER.",
+    "category": "anagrams",
+    "mechanic": "rhyming anagram pair",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_pasta_tapas",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Which Italian food is an anagram of a famous Spanish way of eating?",
+    "choices": [
+      "Pizza",
+      "Pasta",
+      "Risotto",
+      "Salami"
+    ],
+    "correctAnswer": "Pasta",
+    "explanation": "PASTA rearranges into TAPAS.",
+    "category": "anagrams",
+    "mechanic": "anagram",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_earth_heart_mars",
+    "difficulty": 40,
+    "questionType": "text",
+    "prompt": "If planet Earth has a 'heart', which body parts does 'Mars' have?",
+    "correctAnswer": "arms",
+    "acceptedAnswers": [
+      "arm"
+    ],
+    "explanation": "HEART is an anagram of EARTH, and ARMS is an anagram of MARS.",
+    "category": "anagrams",
+    "mechanic": "anagram analogy",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_van_words",
+    "difficulty": 40,
+    "questionType": "text",
+    "prompt": "What type of vehicle can go in front of ITY, ISH and GUARD to make three words?",
+    "correctAnswer": "van",
+    "explanation": "VANity, VANish, VANguard.",
+    "category": "wordplay",
+    "mechanic": "missing link word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_second_letter_names",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Which name comes next?\n\nMarie, Annabelle, Norah, Olivia, Leah…",
+    "choices": [
+      "Alison",
+      "Irene",
+      "Una",
+      "Elizabeth"
+    ],
+    "correctAnswer": "Elizabeth",
+    "explanation": "Each name starts with the second letter of the one before: mArie → Annabelle → aNnabelle → Norah… → lEah → Elizabeth.",
+    "category": "letter manipulation",
+    "mechanic": "chained letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_hail_country",
+    "difficulty": 40,
+    "questionType": "multiple_choice",
+    "prompt": "Hail is always seen in which of these countries?",
+    "choices": [
+      "Bangladesh",
+      "Cameroon",
+      "Thailand",
+      "Poland"
+    ],
+    "correctAnswer": "Thailand",
+    "explanation": "tHAILand.",
+    "category": "hidden words",
+    "mechanic": "embedded word",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf40_dpggff_cocoa",
+    "difficulty": 40,
+    "questionType": "text",
+    "prompt": "If DPGGFF is code for COFFEE, what drink is DPDPB?",
+    "correctAnswer": "cocoa",
+    "explanation": "Each code letter is one step after the real letter. Step DPDPB back one and you get COCOA.",
+    "category": "letter manipulation",
+    "mechanic": "letter shift",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_beard_bread",
+    "difficulty": 30,
+    "questionType": "text",
+    "prompt": "Two words using the same five letters in a different order solve this. What are they?\n\nFacial hair · Baguette",
+    "correctAnswer": "beard and bread",
+    "acceptedAnswers": [
+      "beard bread",
+      "bread and beard",
+      "bread beard"
+    ],
+    "explanation": "BEARD and BREAD — same five letters.",
+    "category": "anagrams",
+    "mechanic": "anagram pair",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_tesla_list",
+    "difficulty": 30,
+    "questionType": "text",
+    "prompt": "Which make of car belongs in this list?\n\nSTEAL, TALES, STALE, LEAST, SLATE, ?????",
+    "correctAnswer": "Tesla",
+    "explanation": "Every word is an anagram of the same five letters — and so is TESLA.",
+    "category": "anagrams",
+    "mechanic": "anagram set",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_state_vowels",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "Rhode Island has 4, California has 3 and Ohio has 2. Which of these has 1?",
+    "choices": [
+      "Mississippi",
+      "Florida",
+      "New York"
+    ],
+    "correctAnswer": "Mississippi",
+    "explanation": "It's the number of different vowels. Mississippi only ever uses I.",
+    "category": "observation",
+    "mechanic": "distinct vowels",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_newspaper_turns",
+    "difficulty": 30,
+    "questionType": "number",
+    "prompt": "A newspaper has 20 pages. The front cover is page 1 and the back cover is page 20. To read every page, how many times must you turn a page?",
+    "correctAnswer": "10",
+    "explanation": "Each turn shows two new pages: 2–3, 4–5 … 18–19, then 20. That's 10 turns.",
+    "category": "logic",
+    "mechanic": "intervals not items",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_par_s",
+    "difficulty": 30,
+    "questionType": "text",
+    "prompt": "What item of clothing fits in the gap to make a word?\n\nP A R _ _ _ S",
+    "correctAnswer": "tie",
+    "explanation": "PARTIES.",
+    "category": "wordplay",
+    "mechanic": "fill the gap",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_longest_month",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "In the UK, January, July and October all have 31 days — but which of them is the longest?",
+    "choices": [
+      "January",
+      "July",
+      "October",
+      "They're all the same"
+    ],
+    "correctAnswer": "October",
+    "explanation": "The UK clocks go back an hour in October, so it lasts 31 days and 1 hour. (In the US that extra hour lands in November instead.)",
+    "category": "logic",
+    "mechanic": "hidden assumption",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_keypad_product",
+    "difficulty": 30,
+    "questionType": "number",
+    "prompt": "What do you get if you multiply together all the numbers on a phone keypad?",
+    "correctAnswer": "0",
+    "explanation": "There's a 0 on the keypad, and anything times 0 is 0.",
+    "category": "logic",
+    "mechanic": "spot the zero",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_flower_letters",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "Seth's favourite flower is a Rose, Percy's is a Lilac and Olivia's is a Dahlia. What is Adrienne's?",
+    "choices": [
+      "Crocus",
+      "Tulip",
+      "Orchid",
+      "Hyacinth"
+    ],
+    "correctAnswer": "Hyacinth",
+    "explanation": "Each flower has the same number of letters as the name. Adrienne has 8 — so does HYACINTH.",
+    "category": "letter manipulation",
+    "mechanic": "matching length",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_v_lat_n",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "Which pair of letters fills BOTH gaps?\n\nV _ _ L A T _ _ N",
+    "choices": [
+      "IO",
+      "OI",
+      "AI",
+      "EA"
+    ],
+    "correctAnswer": "IO",
+    "explanation": "VIOLATION.",
+    "category": "wordplay",
+    "mechanic": "fill the gap",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_suffolk",
+    "difficulty": 20,
+    "questionType": "text",
+    "prompt": "If A = 1, B = 2, C = 3 and so on, which English county is this?\n\n19, 21, 6, 6, 15, 12, 11",
+    "correctAnswer": "Suffolk",
+    "explanation": "S(19) U(21) F(6) F(6) O(15) L(12) K(11).",
+    "category": "letter manipulation",
+    "mechanic": "number to letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_five_equals",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "If all of these are true, what does 5 equal?\n\n1 = 5, 2 = 27, 3 = 125, 4 = 1880",
+    "correctAnswer": "1",
+    "explanation": "If 1 = 5, then 5 = 1. The other lines are there to send you hunting for a pattern.",
+    "category": "logic",
+    "mechanic": "red herring",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_jack_birthday",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "Jack turned 17 yesterday, and he'll turn 18 later this year. What's his birthday?",
+    "choices": [
+      "January 1",
+      "December 31",
+      "February 29",
+      "June 30"
+    ],
+    "correctAnswer": "December 31",
+    "explanation": "Today must be January 1st. Jack turned 17 yesterday, December 31st, and turns 18 on December 31st of this year.",
+    "category": "logic",
+    "mechanic": "calendar edge",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_most_used_letter",
+    "difficulty": 20,
+    "questionType": "multiple_choice",
+    "prompt": "Which letter of the alphabet is used most often in this question?",
+    "choices": [
+      "E",
+      "T",
+      "H",
+      "I"
+    ],
+    "correctAnswer": "T",
+    "explanation": "T appears 8 times — narrowly beating E with 7.",
+    "timerSeconds": 45,
+    "category": "observation",
+    "mechanic": "self-referential letter count",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_caught_thought",
+    "difficulty": 20,
+    "questionType": "text",
+    "prompt": "Unscramble these to make two rhyming words:\n\nCHAGUT  &  HUTGOTH",
+    "correctAnswer": "caught and thought",
+    "acceptedAnswers": [
+      "caught thought",
+      "thought and caught",
+      "thought caught"
+    ],
+    "explanation": "CHAGUT = CAUGHT, HUTGOTH = THOUGHT.",
+    "category": "anagrams",
+    "mechanic": "rhyming anagram pair",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_entq_twenty",
+    "difficulty": 20,
+    "questionType": "text",
+    "prompt": "If ENTQ is code for FOUR, what number is SVDMSX?",
+    "correctAnswer": "twenty",
+    "acceptedAnswers": [
+      "20"
+    ],
+    "explanation": "Each code letter is one step before the real letter. Step SVDMSX forward and you get TWENTY.",
+    "category": "letter manipulation",
+    "mechanic": "letter shift",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_buzz_reverse",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "If Z = 1, Y = 2, X = 3 and so on backwards, what do the letters of BUZZ add up to?",
+    "correctAnswer": "33",
+    "explanation": "B = 25, U = 6, Z = 1, Z = 1. Total 33.",
+    "category": "letter manipulation",
+    "mechanic": "reverse letter values",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_fib_like",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "What number replaces the question mark?\n\n3, 9, 12, 21, ?, 54, 87",
+    "correctAnswer": "33",
+    "explanation": "Each number is the sum of the two before it: 12 + 21 = 33, then 21 + 33 = 54, 33 + 54 = 87.",
+    "category": "number patterns",
+    "mechanic": "add the previous two",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_four_consecutive",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "Four numbers in a row add up to 90. What's the smallest of them?",
+    "correctAnswer": "21",
+    "explanation": "21 + 22 + 23 + 24 = 90.",
+    "category": "number patterns",
+    "mechanic": "consecutive sum",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf20_most_syllables",
+    "difficulty": 20,
+    "questionType": "number",
+    "prompt": "Which number between 1 and 100 has the most syllables when said out loud?",
+    "correctAnswer": "77",
+    "explanation": "SEV-EN-TY-SEV-EN — five syllables. Nothing else gets past four.",
+    "category": "wordplay",
+    "mechanic": "syllable count",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_mackerel",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "What is the longest word in this question that contains not a single letter from the word MACKEREL?",
+    "correctAnswer": "this",
+    "explanation": "Only IS, IN, THIS and NOT avoid every letter of M-A-C-K-E-R-E-L. THIS is the longest.",
+    "timerSeconds": 45,
+    "category": "observation",
+    "mechanic": "self-referential search",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_quiver",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "If 1 = A, 2 = B, 3 = C and so on, what word is spelt by:\n\n17 + 21 + 9 + 22 + 5 + 18",
+    "correctAnswer": "quiver",
+    "explanation": "Don't add them up. 17 = Q, 21 = U, 9 = I, 22 = V, 5 = E, 18 = R.",
+    "category": "letter manipulation",
+    "mechanic": "misleading notation",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_cbehfs_badger",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "If IBNTUFS is code for HAMSTER, what animal is CBEHFS?",
+    "correctAnswer": "badger",
+    "explanation": "Each code letter is one step after the real one. Step CBEHFS back and you get BADGER.",
+    "category": "letter manipulation",
+    "mechanic": "letter shift",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_two_and_four",
+    "difficulty": 10,
+    "questionType": "number",
+    "prompt": "If TWO and TWO equals 6, and TWO and THREE equals 8, what does TWO and FOUR equal?",
+    "correctAnswer": "7",
+    "explanation": "Count the letters: TWO (3) + FOUR (4) = 7.",
+    "category": "wordplay",
+    "mechanic": "letter count as value",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_tuna_aunt",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "Two words using the same four letters in a different order solve this. What are they?\n\nFish · Female relative",
+    "correctAnswer": "tuna and aunt",
+    "acceptedAnswers": [
+      "tuna aunt",
+      "aunt and tuna",
+      "aunt tuna"
+    ],
+    "explanation": "TUNA and AUNT.",
+    "category": "anagrams",
+    "mechanic": "anagram pair",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_spieky",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "What well-known phrase is shown here?\n\nSPIEKY",
+    "correctAnswer": "pie in the sky",
+    "explanation": "The word PIE sits inside the word SKY.",
+    "category": "wordplay",
+    "mechanic": "word picture",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_christmas_summer",
+    "difficulty": 10,
+    "questionType": "text",
+    "prompt": "What do the end of Christmas and the beginning of Summer have in common?",
+    "correctAnswer": "S",
+    "acceptedAnswers": [
+      "the letter s",
+      "letter s",
+      "s"
+    ],
+    "explanation": "ChristmaS ends in S and Summer starts with S.",
+    "category": "wordplay",
+    "mechanic": "riddle",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_sevens_to_100",
+    "difficulty": 10,
+    "questionType": "number",
+    "prompt": "Counting from 1 to 100, how many times does the digit 7 appear?",
+    "correctAnswer": "20",
+    "explanation": "Ten in the units (7, 17 … 97) and ten in the tens (70–79). 77 counts twice.",
+    "category": "observation",
+    "mechanic": "digit counting",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_tnessfftt",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "What letter comes next?\n\nT  N  E  S  S  F  F  T  T  ?",
+    "correctAnswer": "O",
+    "acceptedAnswers": [
+      "the letter o",
+      "letter o"
+    ],
+    "explanation": "Counting down from ten: Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two… One.",
+    "category": "letter manipulation",
+    "mechanic": "initial letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_nth_letter",
+    "difficulty": 5,
+    "questionType": "multiple_choice",
+    "prompt": "Logically, what letter replaces the question mark?\n\n1 = O,  2 = W,  3 = R,  4 = ?",
+    "choices": [
+      "R",
+      "U",
+      "F",
+      "O"
+    ],
+    "correctAnswer": "R",
+    "explanation": "O is the 1st letter of ONE, W the 2nd of TWO, R the 3rd of THREE — and R is the 4th of FOUR.",
+    "category": "letter manipulation",
+    "mechanic": "nth letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_anwar_victoria",
+    "difficulty": 5,
+    "questionType": "number",
+    "prompt": "If Anwar is 5, Jennifer is 8 and Sarah is 3, what is Victoria?",
+    "correctAnswer": "6",
+    "explanation": "The number is where the R sits: anwaR (5th), jenniFER (8th), saR (3rd), victoR (6th).",
+    "category": "letter manipulation",
+    "mechanic": "letter position",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_months_sorted",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "What two words replace the question marks?\n\nApril, August, December, ?, January, July, June, ?, May, November, October",
+    "correctAnswer": "February and March",
+    "acceptedAnswers": [
+      "february march",
+      "march and february",
+      "feb and mar"
+    ],
+    "explanation": "It's the months in alphabetical order. (September is missing too — it'd come at the end.)",
+    "timerSeconds": 45,
+    "category": "ordering",
+    "mechanic": "alphabetical order",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_mary_poppins",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "Unscramble these to find a book and film character:\n\nAIMN  OPPPRSY",
+    "correctAnswer": "Mary Poppins",
+    "explanation": "All eleven letters of MARY POPPINS, sorted into alphabetical order and split in two.",
+    "category": "anagrams",
+    "mechanic": "sorted letters",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_www_syllables",
+    "difficulty": 5,
+    "questionType": "number",
+    "prompt": "If World Wide Web = 3 and www = 9, what does Internet equal?",
+    "correctAnswer": "3",
+    "explanation": "Count the syllables. 'Double-u' three times is 9; IN-TER-NET is 3.",
+    "category": "wordplay",
+    "mechanic": "syllable count",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_mints",
+    "difficulty": 5,
+    "questionType": "multiple_choice",
+    "prompt": "You had a packet of 15 mints and ate one every half hour. If the last mint was at 3:30pm, when did you eat the first?",
+    "choices": [
+      "8:00am",
+      "8:30am",
+      "9:00am",
+      "7:30am"
+    ],
+    "correctAnswer": "8:30am",
+    "explanation": "15 mints means 14 half-hour gaps — 7 hours. 3:30pm minus 7 hours is 8:30am.",
+    "category": "logic",
+    "mechanic": "intervals not items",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_years_hidden",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "What are the next two digits?\n\n195  019  601  970  198  019  902  0??",
+    "correctAnswer": "00",
+    "acceptedAnswers": [
+      "0 0",
+      "0 and 0",
+      "zero zero"
+    ],
+    "explanation": "Take out the gaps: 1950 1960 1970 1980 1990 2000.",
+    "timerSeconds": 45,
+    "category": "number patterns",
+    "mechanic": "regroup the digits",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_dennis_sinned",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "If Anna is being herself, and Liam might be sent somewhere, what did Dennis do?",
+    "correctAnswer": "he sinned",
+    "acceptedAnswers": [
+      "sinned"
+    ],
+    "explanation": "Read the names backwards: ANNA is still ANNA, LIAM is MAIL, DENNIS is SINNED.",
+    "category": "wordplay",
+    "mechanic": "word reversal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf5_strength_numbers",
+    "difficulty": 5,
+    "questionType": "text",
+    "prompt": "What three-word saying is hidden in this code?\n\n3S46T89R5E7N68G46T52H9",
+    "correctAnswer": "strength in numbers",
+    "explanation": "Pull out the letters and you get STRENGTH — sitting in numbers.",
+    "category": "wordplay",
+    "mechanic": "word picture",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_first_letters",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "Work out what letters come next in this sequence…\n\nWOW LCN I _ _",
+    "correctAnswer": "TS",
+    "acceptedAnswers": [
+      "T S"
+    ],
+    "explanation": "They're the first letters of the question: Work Out What Letters Come Next In This Sequence.",
+    "category": "observation",
+    "mechanic": "self-referential initials",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_robin_numbers",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "What is the sum of all the numbers you can see in this sentence?\n\nWhen Robin felt lonely, he would tend to go and hide in the height of the smooth reeds near the river.",
+    "correctAnswer": "22",
+    "explanation": "lONEly (1) + TENd (10) + hEIGHT (8) + smooTH REEds (3) = 22.",
+    "timerSeconds": 60,
+    "category": "hidden words",
+    "mechanic": "embedded number",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_interleaved",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "What number replaces the question mark?\n\n1 2 3 4 5 8 7 16 9 ?",
+    "correctAnswer": "32",
+    "explanation": "Two sequences woven together: odd numbers (1, 3, 5, 7, 9) and doubling numbers (2, 4, 8, 16, 32).",
+    "category": "number patterns",
+    "mechanic": "interleaved sequences",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_month_codes",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "If January = 717, March = 5315 and June = 4624, what does August equal?",
+    "correctAnswer": "6848",
+    "explanation": "Letters in the name, then its month number, then those two multiplied: JUNE = 4, 6, 24. AUGUST = 6, 8, 48.",
+    "timerSeconds": 60,
+    "category": "number patterns",
+    "mechanic": "concatenated rule",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_day_middles",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "What two letters complete this sequence?\n\nUN  ON  UE  ED  HU  RI  ??",
+    "correctAnswer": "AT",
+    "acceptedAnswers": [
+      "A T"
+    ],
+    "explanation": "Short day names without their first letter: sUN, mON, tUE, wED, tHU, fRI, sAT.",
+    "category": "letter manipulation",
+    "mechanic": "abbreviation minus a letter",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_suzie_siblings",
+    "difficulty": 0.5,
+    "questionType": "number",
+    "prompt": "Suzie has as many brothers as sisters. But each of her brothers has only half as many brothers as sisters. How many children are in the family?",
+    "correctAnswer": "7",
+    "explanation": "4 girls and 3 boys. Suzie sees 3 sisters and 3 brothers; each boy sees 2 brothers and 4 sisters.",
+    "timerSeconds": 60,
+    "category": "logic",
+    "mechanic": "family constraints",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_senseless",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "Using just two different letters, fill in the blanks to make a word:\n\n_ _ N _ _ L _ _ _",
+    "correctAnswer": "senseless",
+    "explanation": "Fill every gap with S or E: SENSELESS.",
+    "timerSeconds": 45,
+    "category": "wordplay",
+    "mechanic": "fill the gap",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_tnecrepe",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "What are the next two letters?\n\nTNECREPE _ _",
+    "correctAnswer": "NO",
+    "acceptedAnswers": [
+      "N O"
+    ],
+    "explanation": "It's ONE PERCENT spelt backwards: T-N-E-C-R-E-P-E-N-O.",
+    "category": "letter manipulation",
+    "mechanic": "word reversal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_insect_anagrams",
+    "difficulty": 0.5,
+    "questionType": "multiple_choice",
+    "prompt": "These all share a pattern. What is it?\n\nTAN   PAWS   TANG   LEAF",
+    "choices": [
+      "They're all anagrams of insects",
+      "They're all words reversed",
+      "They all hide a body part",
+      "They're all anagrams of colours"
+    ],
+    "correctAnswer": "They're all anagrams of insects",
+    "explanation": "TAN = ANT, PAWS = WASP, TANG = GNAT, LEAF = FLEA.",
+    "category": "anagrams",
+    "mechanic": "anagram set",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf0_5_alphabetical_number",
+    "difficulty": 0.5,
+    "questionType": "text",
+    "prompt": "What's the first number whose letters are in alphabetical order when you spell it out?",
+    "correctAnswer": "forty",
+    "acceptedAnswers": [
+      "40"
+    ],
+    "explanation": "F-O-R-T-Y. Nothing from one to thirty-nine pulls it off.",
+    "timerSeconds": 45,
+    "category": "letter manipulation",
+    "mechanic": "letters in order",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+{
+    "id": "pdf70_coat_odd",
+    "difficulty": 70,
+    "questionType": "multiple_choice",
+    "prompt": "Odd one out: which of these doesn't belong with the others?",
+    "choices": [
+      "Coat",
+      "Cat",
+      "Mat",
+      "Bat",
+      "Hat"
+    ],
+    "correctAnswer": "Coat",
+    "explanation": "Cat, Mat, Bat and Hat all rhyme. Coat doesn't.",
+    "category": "odd one out",
+    "mechanic": "rhyme",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf60_mum_dad_kid",
+    "difficulty": 60,
+    "questionType": "multiple_choice",
+    "prompt": "Odd one out: which of these doesn't belong with the others?",
+    "choices": [
+      "MUM",
+      "DAD",
+      "KID",
+      "NAN"
+    ],
+    "correctAnswer": "KID",
+    "explanation": "MUM, DAD and NAN read the same backwards. KID doesn't.",
+    "category": "odd one out",
+    "mechanic": "palindrome",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf50_first_letter_fruit",
+    "difficulty": 50,
+    "questionType": "multiple_choice",
+    "prompt": "Odd one out: which of these doesn't belong with the others?",
+    "choices": [
+      "DAPPLE",
+      "SLIME",
+      "RABBIT",
+      "SPEAR"
+    ],
+    "correctAnswer": "RABBIT",
+    "explanation": "Drop the first letter: dAPPLE, sLIME, sPEAR are fruit. rABBIT is not.",
+    "category": "odd one out",
+    "mechanic": "letter removal",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf30_hidden_numbers_odd",
+    "difficulty": 30,
+    "questionType": "multiple_choice",
+    "prompt": "Odd one out: which of these doesn't belong with the others?",
+    "choices": [
+      "Tone",
+      "Football",
+      "Freight",
+      "Fasten"
+    ],
+    "correctAnswer": "Football",
+    "explanation": "TONE ends in ONE, FREIGHT in EIGHT, FASTEN in TEN. Football ends in no number.",
+    "category": "odd one out",
+    "mechanic": "embedded number",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
+  {
+    "id": "pdf10_compass_anagrams",
+    "difficulty": 10,
+    "questionType": "multiple_choice",
+    "prompt": "Which one doesn't fit with the rest?",
+    "choices": [
+      "GOAL",
+      "THORN",
+      "SHOUT",
+      "STEW"
+    ],
+    "correctAnswer": "GOAL",
+    "explanation": "THORN = NORTH, SHOUT = SOUTH, STEW = WEST. GOAL isn't a compass point.",
+    "category": "anagrams",
+    "mechanic": "anagram intruder",
+    "sourceType": "adapted",
+    "sourceReference": "1% Club quiz PDF (Quiz Questions)"
+  },
 ];
 
 /** Ids grouped by tier — the selector picks one from each list. */

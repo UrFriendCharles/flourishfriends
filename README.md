@@ -72,7 +72,7 @@ Play it either way from the same setup screen:
 - **Explanations** on every question, plus per-question analytics (attempts,
   correct, passes, timeouts, response times, actual solve rate) returned when
   the game ends, ready to calibrate the difficulty labels later.
-- The bank lives in `src/data/clubQuestions.ts` — 188 questions, at least 11 per tier.
+- The bank lives in `src/data/clubQuestions.ts` — 294 questions, at least 21 per tier.
   Append to it; nothing else needs to change.
 
 ```bash
