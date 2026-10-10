@@ -28,7 +28,8 @@ both when working on multiplayer. For local-play-only work, vite alone is fine.
 
 Live at **https://flourishfriends.com** (also www.flourishfriends.com and
 https://flag-quiz.charles-ef7.workers.dev) — Cloudflare Workers static assets,
-config in `wrangler.jsonc`. To ship an update:
+config in `wrangler.jsonc`. Cloudflare Workers Builds deploys automatically on every
+push to `main` (build: `npm run build`, deploy: `npx wrangler deploy`). To ship by hand:
 
 ```bash
 npm run build && npx wrangler deploy
